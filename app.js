@@ -9,23 +9,22 @@ const API_TIMEOUT_MS = 8000;
 
 const DESKTOP_NAV = [
   ['today', '◉', 'nav.dashboard'],
-  ['week', '▦', 'nav.week'],
-  ['grocery', '☑', 'nav.grocery'],
-  ['prep', '◫', 'nav.prep'],
-  ['body', '⌁', 'nav.body'],
-  ['blood', '✚', 'nav.blood'],
-  ['progress', '↗', 'nav.analysis'],
+  ['meals', '☰', 'nav.meals'],
   ['recipes', '▤', 'nav.recipes'],
+  ['foods', '○', 'nav.foods'],
+  ['week', '▦', 'nav.mealPlans'],
+  ['progress', '↗', 'nav.progress'],
   ['settings', '⚙', 'nav.settings'],
 ];
 
 const MOBILE_NAV = [
-  ['today', '◉', 'nav.today'],
-  ['week', '▦', 'nav.weekShort'],
-  ['grocery', '☑', 'nav.groceryShort'],
+  ['today', '◉', 'nav.dashboardShort'],
+  ['meals', '☰', 'nav.mealsShort'],
   ['recipes', '▤', 'nav.recipesShort'],
-  ['progress', '↗', 'nav.progress'],
-  ['settings', '⚙', 'nav.settings'],
+  ['foods', '○', 'nav.foodsShort'],
+  ['week', '▦', 'nav.mealPlansShort'],
+  ['progress', '↗', 'nav.progressShort'],
+  ['settings', '⚙', 'nav.settingsShort'],
 ];
 
 const MEAL_SLOTS = [
@@ -608,6 +607,135 @@ Object.assign(I18N.it, {
   'table.confidence': 'Affidabilit\u00e0'
 });
 
+Object.assign(I18N.en, {
+  'nav.dashboardShort': 'Home',
+  'nav.meals': 'Meals',
+  'nav.mealsShort': 'Meals',
+  'nav.foods': 'Foods',
+  'nav.foodsShort': 'Foods',
+  'nav.mealPlans': 'Meal Plans',
+  'nav.mealPlansShort': 'Plans',
+  'nav.progressShort': 'Progress',
+  'nav.settingsShort': 'Settings',
+  'page.meals': 'Meals',
+  'page.foods': 'Foods',
+  'page.week': 'Meal Plans',
+  'dashboard.planToday': 'Plan today',
+  'dashboard.todayFocus': 'Today at a glance',
+  'dashboard.optimizationNote': 'Some targets could not be matched exactly. Review portions or add more foods.',
+  'dashboard.optimizerDetails': 'Optimizer details',
+  'dashboard.mealsHint': 'Tap a meal to view details. Use the circle to mark it completed.',
+  'dashboard.primarySummary': 'Calories and macros are based on completed meals; projected values include planned meals.',
+  'meal.addMeal': 'Add meal',
+  'meal.foodPreview': 'Food preview',
+  'meal.remaining': 'Remaining',
+  'meal.viewDetails': 'View details',
+  'foods.title': 'Foods',
+  'foods.subtitle': 'Custom foods, curated foods, and provider results are separated so source quality is clear without clutter.',
+  'foods.custom': 'Custom foods',
+  'foods.curated': 'Curated foods',
+  'foods.provider': 'Provider / cached foods',
+  'foods.noCustom': 'No custom foods yet.',
+  'foods.noProvider': 'No imported provider foods yet.',
+  'foods.searchProvider': 'Search provider foods',
+  'plans.create': 'Create meal plan',
+  'plans.currentWeek': 'Current week plans',
+  'plans.subtitle': 'Generate and review plans progressively. Open a day for details.',
+  'progress.openDetails': 'Open detailed progress',
+  'progress.details': 'Detailed breakdown',
+  'progress.summary': 'A compact readout of adherence from stored plans.',
+  'common.view': 'View',
+  'common.lastUpdated': 'Last updated',
+  'common.today': 'Today',
+  'common.time': 'Time',
+  'common.addItem': 'Add item',
+  'plans.startDate': 'Start date',
+  'plans.endDate': 'End date',
+  'plans.lunchMode': 'Lunch mode',
+  'plans.includeWeekends': 'Include weekends',
+  'plans.noPlans': 'No plans in this week',
+  'plans.noPlansHelp': 'Generate a plan to see daily meals.',
+  'plans.viewDetails': 'View details',
+  'plans.regenerateDay': 'Regenerate day',
+  'progress.daysTracked': 'days tracked',
+  'progress.trackedDays': 'Tracked days',
+  'progress.avgCompletedCalories': 'Average completed calories',
+  'progress.macroAdherence': 'Macro adherence',
+  'progress.localPlans': 'Plans stored locally',
+  'progress.completionDataDays': 'Days with completion data',
+  'progress.caloriesTargetRatio': 'Completed calories ÷ targets',
+  'progress.skippedMeals': 'Skipped meals',
+  'progress.skippedCount': 'Skipped count',
+  'progress.noSkipped': 'No skipped meals yet.',
+  'progress.bodyHealthData': 'Body and health data',
+  'progress.monthlyMacroSummary': 'Monthly macro summary',
+  'progress.noHistoricalData': 'No historical completion data yet.',
+});
+
+Object.assign(I18N.it, {
+  'nav.dashboardShort': 'Home',
+  'nav.meals': 'Pasti',
+  'nav.mealsShort': 'Pasti',
+  'nav.foods': 'Alimenti',
+  'nav.foodsShort': 'Alimenti',
+  'nav.mealPlans': 'Piani pasti',
+  'nav.mealPlansShort': 'Piani',
+  'nav.progressShort': 'Progressi',
+  'nav.settingsShort': 'Impostazioni',
+  'page.meals': 'Pasti',
+  'page.foods': 'Alimenti',
+  'page.week': 'Piani pasti',
+  'dashboard.planToday': 'Pianifica oggi',
+  'dashboard.todayFocus': 'Oggi in breve',
+  'dashboard.optimizationNote': 'Alcuni obiettivi non sono perfetti. Rivedi le porzioni o aggiungi altri alimenti.',
+  'dashboard.optimizerDetails': 'Dettagli ottimizzatore',
+  'dashboard.mealsHint': 'Tocca un pasto per vedere i dettagli. Usa il cerchio per completarlo.',
+  'dashboard.primarySummary': 'Calorie e macro usano i pasti completati; i valori previsti includono i pasti pianificati.',
+  'meal.addMeal': 'Aggiungi pasto',
+  'meal.foodPreview': 'Anteprima alimenti',
+  'meal.remaining': 'Rimanente',
+  'meal.viewDetails': 'Vedi dettagli',
+  'foods.title': 'Alimenti',
+  'foods.subtitle': 'Alimenti personalizzati, curati e risultati provider sono separati per chiarire la fonte senza appesantire.',
+  'foods.custom': 'Alimenti personalizzati',
+  'foods.curated': 'Alimenti curati',
+  'foods.provider': 'Alimenti provider / cache',
+  'foods.noCustom': 'Nessun alimento personalizzato.',
+  'foods.noProvider': 'Nessun alimento provider importato.',
+  'foods.searchProvider': 'Cerca alimenti provider',
+  'plans.create': 'Crea piano pasti',
+  'plans.currentWeek': 'Piani della settimana',
+  'plans.subtitle': 'Genera e rivedi i piani in modo progressivo. Apri un giorno per i dettagli.',
+  'progress.openDetails': 'Apri progressi dettagliati',
+  'progress.details': 'Dettaglio completo',
+  'progress.summary': 'Una lettura compatta dell’aderenza dai piani salvati.',
+  'common.view': 'Vedi',
+  'common.lastUpdated': 'Ultimo aggiornamento',
+  'common.today': 'Oggi',
+  'common.time': 'Ora',
+  'common.addItem': 'Aggiungi elemento',
+  'plans.startDate': 'Data inizio',
+  'plans.endDate': 'Data fine',
+  'plans.lunchMode': 'Modalità pranzo',
+  'plans.includeWeekends': 'Includi weekend',
+  'plans.noPlans': 'Nessun piano in questa settimana',
+  'plans.noPlansHelp': 'Genera un piano per vedere i pasti giornalieri.',
+  'plans.viewDetails': 'Vedi dettagli',
+  'plans.regenerateDay': 'Rigenera giorno',
+  'progress.daysTracked': 'giorni tracciati',
+  'progress.trackedDays': 'Giorni tracciati',
+  'progress.avgCompletedCalories': 'Media calorie completate',
+  'progress.macroAdherence': 'Aderenza macro',
+  'progress.localPlans': 'Piani salvati localmente',
+  'progress.completionDataDays': 'Giorni con dati completati',
+  'progress.caloriesTargetRatio': 'Calorie completate ÷ obiettivi',
+  'progress.skippedMeals': 'Pasti saltati',
+  'progress.skippedCount': 'Numero salti',
+  'progress.noSkipped': 'Nessun pasto saltato.',
+  'progress.bodyHealthData': 'Dati corpo e salute',
+  'progress.monthlyMacroSummary': 'Riepilogo macro mensile',
+  'progress.noHistoricalData': 'Nessun dato storico completato.',
+});
 
 function getCloudSession() {
   try { return JSON.parse(localStorage.getItem(CLOUD_SESSION_KEY) || 'null'); } catch { return null; }
@@ -2040,7 +2168,7 @@ function setView(view) {
 function render() {
   applyLanguageAndTheme();
   const titles = {
-    today: tr('page.today'), week: tr('page.week'), grocery: tr('page.grocery'), prep: tr('page.prep'),
+    today: tr('page.today'), meals: tr('page.meals'), foods: tr('page.foods'), week: tr('page.week'), grocery: tr('page.grocery'), prep: tr('page.prep'),
     progress: tr('page.progress'), recipes: tr('page.recipes'), body: tr('page.body'), blood: tr('page.blood'), settings: tr('page.settings'),
   };
   $('pageTitle').textContent = state.needsOnboarding ? tr('profile.createTitle') : (titles[state.view] || 'Diet Planner');
@@ -2051,6 +2179,8 @@ function render() {
   }
   const renderer = {
     today: renderToday,
+    meals: renderMeals,
+    foods: renderFoods,
     week: renderWeek,
     grocery: renderGrocery,
     prep: renderPrep,
@@ -2183,63 +2313,86 @@ function progressRows(target, completed, projected, day, includeProjected = fals
   }).join('')}</div>`;
 }
 
-function dashboardCard(action, title, body, badge = '', extraClass = '') {
-  return `<button class="dashboard-card ${extraClass}" data-action="${action}" type="button">
-    <span class="dashboard-card-main"><span class="dashboard-card-title">${title}</span><span class="dashboard-card-body">${body}</span></span>
-    <span class="dashboard-card-side">${badge}<span class="chevron">›</span></span>
-  </button>`;
-}
-
 function renderToday() {
   const date = todayISO();
   const day = findPlan(date);
   if (!day) {
     const monday = startOfWeekISO(date);
     return html`
-      <div class="card stack">
+      <section class="hero-card empty-state stack">
+        <p class="eyebrow">${formatDate(date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         <h2>${tr('dashboard.noPlan')}</h2>
-        <p class="muted">Generate a Monday–Friday plan from your baseline diet and macro target.</p>
-        <button class="primary-button" data-action="generate-week" data-start="${monday}" data-end="${addDays(monday, 4)}" data-weekends="false">${tr('dashboard.generateWeek')}</button>
-      </div>`;
+        <p class="muted">${tr('plans.subtitle')}</p>
+        <div class="actions"><button class="primary-button" data-action="generate-week" data-start="${monday}" data-end="${addDays(monday, 4)}" data-weekends="false">${tr('dashboard.planToday')}</button></div>
+      </section>`;
   }
   const target = getTargetForDay(day);
   const completed = calcDayCompleted(day);
   const projected = calcDayProjected(day);
-  const skipped = calcDaySkipped(day);
-  const warnings = [...(day.generationWarnings || []), ...(day.recalculationLog?.slice(-1)[0]?.warnings || [])];
+  const warnings = [...(day.generationWarnings || []), ...(day.recalculationLog?.slice(-1)[0]?.warnings || [])].filter(Boolean);
   const status = macroStatus(target, projected);
   const totalMeals = day.meals.length;
   const completedMeals = day.meals.filter((m) => m.status === 'completed').length;
+  const plannedMeals = day.meals.filter((m) => m.status === 'planned').length;
   const overallPct = totalMeals ? Math.round((completedMeals / totalMeals) * 100) : 0;
-  const grocery = buildGroceryList(date, date);
-  const prepList = buildGroceryList(startOfWeekISO(date), addDays(startOfWeekISO(date), 4));
+  const nextMeal = day.meals.find((m) => m.status === 'planned') || day.meals[0];
   return html`
-    <div class="grid dashboard">
-      <section class="stack compact-dashboard-stack">
-        <p class="eyebrow">${formatDate(date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        ${dashboardCard('open-macro-detail', tr('macro.dailyTarget'), `${round(completed.calories)} / ${round(target.calories)} kcal · P ${round(completed.protein, 1)}/${round(target.protein, 1)}g · C ${round(completed.carbs, 1)}/${round(target.carbs, 1)}g · F ${round(completed.fat, 1)}/${round(target.fat, 1)}g<br><span class="muted">${tr('macro.projected')}: ${totalsText(projected)}</span>`, `<span class="status-pill ${status.cls}">${status.label}</span>`)}
-        ${dashboardCard('open-progress-detail', tr('progress.title'), `${tr('progress.overall')}: <span class="inline-bar"><i style="--value:${overallPct}%"></i></span> ${overallPct}%<br><span class="muted">${tr('progress.completedMeals', { completed: completedMeals, total: totalMeals })} · ${round(completed.calories)} / ${round(target.calories)} kcal</span>`, '')}
-        ${dashboardCard('open-workout-detail', tr('dashboard.workoutSummary'), `${day.workout?.isWorkout ? tr('dashboard.workoutDay') : tr('dashboard.restDay')} · ${escapeHtml(day.workout?.time || '18:30')} · ${escapeHtml(day.workout?.type || 'Strength')}`, '')}
-        ${dashboardCard('open-prep-detail', tr('dashboard.mealPrepSummary'), `${prepList.items.length} ingredients across the current work week`, '')}
-        ${dashboardCard('open-grocery-detail', tr('dashboard.grocerySummary'), `${grocery.items.length} grocery lines for today`, '')}
-        ${warnings.length ? `<div class="warning-box small">${warnings.map(escapeHtml).join('<br>')}</div>` : ''}
-        <div class="card tight stack-sm transparency-card">
-          <h3>Transparency</h3>
-          <div class="small muted">Macro calories formula: protein × 4 + carbs × 4 + fat × 9.</div>
-          <div class="small muted">Skipped macros removed: ${totalsText(skipped)}.</div>
+    <div class="screen dashboard-screen">
+      <section class="hero-card dashboard-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">${formatDate(date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <h2>${tr('dashboard.todayFocus')}</h2>
+          <p class="muted small">${tr('dashboard.primarySummary')}</p>
         </div>
+        <div class="hero-action"><button class="primary-button" data-action="regenerate-day" data-date="${day.date}">${tr('dashboard.planToday')}</button></div>
       </section>
 
-      <section class="card stack meal-checklist-card">
+      <section class="quick-summary-grid">
+        ${dashboardCard('open-macro-detail', tr('macro.dailyTarget'), `${round(completed.calories)} / ${round(target.calories)} kcal<br><span class="muted">P ${round(completed.protein, 1)}/${round(target.protein, 1)}g · C ${round(completed.carbs, 1)}/${round(target.carbs, 1)}g · F ${round(completed.fat, 1)}/${round(target.fat, 1)}g</span>`, `<span class="status-pill ${status.cls}">${status.label}</span>`)}
+        ${dashboardCard('open-progress-detail', tr('progress.title'), `${tr('progress.overall')}: <span class="inline-bar"><i style="--value:${overallPct}%"></i></span> ${overallPct}%<br><span class="muted">${tr('progress.completedMeals', { completed: completedMeals, total: totalMeals })}</span>`, '')}
+        ${dashboardCard('nav', tr('nav.meals'), `${plannedMeals ? `${plannedMeals} ${tr('meal.remaining').toLowerCase()}` : tr('common.completed')}<br><span class="muted">${nextMeal ? `${mealLabel(nextMeal.slot)} · ${round(calcMealMacros(nextMeal).calories)} kcal` : '—'}</span>`, '', 'dashboard-card-route', 'meals')}
+      </section>
+
+      ${warnings.length ? `<section class="soft-note"><span>${tr('dashboard.optimizationNote')}</span><details class="collapsible"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="small muted">${warnings.map(escapeHtml).join('<br>')}</div></details></section>` : ''}
+
+      <section class="card stack meal-checklist-card clean-card">
         <div class="card-title-row compact">
           <div>
             <h2>${tr('dashboard.mealChecklist')}</h2>
-            <p class="muted small">Tap the circle to complete a meal. Skipping can recalculate remaining meals.</p>
+            <p class="muted small">${tr('dashboard.mealsHint')}</p>
           </div>
+          <button class="secondary-button" data-action="nav" data-view="meals">${tr('common.open')}</button>
         </div>
-        ${day.meals.map((meal) => renderMealCard(day, meal)).join('')}
+        <div class="meal-checklist-list">${day.meals.map((meal) => renderMealChecklistRow(day, meal)).join('')}</div>
       </section>
     </div>`;
+}
+
+function renderMealChecklistRow(day, meal) {
+  const macros = calcMealMacros(meal);
+  const statusClass = meal.status === 'completed' ? 'completed' : meal.status === 'skipped' ? 'skipped' : '';
+  const statusText = meal.status === 'completed' ? tr('common.completed') : meal.status === 'skipped' ? tr('common.skipped') : tr('common.planned');
+  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'skipped' ? '×' : '';
+  const preview = (meal.items || []).slice(0, 2).map((item) => item.foodName).join(', ') || tr('meal.noFoods');
+  const extra = (meal.items || []).length > 2 ? ` +${(meal.items || []).length - 2}` : '';
+  return html`
+    <article class="meal-check-row ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">
+      <button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button>
+      <div class="meal-check-copy">
+        <strong>${escapeHtml(mealLabel(meal.slot))}</strong>
+        <span>${escapeHtml(meal.time || '')} · ${escapeHtml(preview)}${extra}</span>
+      </div>
+      <div class="meal-check-metrics"><strong>${round(macros.calories)} kcal</strong><span>P ${round(macros.protein, 1)}g</span></div>
+      <span class="status-pill ${meal.status === 'completed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span>
+    </article>`;
+}
+
+function dashboardCard(action, title, body, badge = '', extraClass = '', view = '') {
+  const viewAttr = view ? ` data-view="${escapeHtml(view)}"` : '';
+  return `<button class="dashboard-card ${extraClass}" data-action="${action}"${viewAttr} type="button">
+    <span class="dashboard-card-main"><span class="dashboard-card-title">${title}</span><span class="dashboard-card-body">${body}</span></span>
+    <span class="dashboard-card-side">${badge}<span class="chevron">›</span></span>
+  </button>`;
 }
 
 function renderMacroDetail(day) {
@@ -2316,11 +2469,13 @@ function renderMealCard(day, meal) {
   const statusClass = meal.status === 'completed' ? 'completed' : meal.status === 'skipped' ? 'skipped' : '';
   const statusText = meal.status === 'completed' ? tr('common.completed') : meal.status === 'skipped' ? tr('common.skipped') : tr('common.planned');
   const checkText = meal.status === 'completed' ? '✓' : meal.status === 'skipped' ? '×' : '';
+  const foods = meal.items || [];
+  const preview = foods.slice(0, 4);
   return html`
-    <article class="meal-card ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">
-      <div class="meal-main">
+    <article class="meal-card ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}" tabindex="0">
+      <div class="meal-main clean-meal-main">
         <button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button>
-        <div class="stack-sm">
+        <div class="meal-summary-copy">
           <div class="row between no-wrap">
             <div>
               <h3>${escapeHtml(mealLabel(meal.slot))}</h3>
@@ -2328,25 +2483,79 @@ function renderMealCard(day, meal) {
             </div>
             <span class="status-pill ${meal.status === 'completed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span>
           </div>
-          <ul class="food-list">
-            ${(meal.items || []).map((item) => `<li><strong>${escapeHtml(item.foodName)}</strong><span>${displayQuantity(item)}</span></li>`).join('') || '<li><span>No foods yet</span></li>'}
-          </ul>
-          <div class="macro-pills">
+          <div class="macro-pills macro-pills-prominent">
             <span class="macro-pill">${round(macros.calories)} kcal</span>
             <span class="macro-pill">P ${round(macros.protein, 1)}g</span>
             <span class="macro-pill">C ${round(macros.carbs, 1)}g</span>
             <span class="macro-pill">F ${round(macros.fat, 1)}g</span>
           </div>
-          ${meal.instructions?.length ? `<details class="collapsible small"><summary>Recipe steps</summary><ol>${meal.instructions.map((s) => `<li>${escapeHtml(s)}</li>`).join('')}</ol>${meal.storageNotes ? `<p class="muted">${escapeHtml(meal.storageNotes)}</p>` : ''}</details>` : ''}
+          <div class="food-preview-line"><span class="label">${tr('meal.foodPreview')}</span>${preview.map((item) => `<span>${escapeHtml(item.foodName)} · ${displayQuantity(item)}</span>`).join('') || `<span>${tr('meal.noFoods')}</span>`}${foods.length > preview.length ? `<span>+${foods.length - preview.length}</span>` : ''}</div>
         </div>
       </div>
-      <div class="actions">
-        <button class="secondary-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.completed')}</button>
+      <div class="actions meal-actions-clean">
+        <button class="secondary-button" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.viewDetails')}</button>
+        <button class="ghost-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.completed')}</button>
         <button class="ghost-button" data-action="skip-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.skipped')}</button>
-        <button class="ghost-button" data-action="change-recipe" data-date="${day.date}" data-meal-id="${meal.id}">Change recipe</button>
-        <button class="ghost-button" data-action="edit-meal" data-date="${day.date}" data-meal-id="${meal.id}">Edit meal</button>
+        <button class="ghost-button" data-action="edit-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.edit')}</button>
       </div>
     </article>`;
+}
+
+function renderMeals() {
+  const date = todayISO();
+  const day = findPlan(date);
+  if (!day) {
+    const monday = startOfWeekISO(date);
+    return html`<section class="hero-card empty-state stack"><h2>${tr('dashboard.noPlan')}</h2><p class="muted">${tr('plans.subtitle')}</p><button class="primary-button" data-action="generate-week" data-start="${monday}" data-end="${addDays(monday, 4)}" data-weekends="false">${tr('dashboard.planToday')}</button></section>`;
+  }
+  const completed = calcDayCompleted(day);
+  const projected = calcDayProjected(day);
+  return html`
+    <div class="screen meals-screen stack">
+      <section class="hero-card section-hero">
+        <div>
+          <p class="eyebrow">${tr('common.today')}</p>
+          <h2>${tr('nav.meals')}</h2>
+          <p class="muted small">${round(completed.calories)} kcal ${tr('macro.consumed').toLowerCase()} · ${round(projected.calories)} kcal ${tr('macro.projected').toLowerCase()}</p>
+        </div>
+        <div class="actions"><button class="primary-button" data-action="open-add-meal" data-date="${day.date}">${tr('meal.addMeal')}</button></div>
+      </section>
+      <section class="meal-list-clean">${day.meals.map((meal) => renderMealCard(day, meal)).join('')}</section>
+    </div>`;
+}
+
+function renderFoods() {
+  const foods = state.foods || [];
+  const custom = foods.filter((food) => food.userEdited || food.userId || food.sourceProvider === 'manual');
+  const curated = foods.filter((food) => food.sourceProvider === 'curated_seed' && !food.userEdited);
+  const provider = foods.filter((food) => !custom.includes(food) && !curated.includes(food));
+  return html`
+    <div class="screen foods-screen stack">
+      <section class="hero-card section-hero">
+        <div>
+          <p class="eyebrow">${tr('foods.title')}</p>
+          <h2>${tr('foods.title')}</h2>
+          <p class="muted small">${tr('foods.subtitle')}</p>
+        </div>
+        <div class="actions"><button class="primary-button" data-action="open-food-editor">${tr('settings.foodDatabase.add')}</button><button class="secondary-button" data-action="open-food-lookup">${tr('foods.searchProvider')}</button></div>
+      </section>
+      <section class="food-source-grid">
+        <div class="card clean-card stack-sm"><div class="row between"><h2>${tr('foods.custom')}</h2><span class="status-pill blue">${custom.length}</span></div>${custom.length ? renderFoodCardList(custom.slice(0, 12)) : `<p class="muted small">${tr('foods.noCustom')}</p>`}</div>
+        <div class="card clean-card stack-sm"><div class="row between"><h2>${tr('foods.provider')}</h2><span class="status-pill blue">${provider.length}</span></div>${provider.length ? renderFoodCardList(provider.slice(0, 12)) : `<p class="muted small">${tr('foods.noProvider')}</p>`}</div>
+        <div class="card clean-card stack-sm food-source-wide"><div class="row between"><h2>${tr('foods.curated')}</h2><span class="status-pill blue">${curated.length}</span></div>${renderFoodCardList(curated.slice(0, 18))}</div>
+      </section>
+    </div>`;
+}
+
+function renderFoodCardList(foods) {
+  return `<div class="food-card-list">${foods.map(renderFoodMiniCard).join('')}</div>`;
+}
+
+function renderFoodMiniCard(food) {
+  return `<article class="food-mini-card">
+    <div><strong>${escapeHtml(localizedFoodName(food))}</strong><span>${round(food.caloriesPer100g)} kcal · P ${round(food.proteinPer100g, 1)} · C ${round(food.carbsPer100g, 1)} · F ${round(food.fatPer100g, 1)}</span></div>
+    <div class="food-mini-meta"><span class="status-pill">${escapeHtml(food.sourceProvider || food.source || '')}</span>${confidencePill(food.confidence)}<button class="pill-button" data-action="open-food-editor" data-food-id="${food.id}">${tr('common.edit')}</button></div>
+  </article>`;
 }
 
 function renderWeek() {
@@ -2355,33 +2564,31 @@ function renderWeek() {
   const end = addDays(monday, state.settings.includeWeekends ? 6 : 4);
   const plans = state.plans.filter((p) => p.date >= start && p.date <= addDays(monday, 6)).sort(sortByDate);
   return html`
-    <div class="stack">
-      <section class="card stack">
-        <div class="card-title-row">
-          <div>
-            <h2>Generate weekly plan</h2>
-            <p class="muted small">Default is Monday–Friday. Plans are generated from the baseline diet and adjusted toward your macro target.</p>
-          </div>
+    <div class="screen plans-screen stack">
+      <section class="hero-card section-hero">
+        <div>
+          <p class="eyebrow">${tr('nav.mealPlans')}</p>
+          <h2>${tr('plans.currentWeek')}</h2>
+          <p class="muted small">${tr('plans.subtitle')}</p>
         </div>
-        <div class="form-grid three">
-          <label class="field"><span>Start date</span><input type="date" id="weekStart" value="${start}"></label>
-          <label class="field"><span>End date</span><input type="date" id="weekEnd" value="${end}"></label>
-          <label class="field"><span>Lunch mode</span><select id="weekLunchMode">
-            <option value="same" ${state.settings.lunchMode === 'same' ? 'selected' : ''}>Same lunch for workdays</option>
-            <option value="rotating" ${state.settings.lunchMode === 'rotating' ? 'selected' : ''}>2–3 rotating work lunches</option>
-            <option value="baseline" ${state.settings.lunchMode === 'baseline' ? 'selected' : ''}>Baseline lunch only</option>
-          </select></label>
-        </div>
-        <label class="checkbox-row"><input type="checkbox" id="weekIncludeWeekends" ${state.settings.includeWeekends ? 'checked' : ''}> <span>Include weekends</span></label>
-        <div class="actions">
-          <button class="primary-button" data-action="generate-week-from-form">Generate / overwrite selected dates</button>
-          <button class="ghost-button" data-action="open-baseline-editor">Edit baseline diet</button>
-          <button class="ghost-button" data-action="open-target-editor">Edit macros</button>
-        </div>
+        <button class="primary-button" data-action="generate-week-from-form">${tr('plans.create')}</button>
       </section>
 
-      <section class="grid two">
-        ${plans.length ? plans.map(renderDayPlanCard).join('') : '<div class="card"><h2>No plans in this week</h2><p class="muted">Generate a plan to see daily meals.</p></div>'}
+      <section class="card clean-card stack-sm plan-controls">
+        <div class="form-grid three">
+          <label class="field"><span>${tr('plans.startDate')}</span><input type="date" id="weekStart" value="${start}"></label>
+          <label class="field"><span>${tr('plans.endDate')}</span><input type="date" id="weekEnd" value="${end}"></label>
+          <label class="field"><span>${tr('plans.lunchMode')}</span><select id="weekLunchMode">
+            <option value="same" ${state.settings.lunchMode === 'same' ? 'selected' : ''}>${tr('prefs.sameLunch')}</option>
+            <option value="rotating" ${state.settings.lunchMode === 'rotating' ? 'selected' : ''}>${tr('prefs.rotatingLunch')}</option>
+            <option value="baseline" ${state.settings.lunchMode === 'baseline' ? 'selected' : ''}>${tr('prefs.baselineLunch')}</option>
+          </select></label>
+        </div>
+        <div class="row between"><label class="checkbox-row"><input type="checkbox" id="weekIncludeWeekends" ${state.settings.includeWeekends ? 'checked' : ''}> <span>${tr('plans.includeWeekends')}</span></label><div class="actions"><button class="ghost-button" data-action="open-baseline-editor">${tr('settings.baseline.title')}</button><button class="ghost-button" data-action="open-target-editor">${tr('macro.targets')}</button></div></div>
+      </section>
+
+      <section class="plan-card-grid">
+        ${plans.length ? plans.map(renderDayPlanCard).join('') : `<div class="card clean-card"><h2>${tr('plans.noPlans')}</h2><p class="muted">${tr('plans.noPlansHelp')}</p></div>`}
       </section>
     </div>`;
 }
@@ -2411,8 +2618,8 @@ function renderDayPlanCard(day) {
         }).join('')}
       </div>
       <div class="actions">
-        <button class="ghost-button" data-action="view-day" data-date="${day.date}">View details</button>
-        <button class="ghost-button" data-action="regenerate-day" data-date="${day.date}">Regenerate day</button>
+        <button class="ghost-button" data-action="view-day" data-date="${day.date}">${tr('plans.viewDetails')}</button>
+        <button class="ghost-button" data-action="regenerate-day" data-date="${day.date}">${tr('plans.regenerateDay')}</button>
       </div>
     </article>`;
 }
@@ -2433,8 +2640,8 @@ function renderGrocery() {
           </div>
         </div>
         <div class="form-grid three">
-          <label class="field"><span>Start date</span><input type="date" id="groceryStart" value="${start}"></label>
-          <label class="field"><span>End date</span><input type="date" id="groceryEnd" value="${end}"></label>
+          <label class="field"><span>${tr('plans.startDate')}</span><input type="date" id="groceryStart" value="${start}"></label>
+          <label class="field"><span>${tr('plans.endDate')}</span><input type="date" id="groceryEnd" value="${end}"></label>
           <label class="field"><span>Range</span><button class="secondary-button" data-action="update-grocery-range">Update list</button></label>
         </div>
         <div class="section-tabs">
@@ -2543,8 +2750,8 @@ function renderPrep() {
           <span class="status-pill blue">Prep day: ${escapeHtml(state.settings.prepDay)}</span>
         </div>
         <div class="form-grid three">
-          <label class="field"><span>Start date</span><input type="date" id="prepStart" value="${start}"></label>
-          <label class="field"><span>End date</span><input type="date" id="prepEnd" value="${end}"></label>
+          <label class="field"><span>${tr('plans.startDate')}</span><input type="date" id="prepStart" value="${start}"></label>
+          <label class="field"><span>${tr('plans.endDate')}</span><input type="date" id="prepEnd" value="${end}"></label>
           <label class="field"><span>Update</span><button class="secondary-button" data-action="update-prep-range">Update prep plan</button></label>
         </div>
       </section>
@@ -2590,34 +2797,37 @@ function renderPrepInstructions(list, label) {
 
 function renderProgress() {
   const analysis = buildHistoricalAnalysis();
+  const overall = clamp(round(analysis.adherence || 0), 0, 150);
   return html`
-    <div class="stack">
-      <section class="grid three">
-        <div class="card metric"><span>Tracked days</span><strong>${analysis.days}</strong><div class="small muted">Plans stored locally</div></div>
-        <div class="card metric"><span>Average completed calories</span><strong>${round(analysis.avgCalories)} kcal</strong><div class="small muted">Days with completion data</div></div>
-        <div class="card metric"><span>Macro adherence</span><strong>${round(analysis.adherence)}%</strong><div class="small muted">Completed calories ÷ targets</div></div>
+    <div class="screen progress-screen stack">
+      <section class="hero-card progress-hero">
+        <div>
+          <p class="eyebrow">${tr('progress.title')}</p>
+          <h2>${tr('progress.overall')}: ${round(analysis.adherence)}%</h2>
+          <p class="muted small">${tr('progress.summary')}</p>
+        </div>
+        <div class="progress-hero-meter"><div class="bar"><i style="--value:${overall}%"></i></div><span>${analysis.days} ${tr('progress.daysTracked')}</span></div>
       </section>
 
-      <section class="grid two">
-        <div class="card stack">
-          <div class="card-title-row"><div><h2>Simple summaries</h2><p class="muted small">No diagnosis. These are mechanical summaries of logged values.</p></div></div>
-          <div class="stack-sm">
-            ${analysis.sentences.map((s) => `<div class="info-box small">${escapeHtml(s)}</div>`).join('')}
-          </div>
-          <div class="actions">
-            <button class="secondary-button" data-action="nav" data-view="body">Body data</button>
-            <button class="secondary-button" data-action="nav" data-view="blood">Blood exams</button>
-          </div>
-        </div>
-        <div class="card stack">
-          <h2>Skipped meals</h2>
-          ${analysis.skippedRows.length ? `<div class="table-wrap"><table><thead><tr><th>Meal</th><th>Skipped count</th></tr></thead><tbody>${analysis.skippedRows.map(([slot, count]) => `<tr><td>${slot}</td><td>${count}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">No skipped meals yet.</p>'}
-        </div>
+      <section class="quick-summary-grid">
+        <div class="card metric clean-card"><span>${tr('progress.trackedDays')}</span><strong>${analysis.days}</strong><div class="small muted">${tr('progress.localPlans')}</div></div>
+        <div class="card metric clean-card"><span>${tr('progress.avgCompletedCalories')}</span><strong>${round(analysis.avgCalories)} kcal</strong><div class="small muted">${tr('progress.completionDataDays')}</div></div>
+        <div class="card metric clean-card"><span>${tr('progress.macroAdherence')}</span><strong>${round(analysis.adherence)}%</strong><div class="small muted">${tr('progress.caloriesTargetRatio')}</div></div>
       </section>
 
-      <section class="card stack">
-        <h2>Monthly macro summary</h2>
-        ${analysis.monthRows.length ? `<div class="table-wrap"><table><thead><tr><th>Month</th><th>Days</th><th>Completed kcal avg</th><th>Protein avg</th><th>Carbs avg</th><th>Fat avg</th></tr></thead><tbody>${analysis.monthRows.map((r) => `<tr><td>${r.month}</td><td>${r.days}</td><td>${round(r.calories)}</td><td>${round(r.protein, 1)}g</td><td>${round(r.carbs, 1)}g</td><td>${round(r.fat, 1)}g</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">No historical completion data yet.</p>'}
+      <section class="card clean-card stack-sm">
+        <div class="card-title-row"><div><h2>${tr('progress.details')}</h2><p class="muted small">${tr('progress.explainer')}</p></div></div>
+        <details class="collapsible roomy-details">
+          <summary>${tr('progress.openDetails')}</summary>
+          <div class="stack">
+            <div class="stack-sm">${analysis.sentences.map((sentence) => `<div class="info-box small">${escapeHtml(sentence)}</div>`).join('')}</div>
+            <div class="grid two">
+              <div class="card flat stack-sm"><h3>${tr('progress.skippedMeals')}</h3>${analysis.skippedRows.length ? `<div class="table-wrap"><table><thead><tr><th>${tr('recipe.mealType')}</th><th>${tr('progress.skippedCount')}</th></tr></thead><tbody>${analysis.skippedRows.map(([slot, count]) => `<tr><td>${slot}</td><td>${count}</td></tr>`).join('')}</tbody></table></div>` : `<p class="muted">${tr('progress.noSkipped')}</p>`}</div>
+              <div class="card flat stack-sm"><h3>${tr('progress.bodyHealthData')}</h3><div class="actions"><button class="secondary-button" data-action="nav" data-view="body">Body data</button><button class="secondary-button" data-action="nav" data-view="blood">Blood exams</button></div></div>
+            </div>
+            <section class="card flat stack-sm"><h3>${tr('progress.monthlyMacroSummary')}</h3>${analysis.monthRows.length ? `<div class="table-wrap"><table><thead><tr><th>Month</th><th>Days</th><th>Completed kcal avg</th><th>Protein avg</th><th>Carbs avg</th><th>Fat avg</th></tr></thead><tbody>${analysis.monthRows.map((r) => `<tr><td>${r.month}</td><td>${r.days}</td><td>${round(r.calories)}</td><td>${round(r.protein, 1)}g</td><td>${round(r.carbs, 1)}g</td><td>${round(r.fat, 1)}g</td></tr>`).join('')}</tbody></table></div>` : `<p class="muted">${tr('progress.noHistoricalData')}</p>`}</section>
+          </div>
+        </details>
       </section>
     </div>`;
 }
@@ -2970,7 +3180,7 @@ function __legacy_renderPreferencesForm_1_unused() {
       <label class="field"><span>${tr('settings.language')}</span><select id="pref_language"><option value="en" ${normalizeLanguage(s.language) === 'en' ? 'selected' : ''}>English</option><option value="it" ${normalizeLanguage(s.language) === 'it' ? 'selected' : ''}>Italiano</option></select></label>
       <label class="field"><span>${tr('settings.theme')}</span><select id="pref_theme"><option value="system" ${s.theme === 'system' ? 'selected' : ''}>${tr('settings.themeSystem')}</option><option value="light" ${s.theme === 'light' ? 'selected' : ''}>${tr('settings.themeLight')}</option><option value="dark" ${s.theme === 'dark' ? 'selected' : ''}>${tr('settings.themeDark')}</option></select></label>
       <label class="field"><span>Prep day</span><select id="pref_prepDay">${['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((d) => `<option ${s.prepDay === d ? 'selected' : ''}>${d}</option>`).join('')}</select></label>
-      <label class="field"><span>Lunch mode</span><select id="pref_lunchMode">
+      <label class="field"><span>${tr('plans.lunchMode')}</span><select id="pref_lunchMode">
         <option value="same" ${s.lunchMode === 'same' ? 'selected' : ''}>Same lunch Monday–Friday</option>
         <option value="rotating" ${s.lunchMode === 'rotating' ? 'selected' : ''}>2–3 rotating work lunches</option>
         <option value="baseline" ${s.lunchMode === 'baseline' ? 'selected' : ''}>Baseline lunch</option>
@@ -3197,10 +3407,85 @@ function openMealEditor(date, mealId) {
         ${meal.items.map((item, i) => renderEditMealItem(item, i)).join('')}
       </div>
       <div class="actions">
-        <button class="secondary-button" data-action="add-meal-item-row">Add item</button>
+        <button class="secondary-button" data-action="add-meal-item-row">${tr('common.addItem')}</button>
         <button class="primary-button" data-action="save-meal-edit" data-date="${date}" data-meal-id="${mealId}">Save meal</button>
       </div>
     </div>`);
+}
+
+function openAddMealEditor(date) {
+  const day = findPlan(date);
+  if (!day) return;
+  openModal(tr('meal.addMeal'), html`
+    <div class="stack">
+      <div class="form-grid three">
+        <label class="field"><span>${tr('recipe.name')}</span><input id="newMealName" value="${tr('meal.addMeal')}"></label>
+        <label class="field"><span>${tr('recipe.mealType')}</span><select id="newMealSlot">${MEAL_SLOTS.map((m) => `<option value="${m.slot}">${mealLabel(m.slot)}</option>`).join('')}<option value="Custom meal">Custom meal</option></select></label>
+        <label class="field"><span>${tr('common.time')}</span><input id="newMealTime" type="time" value="12:00"></label>
+      </div>
+      <div class="stack-sm" id="editMealItems">${renderEditMealItem()}</div>
+      <div class="actions">
+        <button class="secondary-button" data-action="add-meal-item-row">${tr('common.addItem')}</button>
+        <button class="primary-button" data-action="save-new-meal" data-date="${date}">${tr('common.save')}</button>
+      </div>
+    </div>`);
+}
+
+async function saveNewMeal(date) {
+  const day = findPlan(date);
+  if (!day) return;
+  const rows = [...document.querySelectorAll('.meal-edit-row')];
+  const items = rows.map((row) => {
+    const name = row.querySelector('.meal-food').value.trim();
+    const qty = Number(row.querySelector('.meal-qty').value || 0);
+    const unit = row.querySelector('.meal-unit').value;
+    const food = lookupFood(name);
+    const normalizedUnit = normalizeUnit(unit, qty, food);
+    const grams = quantityToGrams(qty, normalizedUnit, food);
+    return {
+      id: uuid('item'),
+      foodId: food?.id || null,
+      foodName: food?.name || name,
+      rawName: name,
+      quantity: qty,
+      unit: normalizedUnit,
+      grams,
+      originalGrams: grams,
+      locked: false,
+      notes: '',
+      source: food?.source || 'Manual value required',
+      confidence: food?.confidence || 'unknown',
+    };
+  }).filter((item) => item.foodName && item.quantity > 0);
+  const slot = $('newMealSlot')?.value || 'Custom meal';
+  const meal = {
+    id: uuid('meal'),
+    date,
+    slot,
+    time: $('newMealTime')?.value || '12:00',
+    status: 'planned',
+    locked: false,
+    recipeId: null,
+    recipeName: $('newMealName')?.value.trim() || slot,
+    instructions: [],
+    prepMinutes: 0,
+    cookMinutes: 0,
+    storageNotes: '',
+    alternatives: [],
+    originalItems: deepClone(items),
+    items,
+    notes: '',
+    source: 'manual_meal',
+    adjustments: [{ at: new Date().toISOString(), type: 'manual_add' }],
+  };
+  day.meals.push(meal);
+  day.meals.sort((a, b) => timeToMinutes(a.time || '23:59') - timeToMinutes(b.time || '23:59'));
+  day.updatedAt = new Date().toISOString();
+  await idbPut('plans', day);
+  await loadState();
+  closeModal();
+  render();
+  toast('Meal added.');
 }
 
 function renderEditMealItem(item = {}, i = 0) {
@@ -3752,8 +4037,8 @@ function setupEvents() {
     if (action === 'open-workout-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.workoutSummary'), renderWorkoutDetail(day)); return; }
     if (action === 'open-grocery-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.grocerySummary'), renderGroceryDetail(day)); return; }
     if (action === 'open-prep-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.mealPrepSummary'), renderPrepDetail(day)); return; }
-    if (action === 'open-meal-detail') { if (event.target.closest('button, a, input, select, textarea')) return; openMealDetail(button.dataset.date, button.dataset.mealId); return; }
-    if (action === 'nav') setView(button.dataset.view);
+    if (action === 'open-meal-detail') { openMealDetail(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'nav') { setView(button.dataset.view); return; }
     if (action === 'toggle-meal') await toggleMeal(button.dataset.date, button.dataset.mealId);
     if (action === 'complete-meal') await setMealStatus(button.dataset.date, button.dataset.mealId, 'completed');
     if (action === 'skip-meal') askSkipMeal(button.dataset.date, button.dataset.mealId);
@@ -3761,8 +4046,10 @@ function setupEvents() {
     if (action === 'confirm-skip-only') await skipAndRecalculate(button.dataset.date, button.dataset.mealId, false);
     if (action === 'change-recipe') await changeRecipe(button.dataset.date, button.dataset.mealId);
     if (action === 'edit-meal') openMealEditor(button.dataset.date, button.dataset.mealId);
+    if (action === 'open-add-meal') openAddMealEditor(button.dataset.date);
     if (action === 'add-meal-item-row') $('editMealItems').insertAdjacentHTML('beforeend', renderEditMealItem());
     if (action === 'save-meal-edit') await saveMealEdit(button.dataset.date, button.dataset.mealId);
+    if (action === 'save-new-meal') await saveNewMeal(button.dataset.date);
     if (action === 'apply-workout') await applyWorkout(button.dataset.date);
     if (action === 'generate-week' || action === 'generate-week-from-form') {
       const start = action === 'generate-week-from-form' ? $('weekStart').value : button.dataset.start;
@@ -4500,7 +4787,13 @@ function renderRecipeCards(recipes) {
 
 function renderRecipeCard(recipeRecord) {
   const macros = calcRecipeMacros(recipeRecord);
-  return `<article class="card flat recipe-card" data-recipe-name="${escapeHtml(normalizeText(recipeDisplayName(recipeRecord)))}" data-meal-type="${escapeHtml(recipeRecord.mealType)}"><div class="row between"><div><h3>${escapeHtml(recipeDisplayName(recipeRecord))}</h3><p class="muted small">${mealLabel(recipeRecord.mealType)} · ${totalsText(macros)}</p></div><span>${confidencePill(recipeRecord.confidence)}</span></div><div class="chip-row"><span class="status-pill blue">${escapeHtml(recipeRecord.source || 'recipe')}</span><span class="status-pill">${recipeRecord.ingredients.length} ${tr('recipe.ingredients')}</span></div><div class="actions"><button class="secondary-button" data-action="open-recipe-editor" data-recipe-id="${recipeRecord.id}">${tr('common.edit')}</button><button class="ghost-button" data-action="duplicate-recipe" data-recipe-id="${recipeRecord.id}">${tr('recipe.duplicate')}</button>${recipeRecord.source === 'seed_recipe' ? '' : `<button class="danger-button" data-action="delete-recipe" data-recipe-id="${recipeRecord.id}">${tr('common.delete')}</button>`}</div></article>`;
+  const minutes = [recipeRecord.prepTimeMinutes ? `${recipeRecord.prepTimeMinutes}m prep` : '', recipeRecord.cookTimeMinutes ? `${recipeRecord.cookTimeMinutes}m cook` : ''].filter(Boolean).join(' · ');
+  return `<article class="card flat recipe-card clean-recipe-card" data-recipe-name="${escapeHtml(normalizeText(recipeDisplayName(recipeRecord)))}" data-meal-type="${escapeHtml(recipeRecord.mealType)}">
+    <div class="row between"><div><h3>${escapeHtml(recipeDisplayName(recipeRecord))}</h3><p class="muted small">${mealLabel(recipeRecord.mealType)}${minutes ? ` · ${escapeHtml(minutes)}` : ''}</p></div><span>${confidencePill(recipeRecord.confidence)}</span></div>
+    <div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(macros.calories)} kcal / serving</span><span class="macro-pill">P ${round(macros.protein, 1)}g</span><span class="macro-pill">C ${round(macros.carbs, 1)}g</span><span class="macro-pill">F ${round(macros.fat, 1)}g</span></div>
+    <div class="chip-row"><span class="status-pill blue">${escapeHtml(recipeRecord.source || 'recipe')}</span><span class="status-pill">${recipeRecord.ingredients.length} ${tr('recipe.ingredients')}</span></div>
+    <div class="actions"><button class="secondary-button" data-action="open-recipe-editor" data-recipe-id="${recipeRecord.id}">${tr('common.view')}</button><button class="ghost-button" data-action="open-recipe-editor" data-recipe-id="${recipeRecord.id}">${tr('common.edit')}</button><button class="ghost-button" data-action="duplicate-recipe" data-recipe-id="${recipeRecord.id}">${tr('recipe.duplicate')}</button>${recipeRecord.source === 'seed_recipe' ? '' : `<button class="danger-button" data-action="delete-recipe" data-recipe-id="${recipeRecord.id}">${tr('common.delete')}</button>`}</div>
+  </article>`;
 }
 
 function openRecipeEditor(recipeId = null) {
