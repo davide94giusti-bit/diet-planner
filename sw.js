@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diet-planner-v0.3.3-cloud-sections';
+const CACHE_NAME = 'diet-planner-v0.5.2-modal-scroll-lock';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const APP_SHELL = [
   './app.js',
   './manifest.webmanifest',
   './assets/icon.svg',
+  './assets/vendor/zxing-browser.min.js',
   './assets/icon-192.png',
   './assets/icon-512.png'
 ];
@@ -25,7 +26,31 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
-  if (new URL(request.url).pathname.startsWith('/api/')) return;
+
+  const url = new URL(request.url);
+  if (url.pathname.startsWith('/api/')) return;
+
+  const isAppShellAsset =
+    request.mode === 'navigate' ||
+    url.pathname.endsWith('/index.html') ||
+    url.pathname.endsWith('/app.js') ||
+    url.pathname.endsWith('/styles.css') ||
+    url.pathname.endsWith('/manifest.webmanifest');
+
+  if (isAppShellAsset) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            if (url.origin === self.location.origin) cache.put(request, copy);
+          });
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match('./index.html')))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(request).then((cached) => {
@@ -34,7 +59,7 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            if (new URL(request.url).origin === self.location.origin) cache.put(request, copy);
+            if (url.origin === self.location.origin) cache.put(request, copy);
           });
           return response;
         })
