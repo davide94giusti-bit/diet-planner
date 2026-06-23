@@ -1,0 +1,17 @@
+{
+  "name": "diet-planner-mvp",
+  "version": "0.3.4-ui-redesign",
+  "private": true,
+  "description": "Diet Planner PWA with backend-managed nutrition provider integrations.",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "check": "node --check app.js && node --check backend/server.js && node --check backend/db.js && node --check backend/storage.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pg": "^8.22.0"
+  }
+}
