@@ -1,4 +1,4 @@
-const APP_VERSION = '0.3.3-cloud-sections';
+const APP_VERSION = '0.4.0-daily-os';
 const DB_NAME = 'diet-planner-local-db';
 const DB_VERSION = 3;
 const STORES = ['settings', 'macroTargets', 'foods', 'baseline', 'plans', 'body', 'blood', 'profiles', 'nutritionLookupCache', 'dashboardPreferences', 'recipes', 'recipeAlternatives', 'nutritionProviders'];
@@ -737,6 +737,223 @@ Object.assign(I18N.it, {
   'progress.noHistoricalData': 'Nessun dato storico completato.',
 });
 
+
+Object.assign(I18N.en, {
+  'nav.dashboardShort': 'Today',
+  'nav.meals': 'Meals',
+  'nav.mealsShort': 'Meals',
+  'nav.foods': 'Foods',
+  'nav.foodsShort': 'Foods',
+  'nav.mealPlans': 'Meal Plans',
+  'nav.mealPlansShort': 'Plan',
+  'nav.settingsShort': 'Settings',
+  'page.meals': 'Meals',
+  'page.foods': 'Foods',
+  'common.today': 'Today',
+  'common.view': 'View',
+  'common.addItem': 'Add item',
+  'common.changed': 'Changed',
+  'common.apply': 'Apply',
+  'common.reason': 'Reason',
+  'dashboard.todayFocus': 'Eat this next',
+  'dashboard.primarySummary': 'One tap to follow the plan, recover a skipped meal, or swap food without losing the day.',
+  'dashboard.planToday': 'Generate today',
+  'dashboard.nextMeal': 'Next meal',
+  'dashboard.nextMealDone': 'All meals handled',
+  'dashboard.remainingToday': 'Remaining today',
+  'dashboard.remainingHint': 'Based on eaten meals versus today\'s target.',
+  'dashboard.projectedToday': 'Projected today',
+  'dashboard.consumedToday': 'Consumed today',
+  'dashboard.goalMode': 'Goal',
+  'dashboard.workoutStatus': 'Training status',
+  'dashboard.mealsHint': 'Quick status for the whole day.',
+  'dashboard.optimizationNote': 'Some nutrition data needs review, but the daily plan remains usable.',
+  'dashboard.optimizerDetails': 'Show technical details',
+  'dashboard.eveningSummary': 'End-of-day summary',
+  'dashboard.tomorrowSuggestion': 'Tomorrow suggestion',
+  'dashboard.skippedTomorrowSuggestion': '{meal} was skipped. Add an easier backup option for that slot tomorrow.',
+  'dashboard.bestMacroHit': 'Best macro hit',
+  'dashboard.largestDeviation': 'Largest deviation',
+  'meal.remaining': 'Remaining',
+  'meal.viewDetails': 'Details',
+  'meal.foodPreview': 'Foods',
+  'meal.addMeal': 'Add meal',
+  'meal.ateThis': 'I ate this',
+  'meal.skippedThis': 'I skipped this',
+  'meal.ateDifferent': 'I ate something different',
+  'meal.swapMeal': 'Swap meal',
+  'meal.swapFood': 'Swap food',
+  'meal.makeFaster': 'Make faster',
+  'meal.makeCheaper': 'Make cheaper',
+  'meal.lowerFatPreWorkout': 'Lower fat pre-workout',
+  'meal.eatingOut': 'Eating out',
+  'meal.sourceRecipe': 'Recipe/source',
+  'meal.confidenceNote': 'Confidence',
+  'flow.ateDifferentTitle': 'What did you eat instead?',
+  'flow.foodType': 'Entry type',
+  'flow.savedFood': 'Saved food',
+  'flow.savedRecipe': 'Saved recipe',
+  'flow.barcodeProduct': 'Barcode/product',
+  'flow.manualItem': 'Manual item',
+  'flow.restaurantEstimate': 'Restaurant estimate',
+  'flow.foodOrBarcode': 'Food name or barcode',
+  'flow.quantity': 'Quantity',
+  'flow.unit': 'Unit',
+  'flow.manualMacros': 'Manual macros for the quantity entered',
+  'flow.saveCustom': 'Save as custom food',
+  'flow.adjustRemaining': 'Adjust remaining meals to compensate',
+  'flow.markEatenOnly': 'Mark this meal as eaten only',
+  'flow.preview': 'Macro preview',
+  'flow.applyDifferent': 'Save and update day',
+  'flow.resolveFood': 'Search/import food first',
+  'swap.title': 'Swap meal',
+  'swap.subtitle': 'Three alternatives close to the original meal macros.',
+  'swap.apply': 'Apply swap',
+  'swap.noAlternatives': 'No suitable alternatives yet. Add more recipes for this meal type.',
+  'swap.macroDelta': 'Macro difference',
+  'swap.reason.similar': 'similar macros',
+  'swap.reason.faster': 'faster prep',
+  'swap.reason.cheaper': 'staple-food friendly',
+  'swap.reason.preWorkout': 'lower fat before training',
+  'swap.reason.eatingOut': 'works as an eating-out estimate',
+  'swap.foodTitle': 'Swap food',
+  'swap.newQuantity': 'New quantity',
+  'swap.sameRole': 'Same food role',
+  'recalc.title': 'Adjusted remaining meals',
+  'recalc.summarySkipped': '{meal} skipped. I adjusted remaining meals toward today\'s target.',
+  'recalc.summaryChanged': '{meal} changed. I adjusted the rest of the day toward the target.',
+  'recalc.closeEnough': 'I adjusted the remaining meals as close as possible.',
+  'recalc.before': 'Before',
+  'recalc.after': 'After',
+  'recalc.projected': 'New projected daily totals',
+  'foods.title': 'Foods',
+  'foods.subtitle': 'Custom foods, curated foods, and imported provider products stay separated.',
+  'foods.custom': 'Custom foods',
+  'foods.curated': 'Curated foods',
+  'foods.provider': 'Provider/imported foods',
+  'foods.noCustom': 'No custom foods yet.',
+  'foods.noProvider': 'No imported provider foods yet.',
+  'foods.searchProvider': 'Search / barcode',
+  'plans.currentWeek': 'Current week',
+  'plans.subtitle': 'Generate meals from your baseline and recipes, then execute day by day.',
+  'plans.create': 'Generate plan',
+  'plans.startDate': 'Start date',
+  'plans.endDate': 'End date',
+  'plans.lunchMode': 'Lunch mode',
+  'plans.noPlans': 'No plans in this week',
+  'plans.noPlansHelp': 'Generate a plan to see daily meals.',
+  'progress.recommendation': 'Recommendation',
+  'progress.notEnoughData': 'Track more meals and weight entries before changing targets.',
+});
+
+Object.assign(I18N.it, {
+  'nav.dashboardShort': 'Oggi',
+  'nav.meals': 'Pasti',
+  'nav.mealsShort': 'Pasti',
+  'nav.foods': 'Alimenti',
+  'nav.foodsShort': 'Cibi',
+  'nav.mealPlans': 'Piani pasti',
+  'nav.mealPlansShort': 'Piano',
+  'nav.settingsShort': 'Impost.',
+  'page.meals': 'Pasti',
+  'page.foods': 'Alimenti',
+  'common.today': 'Oggi',
+  'common.view': 'Vedi',
+  'common.addItem': 'Aggiungi alimento',
+  'common.changed': 'Modificato',
+  'common.apply': 'Applica',
+  'common.reason': 'Motivo',
+  'dashboard.todayFocus': 'Mangia questo ora',
+  'dashboard.primarySummary': 'Un tap per seguire il piano, recuperare un pasto saltato o sostituire senza rovinare la giornata.',
+  'dashboard.planToday': 'Genera oggi',
+  'dashboard.nextMeal': 'Prossimo pasto',
+  'dashboard.nextMealDone': 'Tutti i pasti gestiti',
+  'dashboard.remainingToday': 'Rimanenti oggi',
+  'dashboard.remainingHint': 'Basato sui pasti mangiati rispetto al target di oggi.',
+  'dashboard.projectedToday': 'Previsti oggi',
+  'dashboard.consumedToday': 'Consumati oggi',
+  'dashboard.goalMode': 'Obiettivo',
+  'dashboard.workoutStatus': 'Stato allenamento',
+  'dashboard.mealsHint': 'Stato rapido di tutta la giornata.',
+  'dashboard.optimizationNote': 'Alcuni dati nutrizionali richiedono revisione, ma il piano resta utilizzabile.',
+  'dashboard.optimizerDetails': 'Mostra dettagli tecnici',
+  'dashboard.eveningSummary': 'Riepilogo fine giornata',
+  'dashboard.tomorrowSuggestion': 'Suggerimento per domani',
+  'dashboard.skippedTomorrowSuggestion': '{meal} è stato saltato. Aggiungi per domani un backup più facile per quello slot.',
+  'dashboard.bestMacroHit': 'Macro più precisa',
+  'dashboard.largestDeviation': 'Scostamento maggiore',
+  'meal.remaining': 'Rimanenti',
+  'meal.viewDetails': 'Dettagli',
+  'meal.foodPreview': 'Alimenti',
+  'meal.addMeal': 'Aggiungi pasto',
+  'meal.ateThis': 'L\'ho mangiato',
+  'meal.skippedThis': 'L\'ho saltato',
+  'meal.ateDifferent': 'Ho mangiato altro',
+  'meal.swapMeal': 'Sostituisci pasto',
+  'meal.swapFood': 'Sostituisci alimento',
+  'meal.makeFaster': 'Rendi più veloce',
+  'meal.makeCheaper': 'Rendi più economico',
+  'meal.lowerFatPreWorkout': 'Meno grassi pre-workout',
+  'meal.eatingOut': 'Mangio fuori',
+  'meal.sourceRecipe': 'Ricetta/fonte',
+  'meal.confidenceNote': 'Affidabilità',
+  'flow.ateDifferentTitle': 'Cosa hai mangiato invece?',
+  'flow.foodType': 'Tipo inserimento',
+  'flow.savedFood': 'Alimento salvato',
+  'flow.savedRecipe': 'Ricetta salvata',
+  'flow.barcodeProduct': 'Barcode/prodotto',
+  'flow.manualItem': 'Inserimento manuale',
+  'flow.restaurantEstimate': 'Stima ristorante',
+  'flow.foodOrBarcode': 'Nome alimento o barcode',
+  'flow.quantity': 'Quantità',
+  'flow.unit': 'Unità',
+  'flow.manualMacros': 'Macro manuali per la quantità inserita',
+  'flow.saveCustom': 'Salva come alimento personalizzato',
+  'flow.adjustRemaining': 'Regola i pasti rimanenti per compensare',
+  'flow.markEatenOnly': 'Segna solo come mangiato',
+  'flow.preview': 'Anteprima macro',
+  'flow.applyDifferent': 'Salva e aggiorna giornata',
+  'flow.resolveFood': 'Cerca/importa prima l\'alimento',
+  'swap.title': 'Sostituisci pasto',
+  'swap.subtitle': 'Tre alternative vicine ai macro del pasto originale.',
+  'swap.apply': 'Applica sostituzione',
+  'swap.noAlternatives': 'Nessuna alternativa adatta. Aggiungi altre ricette per questo tipo di pasto.',
+  'swap.macroDelta': 'Differenza macro',
+  'swap.reason.similar': 'macro simili',
+  'swap.reason.faster': 'preparazione più veloce',
+  'swap.reason.cheaper': 'usa alimenti base',
+  'swap.reason.preWorkout': 'meno grassi prima dell\'allenamento',
+  'swap.reason.eatingOut': 'adatto come stima fuori casa',
+  'swap.foodTitle': 'Sostituisci alimento',
+  'swap.newQuantity': 'Nuova quantità',
+  'swap.sameRole': 'Stesso ruolo alimentare',
+  'recalc.title': 'Pasti rimanenti regolati',
+  'recalc.summarySkipped': '{meal} saltato. Ho regolato i pasti rimanenti verso il target di oggi.',
+  'recalc.summaryChanged': '{meal} modificato. Ho regolato il resto della giornata verso il target.',
+  'recalc.closeEnough': 'Ho regolato i pasti rimanenti il più vicino possibile.',
+  'recalc.before': 'Prima',
+  'recalc.after': 'Dopo',
+  'recalc.projected': 'Nuovi totali giornalieri previsti',
+  'foods.title': 'Alimenti',
+  'foods.subtitle': 'Alimenti personalizzati, curati e importati dai provider restano separati.',
+  'foods.custom': 'Alimenti personalizzati',
+  'foods.curated': 'Alimenti curati',
+  'foods.provider': 'Alimenti provider/importati',
+  'foods.noCustom': 'Nessun alimento personalizzato.',
+  'foods.noProvider': 'Nessun alimento importato.',
+  'foods.searchProvider': 'Cerca / barcode',
+  'plans.currentWeek': 'Settimana corrente',
+  'plans.subtitle': 'Genera pasti da dieta base e ricette, poi esegui giorno per giorno.',
+  'plans.create': 'Genera piano',
+  'plans.startDate': 'Data inizio',
+  'plans.endDate': 'Data fine',
+  'plans.lunchMode': 'Modalità pranzo',
+  'plans.noPlans': 'Nessun piano in questa settimana',
+  'plans.noPlansHelp': 'Genera un piano per vedere i pasti giornalieri.',
+  'progress.recommendation': 'Raccomandazione',
+  'progress.notEnoughData': 'Traccia più pasti e peso prima di modificare i target.',
+});
+
 function getCloudSession() {
   try { return JSON.parse(localStorage.getItem(CLOUD_SESSION_KEY) || 'null'); } catch { return null; }
 }
@@ -1439,15 +1656,29 @@ function calcDayProjected(day) {
 
 function calcDayCompleted(day) {
   return (day?.meals || [])
-    .filter((m) => m.status === 'completed')
+    .filter((m) => m.status === 'completed' || m.status === 'changed')
     .reduce((acc, meal) => addMacros(acc, calcMealMacros(meal)), emptyMacros());
 }
+
 
 function calcDaySkipped(day) {
   return (day?.meals || [])
     .filter((m) => m.status === 'skipped')
     .reduce((acc, meal) => addMacros(acc, calcMealMacros(meal)), emptyMacros());
 }
+
+function clampRemainingMacros(target, completed) {
+  const diff = subtractMacros(target, completed);
+  return { calories: Math.max(0, diff.calories || 0), protein: Math.max(0, diff.protein || 0), carbs: Math.max(0, diff.carbs || 0), fat: Math.max(0, diff.fat || 0) };
+}
+
+function isMealDone(meal) { return meal?.status === 'completed' || meal?.status === 'changed'; }
+function mealStatusText(meal) { if (meal?.status === 'completed') return tr('common.completed'); if (meal?.status === 'changed') return tr('common.changed'); if (meal?.status === 'skipped') return tr('common.skipped'); return tr('common.planned'); }
+function mealStatusClass(meal) { if (meal?.status === 'completed' || meal?.status === 'changed') return 'completed'; if (meal?.status === 'skipped') return 'skipped'; return ''; }
+function mealConfidence(meal) { const items = meal?.items || []; if (!items.length) return 'unknown'; if (items.some((item) => item.confidence === 'unknown')) return 'unknown'; if (items.some((item) => item.confidence === 'low')) return 'low'; if (items.some((item) => item.confidence === 'medium')) return 'medium'; return 'high'; }
+function macroDistance(a, b) { return Math.abs((a.calories || 0) - (b.calories || 0)) + Math.abs((a.protein || 0) - (b.protein || 0)) * 15 + Math.abs((a.carbs || 0) - (b.carbs || 0)) * 6 + Math.abs((a.fat || 0) - (b.fat || 0)) * 9; }
+function foodRole(food) { if (!food) return 'snack'; const p = Number(food.proteinPer100g) || 0; const c = Number(food.carbsPer100g) || 0; const f = Number(food.fatPer100g) || 0; const n = normalizeText(`${food.name} ${food.department || ''} ${food.category || ''}`); if (n.includes('vegetable') || n.includes('verdure') || n.includes('fruit')) return 'vegetable'; if (p >= c * 0.7 && p >= f * 1.6 && p >= 8) return 'protein'; if (c >= p * 1.5 && c >= f * 1.8 && c >= 12) return 'carb'; if (f >= p * 0.8 && f >= c * 0.35 && f >= 8) return 'fat'; return 'snack'; }
+function calmOptimizationWarning(warning) { return String(warning || '').replace('Not enough known nutrition data to optimize this plan. Add or correct food nutrition values.', tr('macro.needsData')).replace('Closest practical adjustment still differs from target:', tr('recalc.closeEnough')); }
 
 function getTargetForDay(dayOrDate) {
   const day = typeof dayOrDate === 'string' ? findPlan(dayOrDate) : dayOrDate;
@@ -2119,7 +2350,7 @@ async function __legacy_generatePlans_1_unused(start, end, includeWeekends, lunc
     }
     const day = makeDayPlan(dates[i], lunchOverride);
     scaleDayToTarget(day, getTargetForDay(day));
-    await idbPut('plans', day);
+    await persistPlan(day);
     created.push(day);
   }
   await loadState();
@@ -2329,62 +2560,57 @@ function renderToday() {
   const target = getTargetForDay(day);
   const completed = calcDayCompleted(day);
   const projected = calcDayProjected(day);
+  const remaining = clampRemainingMacros(target, completed);
   const warnings = [...(day.generationWarnings || []), ...(day.recalculationLog?.slice(-1)[0]?.warnings || [])].filter(Boolean);
   const status = macroStatus(target, projected);
-  const totalMeals = day.meals.length;
-  const completedMeals = day.meals.filter((m) => m.status === 'completed').length;
-  const plannedMeals = day.meals.filter((m) => m.status === 'planned').length;
-  const overallPct = totalMeals ? Math.round((completedMeals / totalMeals) * 100) : 0;
-  const nextMeal = day.meals.find((m) => m.status === 'planned') || day.meals[0];
+  const nextMeal = day.meals.find((m) => m.status === 'planned') || null;
   return html`
-    <div class="screen dashboard-screen">
-      <section class="hero-card dashboard-hero">
+    <div class="screen dashboard-screen daily-os-screen">
+      <section class="hero-card dashboard-hero daily-hero">
         <div class="hero-copy">
           <p class="eyebrow">${formatDate(date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           <h2>${tr('dashboard.todayFocus')}</h2>
           <p class="muted small">${tr('dashboard.primarySummary')}</p>
+          <div class="chip-row"><span class="status-pill blue">${tr('dashboard.goalMode')}: ${escapeHtml(day.goalMode || state.settings.goalMode || 'custom')}</span><span class="status-pill ${day.workout?.isWorkout ? 'good' : ''}">${day.workout?.isWorkout ? tr('dashboard.workoutDay') : tr('dashboard.restDay')}</span></div>
         </div>
-        <div class="hero-action"><button class="primary-button" data-action="regenerate-day" data-date="${day.date}">${tr('dashboard.planToday')}</button></div>
+        <div class="daily-hero-metrics"><span>${tr('dashboard.projectedToday')}</span><strong>${round(projected.calories)} / ${round(target.calories)} kcal</strong><span class="status-pill ${status.cls}">${status.label}</span></div>
       </section>
-
-      <section class="quick-summary-grid">
-        ${dashboardCard('open-macro-detail', tr('macro.dailyTarget'), `${round(completed.calories)} / ${round(target.calories)} kcal<br><span class="muted">P ${round(completed.protein, 1)}/${round(target.protein, 1)}g · C ${round(completed.carbs, 1)}/${round(target.carbs, 1)}g · F ${round(completed.fat, 1)}/${round(target.fat, 1)}g</span>`, `<span class="status-pill ${status.cls}">${status.label}</span>`)}
-        ${dashboardCard('open-progress-detail', tr('progress.title'), `${tr('progress.overall')}: <span class="inline-bar"><i style="--value:${overallPct}%"></i></span> ${overallPct}%<br><span class="muted">${tr('progress.completedMeals', { completed: completedMeals, total: totalMeals })}</span>`, '')}
-        ${dashboardCard('nav', tr('nav.meals'), `${plannedMeals ? `${plannedMeals} ${tr('meal.remaining').toLowerCase()}` : tr('common.completed')}<br><span class="muted">${nextMeal ? `${mealLabel(nextMeal.slot)} · ${round(calcMealMacros(nextMeal).calories)} kcal` : '—'}</span>`, '', 'dashboard-card-route', 'meals')}
-      </section>
-
-      ${warnings.length ? `<section class="soft-note"><span>${tr('dashboard.optimizationNote')}</span><details class="collapsible"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="small muted">${warnings.map(escapeHtml).join('<br>')}</div></details></section>` : ''}
-
-      <section class="card stack meal-checklist-card clean-card">
-        <div class="card-title-row compact">
-          <div>
-            <h2>${tr('dashboard.mealChecklist')}</h2>
-            <p class="muted small">${tr('dashboard.mealsHint')}</p>
-          </div>
-          <button class="secondary-button" data-action="nav" data-view="meals">${tr('common.open')}</button>
-        </div>
-        <div class="meal-checklist-list">${day.meals.map((meal) => renderMealChecklistRow(day, meal)).join('')}</div>
-      </section>
+      ${renderNextMealCard(day, nextMeal)}
+      ${renderRemainingMacroPanel(target, completed, remaining)}
+      ${warnings.length ? `<section class="soft-note"><span>${tr('dashboard.optimizationNote')}</span><details class="collapsible"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="small muted">${warnings.map(calmOptimizationWarning).map(escapeHtml).join('<br>')}</div></details></section>` : ''}
+      <section class="card stack meal-checklist-card clean-card"><div class="card-title-row compact"><div><h2>${tr('dashboard.mealChecklist')}</h2><p class="muted small">${tr('dashboard.mealsHint')}</p></div><button class="secondary-button" data-action="nav" data-view="meals">${tr('common.open')}</button></div><div class="meal-checklist-list">${day.meals.map((meal) => renderMealChecklistRow(day, meal)).join('')}</div></section>
+      ${renderEveningSummary(day, target, completed, projected)}
     </div>`;
+}
+
+function renderNextMealCard(day, meal) {
+  if (!meal) return `<section class="card clean-card next-meal-card done"><p class="eyebrow">${tr('dashboard.nextMeal')}</p><h2>${tr('dashboard.nextMealDone')}</h2><p class="muted small">${totalsText(calcDayCompleted(day))}</p></section>`;
+  const macros = calcMealMacros(meal);
+  const foods = meal.items || [];
+  return html`<section class="card clean-card next-meal-card"><div class="next-meal-header"><div><p class="eyebrow">${tr('dashboard.nextMeal')}</p><h2>${escapeHtml(mealLabel(meal.slot))}</h2><p class="muted small">${escapeHtml(meal.time || '')} · ${escapeHtml(meal.recipeName || tr('meal.recipeViewer'))}</p></div>${confidencePill(mealConfidence(meal))}</div><div class="next-meal-foods">${foods.map((item) => `<div><strong>${escapeHtml(item.foodName)}</strong><span>${displayQuantity(item)}</span></div>`).join('') || `<p class="muted small">${tr('meal.noFoods')}</p>`}</div><div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(macros.calories)} kcal</span><span class="macro-pill">P ${round(macros.protein, 1)}g</span><span class="macro-pill">C ${round(macros.carbs, 1)}g</span><span class="macro-pill">F ${round(macros.fat, 1)}g</span></div><div class="actions next-meal-actions"><button class="primary-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateThis')}</button><button class="secondary-button" data-action="open-ate-different" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateDifferent')}</button><button class="ghost-button" data-action="skip-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.skippedThis')}</button><button class="ghost-button" data-action="open-swap-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.swapMeal')}</button><button class="ghost-button" data-action="edit-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.edit')}</button></div></section>`;
+}
+
+function renderRemainingMacroPanel(target, completed, remaining) {
+  const rows = [[tr('macro.calories'), remaining.calories, target.calories, 'kcal'], [tr('macro.protein'), remaining.protein, target.protein, 'g'], [tr('macro.carbs'), remaining.carbs, target.carbs, 'g'], [tr('macro.fat'), remaining.fat, target.fat, 'g']];
+  return html`<section class="card clean-card remaining-panel"><div class="card-title-row compact"><div><h2>${tr('dashboard.remainingToday')}</h2><p class="muted small">${tr('dashboard.remainingHint')}</p></div><span class="status-pill blue">${tr('dashboard.consumedToday')}: ${round(completed.calories)} kcal</span></div><div class="remaining-grid">${rows.map(([label, value, goal, unit]) => { const consumed = Math.max(0, (goal || 0) - (value || 0)); const pct = goal ? clamp((consumed / goal) * 100, 0, 125) : 0; return `<div class="remaining-macro"><div class="row between"><span>${escapeHtml(label)}</span><strong>${round(value, unit === 'kcal' ? 0 : 1)} ${unit}</strong></div><div class="bar"><i style="--value:${pct}%"></i></div></div>`; }).join('')}</div></section>`;
+}
+
+function renderEveningSummary(day, target, completed, projected) {
+  const skipped = day.meals.filter((m) => m.status === 'skipped');
+  const diff = subtractMacros(projected, target);
+  const deltas = [[tr('macro.calories'), Math.abs(diff.calories || 0), `${round(diff.calories)} kcal`], [tr('macro.protein'), Math.abs(diff.protein || 0), `${round(diff.protein, 1)} g`], [tr('macro.carbs'), Math.abs(diff.carbs || 0), `${round(diff.carbs, 1)} g`], [tr('macro.fat'), Math.abs(diff.fat || 0), `${round(diff.fat, 1)} g`]].sort((a, b) => a[1] - b[1]);
+  const suggestion = skipped.length ? tr('dashboard.skippedTomorrowSuggestion', { meal: mealLabel(skipped[0].slot) }) : tr('progress.notEnoughData');
+  return html`<section class="card clean-card evening-summary"><details class="collapsible"><summary><strong>${tr('dashboard.eveningSummary')}</strong><span class="muted small">${totalsText(completed)}</span></summary><div class="grid three"><div class="card flat"><h3>${tr('macro.target')}</h3><p>${totalsText(target)}</p></div><div class="card flat"><h3>${tr('macro.consumed')}</h3><p>${totalsText(completed)}</p></div><div class="card flat"><h3>${tr('macro.projected')}</h3><p>${totalsText(projected)}</p></div></div><div class="grid two"><div class="card flat"><h3>${tr('dashboard.bestMacroHit')}</h3><p>${escapeHtml(deltas[0][0])}: ${escapeHtml(deltas[0][2])}</p></div><div class="card flat"><h3>${tr('dashboard.largestDeviation')}</h3><p>${escapeHtml(deltas[deltas.length - 1][0])}: ${escapeHtml(deltas[deltas.length - 1][2])}</p></div></div><div class="info-box small"><strong>${tr('dashboard.tomorrowSuggestion')}:</strong> ${escapeHtml(suggestion)}</div></details></section>`;
 }
 
 function renderMealChecklistRow(day, meal) {
   const macros = calcMealMacros(meal);
-  const statusClass = meal.status === 'completed' ? 'completed' : meal.status === 'skipped' ? 'skipped' : '';
-  const statusText = meal.status === 'completed' ? tr('common.completed') : meal.status === 'skipped' ? tr('common.skipped') : tr('common.planned');
-  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'skipped' ? '×' : '';
+  const statusClass = mealStatusClass(meal);
+  const statusText = mealStatusText(meal);
+  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'changed' ? '↺' : meal.status === 'skipped' ? '×' : '';
   const preview = (meal.items || []).slice(0, 2).map((item) => item.foodName).join(', ') || tr('meal.noFoods');
   const extra = (meal.items || []).length > 2 ? ` +${(meal.items || []).length - 2}` : '';
-  return html`
-    <article class="meal-check-row ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">
-      <button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button>
-      <div class="meal-check-copy">
-        <strong>${escapeHtml(mealLabel(meal.slot))}</strong>
-        <span>${escapeHtml(meal.time || '')} · ${escapeHtml(preview)}${extra}</span>
-      </div>
-      <div class="meal-check-metrics"><strong>${round(macros.calories)} kcal</strong><span>P ${round(macros.protein, 1)}g</span></div>
-      <span class="status-pill ${meal.status === 'completed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span>
-    </article>`;
+  return html`<article class="meal-check-row ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}"><button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button><div class="meal-check-copy"><strong>${escapeHtml(mealLabel(meal.slot))}</strong><span>${escapeHtml(meal.time || '')} · ${escapeHtml(preview)}${extra}</span></div><div class="meal-check-metrics"><strong>${round(macros.calories)} kcal</strong><span>P ${round(macros.protein, 1)}g</span></div><span class="status-pill ${meal.status === 'completed' || meal.status === 'changed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span></article>`;
 }
 
 function dashboardCard(action, title, body, badge = '', extraClass = '', view = '') {
@@ -2466,39 +2692,12 @@ function renderWorkoutControls(day) {
 
 function renderMealCard(day, meal) {
   const macros = calcMealMacros(meal);
-  const statusClass = meal.status === 'completed' ? 'completed' : meal.status === 'skipped' ? 'skipped' : '';
-  const statusText = meal.status === 'completed' ? tr('common.completed') : meal.status === 'skipped' ? tr('common.skipped') : tr('common.planned');
-  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'skipped' ? '×' : '';
+  const statusClass = mealStatusClass(meal);
+  const statusText = mealStatusText(meal);
+  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'changed' ? '↺' : meal.status === 'skipped' ? '×' : '';
   const foods = meal.items || [];
   const preview = foods.slice(0, 4);
-  return html`
-    <article class="meal-card ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}" tabindex="0">
-      <div class="meal-main clean-meal-main">
-        <button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button>
-        <div class="meal-summary-copy">
-          <div class="row between no-wrap">
-            <div>
-              <h3>${escapeHtml(mealLabel(meal.slot))}</h3>
-              <div class="small muted">${escapeHtml(meal.time || '')} · ${escapeHtml(meal.recipeName || 'Meal')}</div>
-            </div>
-            <span class="status-pill ${meal.status === 'completed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span>
-          </div>
-          <div class="macro-pills macro-pills-prominent">
-            <span class="macro-pill">${round(macros.calories)} kcal</span>
-            <span class="macro-pill">P ${round(macros.protein, 1)}g</span>
-            <span class="macro-pill">C ${round(macros.carbs, 1)}g</span>
-            <span class="macro-pill">F ${round(macros.fat, 1)}g</span>
-          </div>
-          <div class="food-preview-line"><span class="label">${tr('meal.foodPreview')}</span>${preview.map((item) => `<span>${escapeHtml(item.foodName)} · ${displayQuantity(item)}</span>`).join('') || `<span>${tr('meal.noFoods')}</span>`}${foods.length > preview.length ? `<span>+${foods.length - preview.length}</span>` : ''}</div>
-        </div>
-      </div>
-      <div class="actions meal-actions-clean">
-        <button class="secondary-button" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.viewDetails')}</button>
-        <button class="ghost-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.completed')}</button>
-        <button class="ghost-button" data-action="skip-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.skipped')}</button>
-        <button class="ghost-button" data-action="edit-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.edit')}</button>
-      </div>
-    </article>`;
+  return html`<article class="meal-card ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}" tabindex="0"><div class="meal-main clean-meal-main"><button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button><div class="meal-summary-copy"><div class="row between no-wrap"><div><h3>${escapeHtml(mealLabel(meal.slot))}</h3><div class="small muted">${escapeHtml(meal.time || '')} · ${escapeHtml(meal.recipeName || 'Meal')}</div></div><span class="status-pill ${meal.status === 'completed' || meal.status === 'changed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span></div><div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(macros.calories)} kcal</span><span class="macro-pill">P ${round(macros.protein, 1)}g</span><span class="macro-pill">C ${round(macros.carbs, 1)}g</span><span class="macro-pill">F ${round(macros.fat, 1)}g</span></div><div class="food-preview-line"><span class="label">${tr('meal.foodPreview')}</span>${preview.map((item) => `<span>${escapeHtml(item.foodName)} · ${displayQuantity(item)}</span>`).join('') || `<span>${tr('meal.noFoods')}</span>`}${foods.length > preview.length ? `<span>+${foods.length - preview.length}</span>` : ''}</div></div></div><div class="actions meal-actions-clean"><button class="secondary-button" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.viewDetails')}</button><button class="ghost-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateThis')}</button><button class="ghost-button" data-action="open-ate-different" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateDifferent')}</button><button class="ghost-button" data-action="open-swap-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.swapMeal')}</button></div></article>`;
 }
 
 function renderMeals() {
@@ -3254,7 +3453,7 @@ async function toggleMeal(date, mealId) {
   if (!meal) return;
   meal.status = meal.status === 'completed' ? 'planned' : 'completed';
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
 }
@@ -3265,7 +3464,7 @@ async function setMealStatus(date, mealId, status) {
   if (!meal) return;
   meal.status = status;
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
 }
@@ -3291,16 +3490,16 @@ async function skipAndRecalculate(date, mealId, recalc = true) {
   if (!meal) return;
   meal.status = 'skipped';
   let comparison = null;
-  if (recalc) comparison = recalcRemainingMeals(day);
+  if (recalc) comparison = recalcRemainingMeals(day, { type: 'skipped', mealLabel: mealLabel(meal.slot) });
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   closeModal();
   render();
   if (comparison) showRecalcComparison(comparison);
 }
 
-function recalcRemainingMeals(day) {
+function recalcRemainingMeals(day, context = {}) {
   const target = getTargetForDay(day);
   const completed = calcDayCompleted(day);
   const remainingTarget = subtractMacros(target, completed);
@@ -3313,27 +3512,16 @@ function recalcRemainingMeals(day) {
   const result = scaleMealsToTarget(remainingMeals, remainingTarget);
   const after = remainingMeals.map((m) => ({ slot: m.slot, macros: calcMealMacros(m), items: m.items.map((i) => ({ name: i.foodName, qty: displayQuantity(i) })) }));
   const projected = calcDayProjected(day);
-  const comparison = { date: day.date, remainingTarget, before, after, projected, target, warnings: result.warnings };
+  const comparison = { date: day.date, remainingTarget, before, after, projected, target, warnings: result.warnings, context };
   day.recalculationLog ||= [];
-  day.recalculationLog.push({ at: new Date().toISOString(), skippedMealHandled: true, projected, warnings: result.warnings });
+  day.recalculationLog.push({ at: new Date().toISOString(), eventType: context.type || 'recalculation', projected, warnings: result.warnings });
   return comparison;
 }
 
 function showRecalcComparison(c) {
-  openModal('Remaining meals recalculated', html`
-    <div class="stack">
-      <div class="info-box small">To stay close to your daily targets, the app adjusted remaining uncompleted meals. If the target cannot be reached within portion limits, the closest practical result is shown.</div>
-      ${c.warnings.length ? `<div class="warning-box small">${c.warnings.map(escapeHtml).join('<br>')}</div>` : ''}
-      <div class="grid two">
-        <div class="card flat stack-sm"><h3>Before</h3>${renderMiniMealList(c.before)}</div>
-        <div class="card flat stack-sm"><h3>After</h3>${renderMiniMealList(c.after)}</div>
-      </div>
-      <div class="card flat stack-sm">
-        <h3>New projected daily totals</h3>
-        <div>${totalsText(c.projected)}</div>
-        ${macroDiffHtml(c.projected, c.target)}
-      </div>
-    </div>`);
+  const meal = c.context?.mealLabel || tr('meal.recipeViewer');
+  const summaryKey = c.context?.type === 'changed' ? 'recalc.summaryChanged' : 'recalc.summarySkipped';
+  openModal(tr('recalc.title'), html`<div class="stack"><div class="info-box small">${tr(summaryKey, { meal })}</div>${c.warnings.length ? `<details class="collapsible warning-details"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="warning-box small">${c.warnings.map(calmOptimizationWarning).map(escapeHtml).join('<br>')}</div></details>` : ''}<div class="grid two"><div class="card flat stack-sm"><h3>${tr('recalc.before')}</h3>${renderMiniMealList(c.before)}</div><div class="card flat stack-sm"><h3>${tr('recalc.after')}</h3>${renderMiniMealList(c.after)}</div></div><div class="card flat stack-sm"><h3>${tr('recalc.projected')}</h3><div>${totalsText(c.projected)}</div>${macroDiffHtml(c.projected, c.target)}</div></div>`);
 }
 
 function renderMiniMealList(rows) {
@@ -3368,7 +3556,7 @@ async function __legacy_changeRecipe_1_unused(date, mealId) {
   selected.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'recipe_change', from: original.recipeName, to: selected.recipeName }];
   day.meals[idx] = selected;
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   openModal('Recipe changed', html`
@@ -3394,6 +3582,101 @@ function __legacy_openMealDetail_1_unused(date, mealId) {
       ${meal.instructions?.length ? `<section class="card flat"><h3>Recipe steps</h3><ol>${meal.instructions.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol></section>` : ''}
       <div class="actions"><button class="secondary-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.completed')}</button><button class="ghost-button" data-action="skip-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.skipped')}</button><button class="ghost-button" data-action="edit-meal" data-date="${date}" data-meal-id="${mealId}">Edit meal</button></div>
     </div>`);
+}
+
+function openAteDifferentFlow(date, mealId) {
+  const day = findPlan(date);
+  const meal = day?.meals.find((m) => m.id === mealId);
+  if (!meal) return;
+  const foodOptions = state.foods.slice(0, 180).map((food) => `<option value="${escapeHtml(localizedFoodName(food))}"></option>`).join('');
+  const recipeOptions = getAllRecipes().map((recipeRecord) => `<option value="${escapeHtml(recipeRecord.id)}">${escapeHtml(recipeDisplayName(recipeRecord))} · ${escapeHtml(mealLabel(recipeRecord.mealType))}</option>`).join('');
+  openModal(tr('flow.ateDifferentTitle'), html`<div class="stack ate-different-flow"><div class="info-box small">${escapeHtml(mealLabel(meal.slot))} · ${totalsText(calcMealMacros(meal))}</div><label class="field"><span>${tr('flow.foodType')}</span><select id="differentType"><option value="food">${tr('flow.savedFood')}</option><option value="recipe">${tr('flow.savedRecipe')}</option><option value="barcode">${tr('flow.barcodeProduct')}</option><option value="manual">${tr('flow.manualItem')}</option><option value="restaurant">${tr('flow.restaurantEstimate')}</option></select></label><label class="field"><span>${tr('flow.foodOrBarcode')}</span><input id="differentName" list="differentFoodList" placeholder="Greek yogurt / yogurt greco / 800..."></label><datalist id="differentFoodList">${foodOptions}</datalist><label class="field"><span>${tr('flow.savedRecipe')}</span><select id="differentRecipe"><option value="">—</option>${recipeOptions}</select></label><div class="form-grid three"><label class="field"><span>${tr('flow.quantity')}</span><input id="differentQty" type="number" step="0.1" value="100"></label><label class="field"><span>${tr('flow.unit')}</span><select id="differentUnit"><option value="g">g</option><option value="ml">ml</option><option value="piece">pieces</option></select></label><label class="field"><span>${tr('common.confidence')}</span><select id="differentConfidence"><option value="medium">medium</option><option value="low">low</option><option value="high">high</option></select></label></div><section class="card flat stack-sm"><h3>${tr('flow.manualMacros')}</h3><div class="form-grid four"><label class="field"><span>kcal</span><input id="differentKcal" type="number" step="1"></label><label class="field"><span>P</span><input id="differentProtein" type="number" step="0.1"></label><label class="field"><span>C</span><input id="differentCarbs" type="number" step="0.1"></label><label class="field"><span>F</span><input id="differentFat" type="number" step="0.1"></label></div></section><div class="stack-sm"><label class="checkbox-row"><input type="checkbox" id="differentAdjust" checked> <span>${tr('flow.adjustRemaining')}</span></label><label class="checkbox-row"><input type="checkbox" id="differentSaveCustom"> <span>${tr('flow.saveCustom')}</span></label></div><div class="actions"><button class="primary-button" data-action="save-ate-different" data-date="${date}" data-meal-id="${mealId}">${tr('flow.applyDifferent')}</button><button class="ghost-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('flow.markEatenOnly')}</button></div></div>`);
+}
+
+async function saveAteDifferent(date, mealId) {
+  const day = findPlan(date);
+  const idx = day?.meals.findIndex((m) => m.id === mealId);
+  if (!day || idx < 0) return;
+  const original = day.meals[idx];
+  const type = $('differentType')?.value || 'food';
+  const quantity = Number($('differentQty')?.value || 100);
+  const unit = $('differentUnit')?.value || 'g';
+  const confidence = $('differentConfidence')?.value || 'medium';
+  let newMeal = null;
+  if (type === 'recipe' && $('differentRecipe')?.value) {
+    const recipeRecord = getRecipeById($('differentRecipe').value);
+    if (recipeRecord) newMeal = createMealFromRecipe({ ...recipeRecord, mealType: original.slot, slot: original.slot }, date);
+  } else {
+    let name = $('differentName')?.value.trim() || (type === 'restaurant' ? `${mealLabel(original.slot)} estimate` : 'Manual food');
+    let food = lookupFood(name);
+    if (type === 'barcode' && name) food = await importBarcodeFood(name).catch(() => null) || food;
+    if (!food || type === 'manual' || type === 'restaurant') {
+      const grams = quantityToGrams(quantity, normalizeUnit(unit, quantity, food), food);
+      const per100Factor = grams > 0 ? 100 / grams : 1;
+      const manual = normalizeFoodRecord({ id: uuid(type === 'restaurant' ? 'restaurant_food' : 'manual_food'), userId: state.activeUserId, name, displayNameEn: name, displayNameIt: name, aliases: [name], defaultUnit: unit, unitGrams: unit === 'piece' ? grams : 100, gramsPerUnit: unit === 'piece' ? grams : 100, caloriesPer100g: Number($('differentKcal')?.value || 0) * per100Factor, proteinPer100g: Number($('differentProtein')?.value || 0) * per100Factor, carbsPer100g: Number($('differentCarbs')?.value || 0) * per100Factor, fatPer100g: Number($('differentFat')?.value || 0) * per100Factor, sourceProvider: type === 'restaurant' ? 'restaurant_estimate' : 'manual', source: type === 'restaurant' ? 'restaurant_estimate' : 'manual', confidence, rawOrCookedState: 'unknown', userEdited: true, notes: type === 'restaurant' ? 'Eating-out estimate entered by user.' : 'Manual entry from ate-something-different flow.' });
+      food = manual;
+      if ($('differentSaveCustom')?.checked || type === 'manual' || type === 'restaurant') await idbPut('foods', manual);
+      await saveCustomFoodToCloud(manual);
+      state.foods = (await idbGetAll('foods')).map(normalizeFoodRecord);
+    }
+    const item = createItemFromFood(food.id, quantity, unit);
+    item.confidence = confidence || food.confidence || 'unknown';
+    newMeal = { ...deepClone(original), items: [item], recipeName: name, source: type, status: 'changed' };
+  }
+  if (!newMeal) { toast(tr('flow.resolveFood')); return; }
+  newMeal.id = original.id; newMeal.date = date; newMeal.slot = original.slot; newMeal.time = original.time; newMeal.status = 'changed'; newMeal.originalItems = deepClone(original.originalItems || original.items || []); newMeal.actualItems = deepClone(newMeal.items || []); newMeal.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'ate_different', from: original.recipeName, to: newMeal.recipeName }];
+  day.meals[idx] = newMeal;
+  day.mealEvents ||= [];
+  day.mealEvents.push({ id: uuid('event'), userId: state.activeUserId, mealPlanId: day.id || day.date, plannedMealId: original.id, eventType: type === 'restaurant' ? 'restaurant_estimate' : 'replaced', actualItems: deepClone(newMeal.items), actualMacroSnapshot: calcMealMacros(newMeal), adjustmentApplied: Boolean($('differentAdjust')?.checked), createdAt: new Date().toISOString() });
+  let comparison = null;
+  if ($('differentAdjust')?.checked) comparison = recalcRemainingMeals(day, { type: 'changed', mealLabel: mealLabel(original.slot) });
+  day.updatedAt = new Date().toISOString();
+  await persistPlan(day); await loadState(); closeModal(); render(); if (comparison) showRecalcComparison(comparison);
+}
+
+async function importBarcodeFood(barcode) {
+  const clean = String(barcode || '').replace(/[^0-9]/g, '');
+  if (!clean) return null;
+  const payload = await apiRequest(`/api/nutrition/barcode/${encodeURIComponent(clean)}`);
+  if (!payload?.food) return null;
+  const food = normalizeFoodRecord({ ...payload.food, id: payload.food.id || uuid('food'), userId: state.activeUserId });
+  await idbPut('foods', food);
+  state.foods = [...state.foods.filter((item) => item.id !== food.id), food].sort((a, b) => localizedFoodName(a).localeCompare(localizedFoodName(b)));
+  return food;
+}
+
+function openSwapMealFlow(date, mealId, mode = 'similar') {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); if (!meal) return;
+  const suggestions = scoreMealSwapSuggestions(day, meal, mode).slice(0, 3);
+  openModal(tr('swap.title'), html`<div class="stack swap-flow"><div><p class="muted small">${tr('swap.subtitle')}</p><div class="chip-row"><button class="pill-button ${mode === 'similar' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="similar">${tr('meal.swapMeal')}</button><button class="pill-button ${mode === 'faster' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="faster">${tr('meal.makeFaster')}</button><button class="pill-button ${mode === 'cheaper' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="cheaper">${tr('meal.makeCheaper')}</button><button class="pill-button ${mode === 'preworkout' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="preworkout">${tr('meal.lowerFatPreWorkout')}</button></div></div>${suggestions.length ? suggestions.map((x) => renderSwapSuggestion(day, meal, x)).join('') : `<div class="warning-box small">${tr('swap.noAlternatives')}</div>`}</div>`);
+}
+
+function scoreMealSwapSuggestions(day, meal, mode = 'similar') {
+  const targetMacros = calcMealMacros(meal); const excluded = normalizeText(`${state.settings.excludedFoods || ''} ${state.settings.allergies || ''}`);
+  return getAllRecipes().filter((recipeRecord) => recipeRecord.mealType === meal.slot && recipeDisplayName(recipeRecord) !== meal.recipeName).filter((recipeRecord) => !recipeIngredients(recipeRecord).some((ingredient) => excluded && excluded.includes(normalizeText(ingredient.name)))).map((recipeRecord) => { const candidate = createMealFromRecipe(recipeRecord, day.date); scaleMealsToTarget([candidate], targetMacros, { tolerance: { caloriesPct: 8, protein: 8, carbs: 10, fat: 6 } }); const macros = calcMealMacros(candidate); let score = macroDistance(macros, targetMacros); const prep = Number(recipeRecord.prepTimeMinutes || recipeRecord.prepMinutes || 0) + Number(recipeRecord.cookTimeMinutes || recipeRecord.cookMinutes || 0); const tags = (recipeRecord.tags || []).map(normalizeText); if (mode === 'faster') score += prep * 8 - (tags.includes('quick') || tags.includes('no cook') ? 80 : 0); if (mode === 'cheaper') score += recipeIngredients(recipeRecord).length * 10 - (tags.includes('cheap') ? 80 : 0); if (mode === 'preworkout') score += macros.fat * 25 - macros.carbs * 1.5 - (tags.includes('pre workout') ? 80 : 0); const reason = mode === 'faster' ? tr('swap.reason.faster') : mode === 'cheaper' ? tr('swap.reason.cheaper') : mode === 'preworkout' ? tr('swap.reason.preWorkout') : tr('swap.reason.similar'); return { recipeRecord, candidate, macros, targetMacros, score, reason, prep }; }).sort((a, b) => a.score - b.score);
+}
+
+function renderSwapSuggestion(day, meal, suggestion) {
+  const recipeRecord = suggestion.recipeRecord; const macros = suggestion.macros;
+  return html`<article class="card flat swap-suggestion"><div class="row between"><div><h3>${escapeHtml(recipeDisplayName(recipeRecord))}</h3><p class="muted small">${escapeHtml(suggestion.reason)} · ${round(suggestion.prep)} min</p></div>${confidencePill(recipeRecord.confidence || 'medium')}</div><div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(macros.calories)} kcal</span><span class="macro-pill">P ${round(macros.protein, 1)}g</span><span class="macro-pill">C ${round(macros.carbs, 1)}g</span><span class="macro-pill">F ${round(macros.fat, 1)}g</span></div><div><span class="small muted">${tr('swap.macroDelta')}</span>${macroDiffHtml(macros, suggestion.targetMacros)}</div><button class="primary-button" data-action="apply-recipe-alternative" data-date="${day.date}" data-meal-id="${meal.id}" data-recipe-id="${recipeRecord.id}">${tr('swap.apply')}</button></article>`;
+}
+
+function openFoodSwapFlow(date, mealId) {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); if (!meal) return;
+  const options = (meal.items || []).map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.foodName)} · ${displayQuantity(item)}</option>`).join('');
+  openModal(tr('swap.foodTitle'), html`<div class="stack"><label class="field"><span>${tr('meal.swapFood')}</span><select id="swapFoodItem">${options}</select></label><button class="primary-button" data-action="show-food-swap-options" data-date="${date}" data-meal-id="${mealId}">${tr('common.apply')}</button></div>`);
+}
+
+function showFoodSwapOptions(date, mealId) {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); const item = meal?.items.find((x) => x.id === $('swapFoodItem')?.value); if (!day || !meal || !item) return;
+  const food = getFoodById(item.foodId); const role = foodRole(food); const itemMacros = calcItemMacros(item);
+  const candidates = state.foods.filter((candidate) => candidate.id !== food?.id && foodRole(candidate) === role).map((candidate) => { const dominant = role === 'protein' ? 'protein' : role === 'carb' ? 'carbs' : role === 'fat' ? 'fat' : 'calories'; const grams = perGram(candidate, dominant) > 0 ? clamp((itemMacros[dominant] || itemMacros.calories) / perGram(candidate, dominant), candidate.minG || 10, candidate.maxG || 500) : item.grams; const testItem = createItemFromFood(candidate.id, grams, 'g'); const macros = calcItemMacros(testItem); return { candidate, grams, macros, score: macroDistance(macros, itemMacros) }; }).sort((a, b) => a.score - b.score).slice(0, 5);
+  openModal(tr('swap.foodTitle'), html`<div class="stack"><div class="info-box small">${escapeHtml(item.foodName)} · ${tr('swap.sameRole')}: ${role}</div>${candidates.map((x) => `<article class="card flat"><div class="row between"><strong>${escapeHtml(localizedFoodName(x.candidate))}</strong><span>${tr('swap.newQuantity')}: ${round(x.grams)} g</span></div>${macroDiffHtml(x.macros, itemMacros)}<button class="secondary-button" data-action="apply-food-swap" data-date="${date}" data-meal-id="${mealId}" data-item-id="${item.id}" data-food-id="${x.candidate.id}" data-grams="${round(x.grams, 1)}">${tr('swap.apply')}</button></article>`).join('')}</div>`);
+}
+
+async function applyFoodSwap(date, mealId, itemId, foodId, grams) {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); const idx = meal?.items.findIndex((item) => item.id === itemId); if (!day || !meal || idx == null || idx < 0) return;
+  const old = meal.items[idx]; const replacement = createItemFromFood(foodId, Number(grams), 'g'); replacement.originalGrams = old.originalGrams || old.grams; meal.items[idx] = replacement; meal.adjustments ||= []; meal.adjustments.push({ at: new Date().toISOString(), type: 'food_swap', from: old.foodName, to: replacement.foodName }); day.updatedAt = new Date().toISOString(); await persistPlan(day); await loadState(); closeModal(); render(); openMealDetail(date, mealId);
 }
 
 function openMealEditor(date, mealId) {
@@ -3481,7 +3764,7 @@ async function saveNewMeal(date) {
   day.meals.push(meal);
   day.meals.sort((a, b) => timeToMinutes(a.time || '23:59') - timeToMinutes(b.time || '23:59'));
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   closeModal();
   render();
@@ -3527,7 +3810,7 @@ async function saveMealEdit(date, mealId) {
   meal.adjustments ||= [];
   meal.adjustments.push({ at: new Date().toISOString(), type: 'manual_edit' });
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   closeModal();
   render();
@@ -3549,7 +3832,7 @@ async function applyWorkout(date) {
     day.workout.reason = '';
   }
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   if (isWorkout) openModal('Workout meal adjusted', `<div class="stack"><div class="info-box small">${escapeHtml(day.workout.reason)}</div><p class="muted">Daily totals were recalculated by adjusting the rest of the uncompleted meals where possible.</p></div>`);
@@ -3892,7 +4175,7 @@ async function __legacy_regenerateDay_1_unused(date) {
   if (lunchMode === 'rotating') lunchOverride = RECIPE_LIBRARY.filter((r) => r.slot === 'Lunch')[0];
   const day = makeDayPlan(date, lunchOverride);
   scaleDayToTarget(day, getTargetForDay(day));
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   toast('Day regenerated.');
@@ -4038,6 +4321,12 @@ function setupEvents() {
     if (action === 'open-grocery-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.grocerySummary'), renderGroceryDetail(day)); return; }
     if (action === 'open-prep-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.mealPrepSummary'), renderPrepDetail(day)); return; }
     if (action === 'open-meal-detail') { openMealDetail(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'open-ate-different') { openAteDifferentFlow(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'save-ate-different') { await saveAteDifferent(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'open-swap-meal') { openSwapMealFlow(button.dataset.date, button.dataset.mealId, button.dataset.mode || 'similar'); return; }
+    if (action === 'open-food-swap') { openFoodSwapFlow(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'show-food-swap-options') { showFoodSwapOptions(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'apply-food-swap') { await applyFoodSwap(button.dataset.date, button.dataset.mealId, button.dataset.itemId, button.dataset.foodId, button.dataset.grams); return; }
     if (action === 'nav') { setView(button.dataset.view); return; }
     if (action === 'toggle-meal') await toggleMeal(button.dataset.date, button.dataset.mealId);
     if (action === 'complete-meal') await setMealStatus(button.dataset.date, button.dataset.mealId, 'completed');
@@ -4319,6 +4608,36 @@ async function ensureNutritionProviders() {
   }
 }
 
+async function persistPlan(day) {
+  await idbPut('plans', day);
+  await saveMealPlanToCloud(day);
+}
+
+async function loadCloudMealPlansIfAvailable() {
+  if (!isCloudSessionActive()) return;
+  try {
+    const start = addDays(startOfWeekISO(todayISO()), -14);
+    const end = addDays(todayISO(), 30);
+    const payload = await apiRequest(`/api/meal-plans?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+    if (Array.isArray(payload?.mealPlans)) {
+      for (const plan of payload.mealPlans) await idbPut('plans', plan);
+    }
+  } catch (error) { console.warn('Cloud meal-plan sync failed:', error.message); }
+}
+
+async function saveMealPlanToCloud(day) {
+  if (!isCloudSessionActive() || !day) return;
+  try {
+    const plan = { ...day, id: day.id || day.date, date: day.date, updatedAt: new Date().toISOString() };
+    await apiRequest('/api/meal-plans', { method: 'POST', body: plan });
+  } catch (error) { console.warn('Cloud meal-plan save failed:', error.message); }
+}
+
+async function saveCustomFoodToCloud(food) {
+  if (!isCloudSessionActive() || !food) return;
+  try { await apiRequest('/api/nutrition/custom-foods', { method: 'POST', body: food }); } catch (error) { console.warn('Cloud custom food save failed:', error.message); }
+}
+
 async function loadState() {
   state.profiles = (await idbGetAll('profiles')).sort((a, b) => String(a.displayName || '').localeCompare(String(b.displayName || '')));
   const session = getActiveSession();
@@ -4402,7 +4721,7 @@ async function generatePlans(start, end, includeWeekends, lunchMode = state.sett
     }
     const day = makeDayPlan(dates[i], lunchOverride);
     scaleDayToTarget(day, getTargetForDay(day));
-    await idbPut('plans', day);
+    await persistPlan(day);
     created.push(day);
   }
   await loadState();
@@ -4900,8 +5219,8 @@ function openMealDetail(date, mealId) {
       <div class="card flat stack-sm"><div class="row between"><div><h3>${escapeHtml(meal.recipeName || tr('meal.recipeViewer'))}</h3><p>${totalsText(macros)}</p></div>${confidencePill((meal.items || []).some((i) => i.confidence === 'unknown') ? 'unknown' : 'medium')}</div></div>
       <section class="card flat stack-sm"><h3>${tr('meal.ingredients')}</h3><ul class="food-list detail-food-list">${(meal.items || []).map((item) => `<li><strong>${escapeHtml(item.foodName)}</strong><span>${displayQuantity(item)} · ${confidencePill(item.confidence || 'unknown')}</span></li>`).join('') || `<li><span>${tr('meal.noFoods')}</span></li>`}</ul></section>
       ${meal.instructions?.length ? `<section class="card flat"><h3>${tr('meal.instructions')}</h3><ol>${meal.instructions.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol></section>` : ''}
-      <section class="card flat stack-sm"><h3>${tr('recipe.alternatives')}</h3>${alternativeRecipes.slice(0, 5).map((recipeRecord) => renderMealAlternative(day, meal, recipeRecord)).join('') || `<p class="muted small">${tr('recipe.noRecipes')}</p>`}</section>
-      <div class="actions"><button class="secondary-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.completed')}</button><button class="ghost-button" data-action="skip-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.skipped')}</button><button class="ghost-button" data-action="change-recipe" data-date="${date}" data-meal-id="${mealId}">${tr('meal.changeRecipe')}</button><button class="ghost-button" data-action="edit-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.editMeal')}</button></div>
+      <section class="card flat stack-sm"><div class="row between"><h3>${tr('recipe.alternatives')}</h3><button class="pill-button" data-action="open-food-swap" data-date="${date}" data-meal-id="${mealId}">${tr('meal.swapFood')}</button></div>${alternativeRecipes.slice(0, 5).map((recipeRecord) => renderMealAlternative(day, meal, recipeRecord)).join('') || `<p class="muted small">${tr('recipe.noRecipes')}</p>`}</section>
+      <div class="actions"><button class="secondary-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.ateThis')}</button><button class="ghost-button" data-action="open-ate-different" data-date="${date}" data-meal-id="${mealId}">${tr('meal.ateDifferent')}</button><button class="ghost-button" data-action="skip-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.skipped')}</button><button class="ghost-button" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.swapMeal')}</button><button class="ghost-button" data-action="edit-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.editMeal')}</button></div>
     </div>`);
 }
 
@@ -4927,11 +5246,12 @@ async function applyRecipeAlternative(date, mealId, recipeId) {
   selected.originalItems = deepClone(original.originalItems || original.items);
   selected.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'recipe_alternative', from: original.recipeName, to: selected.recipeName }];
   day.meals[idx] = selected;
+  const comparison = recalcRemainingMeals(day, { type: 'changed', mealLabel: mealLabel(original.slot) });
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
-  openMealDetail(date, mealId);
+  showRecalcComparison(comparison);
 }
 
 async function changeRecipe(date, mealId) {
@@ -4959,7 +5279,7 @@ async function changeRecipe(date, mealId) {
   selected.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'recipe_change', from: original.recipeName, to: selected.recipeName }];
   day.meals[idx] = selected;
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   openDetailPanel('Recipe changed', `<div class="stack"><div class="success-box small">Changed ${escapeHtml(mealLabel(original.slot))} to <strong>${escapeHtml(selected.recipeName)}</strong>.</div><div class="grid two"><div class="card flat"><h3>Original macros</h3><p>${totalsText(targetMacros)}</p></div><div class="card flat"><h3>New macros</h3><p>${totalsText(calcMealMacros(selected))}</p>${macroDiffHtml(calcMealMacros(selected), targetMacros)}</div></div></div>`);
@@ -4998,7 +5318,7 @@ async function regenerateDay(date) {
   if (lunchMode === 'rotating') lunchOverride = getAllRecipes().find((recipeRecord) => recipeRecord.mealType === 'Lunch') || null;
   const day = makeDayPlan(date, lunchOverride);
   scaleDayToTarget(day, getTargetForDay(day));
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   toast('Day regenerated.');
@@ -5076,6 +5396,7 @@ async function init() {
   await refreshCloudUser();
   await loadState();
   await loadCloudRecipesIfAvailable();
+  await loadCloudMealPlansIfAvailable();
   await loadState();
   if (state.activeProfile) await ensureStarterPlan();
   renderNav();

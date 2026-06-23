@@ -1,4 +1,5 @@
-const CACHE_NAME = 'diet-planner-v0.3.4-ui-redesign';
+const CACHE_NAME = 'diet-planner-v0.4.0-daily-os';
+
 const APP_SHELL = [
   './',
   './index.html',

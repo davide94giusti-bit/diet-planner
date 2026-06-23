@@ -42,17 +42,27 @@ async function initializeDatabase() {
         id TEXT PRIMARY KEY,
         email TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
+        display_name TEXT,
+        language TEXT DEFAULT 'en',
+        theme TEXT DEFAULT 'system',
+        units TEXT DEFAULT 'metric',
         created_at TIMESTAMPTZ DEFAULT NOW(),
         updated_at TIMESTAMPTZ DEFAULT NOW()
       );
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS display_name TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS language TEXT DEFAULT 'en';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS theme TEXT DEFAULT 'system';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS units TEXT DEFAULT 'metric';
 
       CREATE TABLE IF NOT EXISTS sessions (
         id TEXT PRIMARY KEY,
         user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
         token_hash TEXT NOT NULL,
         created_at TIMESTAMPTZ DEFAULT NOW(),
-        expires_at TIMESTAMPTZ
+        expires_at TIMESTAMPTZ,
+        revoked_at TIMESTAMPTZ
       );
+      ALTER TABLE sessions ADD COLUMN IF NOT EXISTS revoked_at TIMESTAMPTZ;
       CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
       CREATE INDEX IF NOT EXISTS idx_sessions_token_hash ON sessions(token_hash);
       CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
@@ -102,6 +112,67 @@ async function initializeDatabase() {
         updated_at TIMESTAMPTZ DEFAULT NOW()
       );
       CREATE INDEX IF NOT EXISTS idx_meal_plans_user_id ON meal_plans(user_id);
+      CREATE INDEX IF NOT EXISTS idx_meal_plans_date ON meal_plans((data->>'date'));
+
+      CREATE TABLE IF NOT EXISTS meal_events (
+        id TEXT PRIMARY KEY,
+        user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+        meal_plan_id TEXT,
+        planned_meal_id TEXT,
+        event_type TEXT,
+        data JSONB NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_meal_events_user_id ON meal_events(user_id);
+      CREATE INDEX IF NOT EXISTS idx_meal_events_plan_id ON meal_events(meal_plan_id);
+      CREATE INDEX IF NOT EXISTS idx_meal_events_created_at ON meal_events(created_at);
+
+      CREATE TABLE IF NOT EXISTS preferences (
+        user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        data JSONB NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS body_measurements (
+        id TEXT PRIMARY KEY,
+        user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+        measurement_date DATE,
+        data JSONB NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_body_measurements_user_date ON body_measurements(user_id, measurement_date);
+
+      CREATE TABLE IF NOT EXISTS progress_logs (
+        id TEXT PRIMARY KEY,
+        user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+        period_start DATE,
+        period_end DATE,
+        data JSONB NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_progress_logs_user_period ON progress_logs(user_id, period_start, period_end);
+
+      CREATE TABLE IF NOT EXISTS grocery_lists (
+        id TEXT PRIMARY KEY,
+        user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+        start_date DATE,
+        end_date DATE,
+        data JSONB NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_grocery_lists_user_dates ON grocery_lists(user_id, start_date, end_date);
+
+      CREATE TABLE IF NOT EXISTS check_ins (
+        id TEXT PRIMARY KEY,
+        user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+        week_start DATE,
+        data JSONB NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_check_ins_user_week ON check_ins(user_id, week_start);
     `);
     console.log('PostgreSQL storage initialized.');
     return { enabled: true };

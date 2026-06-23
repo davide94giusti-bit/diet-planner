@@ -13,6 +13,12 @@ const files = {
   nutritionCache: path.join(DATA_DIR, 'nutrition-cache.json'),
   recipes: path.join(DATA_DIR, 'recipes.json'),
   mealPlans: path.join(DATA_DIR, 'meal-plans.json'),
+  mealEvents: path.join(DATA_DIR, 'meal-events.json'),
+  preferences: path.join(DATA_DIR, 'preferences.json'),
+  bodyMeasurements: path.join(DATA_DIR, 'body-measurements.json'),
+  progressLogs: path.join(DATA_DIR, 'progress-logs.json'),
+  groceryLists: path.join(DATA_DIR, 'grocery-lists.json'),
+  checkIns: path.join(DATA_DIR, 'check-ins.json'),
 };
 
 function usingPostgres() {
@@ -81,6 +87,11 @@ function userFromRow(row) {
     id: row.id,
     email: row.email,
     passwordHash: row.password_hash,
+    name: row.display_name || row.email,
+    displayName: row.display_name || row.email,
+    language: row.language || 'en',
+    theme: row.theme || 'system',
+    units: row.units || 'metric',
     createdAt: iso(row.created_at),
     updatedAt: iso(row.updated_at),
   };
@@ -94,6 +105,7 @@ function sessionFromRow(row) {
     tokenHash: row.token_hash,
     createdAt: iso(row.created_at),
     expiresAt: iso(row.expires_at),
+    revokedAt: iso(row.revoked_at),
   };
 }
 
@@ -145,11 +157,11 @@ async function getUserById(id) {
 async function createUser(user) {
   if (usingPostgres()) {
     const result = await db.query(
-      `INSERT INTO users (id, email, password_hash, created_at, updated_at)
-       VALUES ($1, $2, $3, COALESCE($4::timestamptz, NOW()), COALESCE($5::timestamptz, NOW()))
+      `INSERT INTO users (id, email, password_hash, display_name, language, theme, units, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, COALESCE($5, 'en'), COALESCE($6, 'system'), COALESCE($7, 'metric'), COALESCE($8::timestamptz, NOW()), COALESCE($9::timestamptz, NOW()))
        ON CONFLICT (email) DO NOTHING
        RETURNING *`,
-      [user.id, user.email, user.passwordHash || user.password_hash, user.createdAt || null, user.updatedAt || null]
+      [user.id, user.email, user.passwordHash || user.password_hash, user.displayName || user.name || null, user.language || null, user.theme || null, user.units || null, user.createdAt || null, user.updatedAt || null]
     );
     if (result.rows[0]) return userFromRow(result.rows[0]);
     return getUserByEmail(user.email);
@@ -182,7 +194,7 @@ async function getSessionByTokenHash(tokenHash) {
   if (usingPostgres()) {
     const result = await db.query(
       `SELECT * FROM sessions
-       WHERE token_hash = $1 AND (expires_at IS NULL OR expires_at > NOW())
+       WHERE token_hash = $1 AND revoked_at IS NULL AND (expires_at IS NULL OR expires_at > NOW())
        LIMIT 1`,
       [tokenHash]
     );
@@ -193,7 +205,7 @@ async function getSessionByTokenHash(tokenHash) {
 
 async function deleteSession(tokenHash) {
   if (usingPostgres()) {
-    await db.query('DELETE FROM sessions WHERE token_hash = $1', [tokenHash]);
+    await db.query('UPDATE sessions SET revoked_at = NOW() WHERE token_hash = $1', [tokenHash]);
     return;
   }
   writeJson(files.sessions, readJson(files.sessions, []).filter((item) => item.tokenHash !== tokenHash));
@@ -281,6 +293,222 @@ async function createCustomFood(userId, food) {
   foods.push(record);
   writeJson(files.customFoods, foods);
   return record;
+}
+
+
+async function updateCustomFood(userId, foodId, food) {
+  return createCustomFood(userId, { ...food, id: foodId, userId, updatedAt: new Date().toISOString() });
+}
+
+async function deleteCustomFood(userId, foodId) {
+  if (usingPostgres()) {
+    await db.query('DELETE FROM custom_foods WHERE id = $1 AND user_id = $2', [foodId, userId]);
+    return;
+  }
+  writeJson(files.customFoods, readJson(files.customFoods, []).filter((food) => !(food.id === foodId && food.userId === userId)));
+}
+
+async function createMealEvent(userId, event) {
+  const record = { ...event, id: event.id || crypto.randomUUID(), userId, createdAt: event.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO meal_events (id, user_id, meal_plan_id, planned_meal_id, event_type, data, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6::jsonb, COALESCE($7::timestamptz, NOW()))
+       RETURNING *`,
+      [record.id, userId, record.mealPlanId || null, record.plannedMealId || null, record.eventType || null, JSON.stringify(record), record.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const events = readJson(files.mealEvents, []);
+  events.push(record);
+  writeJson(files.mealEvents, events);
+  return record;
+}
+
+async function listMealEvents(userId, start = null, end = null) {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM meal_events
+       WHERE user_id = $1
+         AND ($2::timestamptz IS NULL OR created_at >= $2::timestamptz)
+         AND ($3::timestamptz IS NULL OR created_at <= $3::timestamptz)
+       ORDER BY created_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.mealEvents, []).filter((event) => {
+    if (event.userId !== userId) return false;
+    if (start && event.createdAt < start) return false;
+    if (end && event.createdAt > end) return false;
+    return true;
+  });
+}
+
+async function savePreferences(userId, preferences) {
+  const record = { ...preferences, userId, updatedAt: new Date().toISOString(), createdAt: preferences.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO preferences (user_id, data, created_at, updated_at)
+       VALUES ($1, $2::jsonb, COALESCE($3::timestamptz, NOW()), NOW())
+       ON CONFLICT (user_id) DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()
+       RETURNING *`,
+      [userId, JSON.stringify(record), record.createdAt || null]
+    );
+    return publicDataRecord({ ...result.rows[0], id: userId });
+  }
+  const rows = readJson(files.preferences, []).filter((item) => item.userId !== userId);
+  rows.push(record);
+  writeJson(files.preferences, rows);
+  return record;
+}
+
+async function getPreferences(userId) {
+  if (usingPostgres()) {
+    const result = await db.query('SELECT user_id AS id, user_id, data, created_at, updated_at FROM preferences WHERE user_id = $1 LIMIT 1', [userId]);
+    return result.rows[0] ? publicDataRecord(result.rows[0]) : null;
+  }
+  return readJson(files.preferences, []).find((item) => item.userId === userId) || null;
+}
+
+async function saveDatedRecord(fileKey, tableName, userId, record, dateField = 'date') {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO ${tableName} (id, user_id, ${dateField}, data, created_at)
+       VALUES ($1, $2, $3::date, $4::jsonb, COALESCE($5::timestamptz, NOW()))
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data
+       RETURNING *`,
+      [item.id, userId, item[dateField] || item.date || item.periodStart || item.startDate || item.weekStart || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files[fileKey], []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files[fileKey], rows);
+  return item;
+}
+
+async function listDatedRecords(fileKey, tableName, userId, start = null, end = null, dateColumn = 'measurement_date') {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM ${tableName}
+       WHERE user_id = $1
+         AND ($2::date IS NULL OR ${dateColumn} >= $2::date)
+         AND ($3::date IS NULL OR ${dateColumn} <= $3::date)
+       ORDER BY ${dateColumn} DESC, created_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files[fileKey], []).filter((item) => {
+    const date = item.date || item.measurementDate || item.periodStart || item.startDate || item.weekStart || '';
+    if (item.userId !== userId) return false;
+    if (start && date < start) return false;
+    if (end && date > end) return false;
+    return true;
+  });
+}
+
+async function saveBodyMeasurement(userId, record) {
+  const date = record.date || record.measurementDate || new Date().toISOString().slice(0, 10);
+  return saveDatedRecord('bodyMeasurements', 'body_measurements', userId, { ...record, measurement_date: date, date }, 'measurement_date');
+}
+
+async function listBodyMeasurements(userId, start = null, end = null) {
+  return listDatedRecords('bodyMeasurements', 'body_measurements', userId, start, end, 'measurement_date');
+}
+
+async function saveProgressLog(userId, record) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, periodStart: record.periodStart || record.period_start || null, periodEnd: record.periodEnd || record.period_end || null, createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO progress_logs (id, user_id, period_start, period_end, data, created_at)
+       VALUES ($1, $2, $3::date, $4::date, $5::jsonb, COALESCE($6::timestamptz, NOW()))
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data
+       RETURNING *`,
+      [item.id, userId, item.periodStart || null, item.periodEnd || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files.progressLogs, []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files.progressLogs, rows);
+  return item;
+}
+
+async function listProgressLogs(userId, start = null, end = null) {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM progress_logs
+       WHERE user_id = $1
+         AND ($2::date IS NULL OR period_end >= $2::date)
+         AND ($3::date IS NULL OR period_start <= $3::date)
+       ORDER BY period_start DESC, created_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.progressLogs, []).filter((item) => item.userId === userId);
+}
+
+async function saveGroceryList(userId, record) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, startDate: record.startDate || record.start_date || null, endDate: record.endDate || record.end_date || null, updatedAt: new Date().toISOString(), createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO grocery_lists (id, user_id, start_date, end_date, data, created_at, updated_at)
+       VALUES ($1, $2, $3::date, $4::date, $5::jsonb, COALESCE($6::timestamptz, NOW()), NOW())
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, updated_at = NOW()
+       RETURNING *`,
+      [item.id, userId, item.startDate || null, item.endDate || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files.groceryLists, []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files.groceryLists, rows);
+  return item;
+}
+
+async function listGroceryLists(userId, start = null, end = null) {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM grocery_lists
+       WHERE user_id = $1
+         AND ($2::date IS NULL OR end_date >= $2::date)
+         AND ($3::date IS NULL OR start_date <= $3::date)
+       ORDER BY start_date DESC, updated_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.groceryLists, []).filter((item) => item.userId === userId);
+}
+
+async function saveCheckIn(userId, record) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, weekStart: record.weekStart || record.week_start || record.periodStart || null, updatedAt: new Date().toISOString(), createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO check_ins (id, user_id, week_start, data, created_at, updated_at)
+       VALUES ($1, $2, $3::date, $4::jsonb, COALESCE($5::timestamptz, NOW()), NOW())
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()
+       RETURNING *`,
+      [item.id, userId, item.weekStart || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files.checkIns, []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files.checkIns, rows);
+  return item;
+}
+
+async function listCheckIns(userId) {
+  if (usingPostgres()) {
+    const result = await db.query('SELECT * FROM check_ins WHERE user_id = $1 ORDER BY week_start DESC, updated_at DESC', [userId]);
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.checkIns, []).filter((item) => item.userId === userId);
 }
 
 async function getCustomFood(userId, foodId) {
@@ -385,12 +613,28 @@ async function getMealPlan(userId, planId) {
   return readJson(files.mealPlans, []).find((plan) => plan.id === planId && plan.userId === userId) || null;
 }
 
-async function listMealPlans(userId) {
+async function listMealPlans(userId, start = null, end = null) {
   if (usingPostgres()) {
+    if (start || end) {
+      const result = await db.query(
+        `SELECT * FROM meal_plans
+         WHERE user_id = $1
+           AND ($2::date IS NULL OR NULLIF(data->>'date', '')::date >= $2::date)
+           AND ($3::date IS NULL OR NULLIF(data->>'date', '')::date <= $3::date)
+         ORDER BY (data->>'date') DESC, updated_at DESC`,
+        [userId, start || null, end || null]
+      );
+      return result.rows.map(publicDataRecord);
+    }
     const result = await db.query('SELECT * FROM meal_plans WHERE user_id = $1 ORDER BY updated_at DESC', [userId]);
     return result.rows.map(publicDataRecord);
   }
-  return readJson(files.mealPlans, []).filter((plan) => plan.userId === userId);
+  return readJson(files.mealPlans, []).filter((plan) => {
+    if (plan.userId !== userId) return false;
+    if (start && plan.date < start) return false;
+    if (end && plan.date > end) return false;
+    return true;
+  });
 }
 
 async function saveMealPlan(userId, plan) {
@@ -435,6 +679,8 @@ module.exports = {
   deleteRecipe,
   listCustomFoods,
   createCustomFood,
+  updateCustomFood,
+  deleteCustomFood,
   getCustomFood,
   searchCustomFoods,
   findCachedFood,
@@ -445,4 +691,16 @@ module.exports = {
   listMealPlans,
   saveMealPlan,
   deleteMealPlan,
+  createMealEvent,
+  listMealEvents,
+  savePreferences,
+  getPreferences,
+  saveBodyMeasurement,
+  listBodyMeasurements,
+  saveProgressLog,
+  listProgressLogs,
+  saveGroceryList,
+  listGroceryLists,
+  saveCheckIn,
+  listCheckIns,
 };
