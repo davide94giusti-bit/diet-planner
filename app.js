@@ -5088,7 +5088,7 @@ async function init() {
 
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {
       // Service worker can fail on file://. The app still works when served locally.
     });
   }
