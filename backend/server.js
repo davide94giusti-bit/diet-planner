@@ -8,12 +8,12 @@ const { URL } = require('url');
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 loadDotEnv(path.join(ROOT_DIR, '.env'));
-const DATA_DIR = process.env.DIET_PLANNER_DATA_DIR || path.join(__dirname, 'data');
 const PORT = Number(process.env.PORT || 3000);
 const USDA_FDC_API_KEY = process.env.USDA_FDC_API_KEY || '';
 const OPENFOODFACTS_ENABLED = /^(1|true|yes|on)$/i.test(process.env.OPENFOODFACTS_ENABLED || 'true');
 const NUTRITION_CACHE_TTL_DAYS = Number(process.env.NUTRITION_CACHE_TTL_DAYS || 30);
 const AUTO_PROVISION_ACCOUNTS = !/^(0|false|no|off)$/i.test(process.env.DIET_PLANNER_AUTO_PROVISION || 'true');
+const storage = require('./storage');
 const SESSION_COOKIE = 'dp_session';
 const MAX_JSON_BYTES = 1_000_000;
 
@@ -31,17 +31,6 @@ function loadDotEnv(file) {
     if (!Object.prototype.hasOwnProperty.call(process.env, key)) process.env[key] = value;
   }
 }
-
-fs.mkdirSync(DATA_DIR, { recursive: true });
-
-const files = {
-  users: path.join(DATA_DIR, 'users.json'),
-  sessions: path.join(DATA_DIR, 'sessions.json'),
-  customFoods: path.join(DATA_DIR, 'custom-foods.json'),
-  nutritionCache: path.join(DATA_DIR, 'nutrition-cache.json'),
-  recipes: path.join(DATA_DIR, 'recipes.json'),
-  mealPlans: path.join(DATA_DIR, 'meal-plans.json'),
-};
 
 const CURATED_FOODS = [
   curated('greek_yogurt_0', 'Greek yogurt 0%', ['greek yogurt', 'yogurt greco', 'yogurt greco 0'], 57, 10.3, 3.6, 0.2, 'Dairy & eggs', 'high'),
@@ -88,37 +77,41 @@ function curated(id, name, aliases, calories, protein, carbs, fat, department, c
   });
 }
 
-function readJson(file, fallback) {
-  try {
-    if (!fs.existsSync(file)) return fallback;
-    const text = fs.readFileSync(file, 'utf8');
-    return text.trim() ? JSON.parse(text) : fallback;
-  } catch (error) {
-    console.error(`Failed reading ${file}:`, error.message);
-    return fallback;
-  }
-}
-
-function writeJson(file, value) {
-  const tmp = `${file}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(value, null, 2));
-  fs.renameSync(tmp, file);
-}
-
 function nowIso() { return new Date().toISOString(); }
 function addDays(date, days) { const d = new Date(date); d.setUTCDate(d.getUTCDate() + days); return d; }
 function normalizeText(value) { return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
 function randomId(prefix) { return `${prefix}_${crypto.randomBytes(16).toString('hex')}`; }
 
 function hashPassword(password, salt = crypto.randomBytes(16).toString('hex')) {
-  const hash = crypto.pbkdf2Sync(String(password), salt, 120000, 32, 'sha256').toString('hex');
-  return { salt, hash };
+  const iterations = 120000;
+  const hash = crypto.pbkdf2Sync(String(password), salt, iterations, 32, 'sha256').toString('hex');
+  return `pbkdf2_sha256$${iterations}$${salt}$${hash}`;
 }
 
-function safeEqual(a, b) {
+function timingSafeHexEqual(a, b) {
   const aa = Buffer.from(String(a || ''), 'hex');
   const bb = Buffer.from(String(b || ''), 'hex');
   return aa.length === bb.length && crypto.timingSafeEqual(aa, bb);
+}
+
+function verifyPassword(password, user) {
+  const stored = user?.passwordHash || user?.password_hash || '';
+  const parts = String(stored).split('$');
+  if (parts.length === 4 && parts[0] === 'pbkdf2_sha256') {
+    const [, iterationsRaw, salt, expected] = parts;
+    const iterations = Number(iterationsRaw) || 120000;
+    const candidate = crypto.pbkdf2Sync(String(password), salt, iterations, 32, 'sha256').toString('hex');
+    return timingSafeHexEqual(candidate, expected);
+  }
+  if (user?.salt && user?.hash) {
+    const candidate = crypto.pbkdf2Sync(String(password), user.salt, 120000, 32, 'sha256').toString('hex');
+    return timingSafeHexEqual(candidate, user.hash);
+  }
+  return false;
+}
+
+function hashSessionToken(token) {
+  return crypto.createHash('sha256').update(String(token || '')).digest('hex');
 }
 
 function parseCookies(header = '') {
@@ -141,14 +134,18 @@ function getClientIp(req) {
   return String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0].trim();
 }
 
-function getUserFromRequest(req) {
+function sessionCookie(token, req) {
+  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').toLowerCase();
+  const secure = forwardedProto === 'https' ? '; Secure' : '';
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${60 * 60 * 24 * 30}${secure}`;
+}
+
+async function getUserFromRequest(req) {
   const token = getSessionToken(req);
   if (!token) return null;
-  const sessions = readJson(files.sessions, []);
-  const session = sessions.find((item) => item.token === token && new Date(item.expiresAt).getTime() > Date.now());
+  const session = await storage.getSessionByTokenHash(hashSessionToken(token));
   if (!session) return null;
-  const users = readJson(files.users, []);
-  const user = users.find((item) => item.id === session.userId);
+  const user = await storage.getUserById(session.userId);
   return user ? publicUser(user) : null;
 }
 
@@ -296,19 +293,26 @@ function matchesFood(food, query) {
 function cacheKey(provider, id) { return `${provider}:${id}`; }
 function cacheIsFresh(item) { return !item.expiresAt || new Date(item.expiresAt).getTime() > Date.now(); }
 
-function readCache() { return readJson(files.nutritionCache, []); }
-function writeCache(cache) { writeJson(files.nutritionCache, cache); }
-
-function upsertCachedFoods(foods) {
+async function upsertCachedFoods(foods, query = '') {
   if (!foods.length) return;
-  const cache = readCache().filter(cacheIsFresh);
-  const byKey = new Map(cache.map((item) => [cacheKey(item.sourceProvider, item.sourceId), item]));
   const expiresAt = addDays(new Date(), NUTRITION_CACHE_TTL_DAYS).toISOString();
   for (const food of foods.map(normalizeFood)) {
     if (!food.sourceProvider || !food.sourceId) continue;
-    byKey.set(cacheKey(food.sourceProvider, food.sourceId), { ...food, cachedAt: nowIso(), expiresAt });
+    await storage.saveCachedFood({
+      ...food,
+      provider: food.sourceProvider,
+      providerFoodId: food.sourceId,
+      query,
+      cachedAt: nowIso(),
+      expiresAt,
+      sourceMetadata: {
+        provider: food.sourceProvider,
+        providerFoodId: food.sourceId,
+        sourceUrl: food.sourceUrl || '',
+        cachedAt: nowIso(),
+      },
+    });
   }
-  writeCache([...byKey.values()]);
 }
 
 const Providers = {
@@ -317,13 +321,11 @@ const Providers = {
     name: 'User custom foods',
     enabled: true,
     requiresApiKey: false,
-    search(query, userContext) {
-      const foods = readJson(files.customFoods, []);
-      return foods.filter((food) => (!food.userId || food.userId === userContext.userId) && matchesFood(food, query)).slice(0, 12);
+    async search(query, userContext) {
+      return storage.searchCustomFoods(query, userContext.userId);
     },
-    getFood(id, userContext) {
-      const foods = readJson(files.customFoods, []);
-      return foods.find((food) => food.id === id && (!food.userId || food.userId === userContext.userId)) || null;
+    async getFood(id, userContext) {
+      return storage.getCustomFood(userContext.userId, id);
     },
     normalizeFood,
   },
@@ -332,11 +334,11 @@ const Providers = {
     name: 'User cached foods',
     enabled: true,
     requiresApiKey: false,
-    search(query) {
-      return readCache().filter(cacheIsFresh).filter((food) => matchesFood(food, query)).slice(0, 12);
+    async search(query, userContext) {
+      return storage.searchCachedFoods(query, userContext.userId);
     },
-    getFood(id) {
-      return readCache().filter(cacheIsFresh).find((food) => food.id === id || food.sourceId === id) || null;
+    async getFood(id, userContext) {
+      return storage.getCachedFood(id, userContext.userId);
     },
     normalizeFood,
   },
@@ -361,18 +363,18 @@ const Providers = {
       if (!response.ok) throw new Error(`USDA HTTP ${response.status}`);
       const data = await response.json();
       const foods = (data.foods || []).map(normalizeUsdaFood).filter(hasMacros);
-      upsertCachedFoods(foods);
+      await upsertCachedFoods(foods, query);
       return foods;
     },
     async getFood(id) {
-      const cached = Providers.cache.getFood(id);
+      const cached = await storage.findCachedFood('usda_fdc', id);
       if (cached?.sourceProvider === 'usda_fdc') return cached;
       if (!USDA_FDC_API_KEY) return null;
       const params = new URLSearchParams({ api_key: USDA_FDC_API_KEY });
       const response = await fetch(`https://api.nal.usda.gov/fdc/v1/food/${encodeURIComponent(id)}?${params.toString()}`);
       if (!response.ok) throw new Error(`USDA HTTP ${response.status}`);
       const food = normalizeUsdaFood(await response.json());
-      upsertCachedFoods([food]);
+      await upsertCachedFoods([food]);
       return food;
     },
     normalizeFood: normalizeUsdaFood,
@@ -389,18 +391,18 @@ const Providers = {
       if (!response.ok) throw new Error(`Open Food Facts HTTP ${response.status}`);
       const data = await response.json();
       const foods = (data.products || []).map(normalizeOffFood).filter(hasMacros);
-      upsertCachedFoods(foods);
+      await upsertCachedFoods(foods, query);
       return foods;
     },
     async getFood(id) {
-      const cached = Providers.cache.getFood(id);
+      const cached = await storage.findCachedFood('open_food_facts', id);
       if (cached?.sourceProvider === 'open_food_facts') return cached;
       if (!OPENFOODFACTS_ENABLED) return null;
       const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(id)}.json?fields=code,product_name,brands,nutriments,categories_tags,url`);
       if (!response.ok) throw new Error(`Open Food Facts HTTP ${response.status}`);
       const data = await response.json();
       const food = data.product ? normalizeOffFood(data.product) : null;
-      if (food) upsertCachedFoods([food]);
+      if (food) await upsertCachedFoods([food]);
       return food;
     },
     normalizeFood: normalizeOffFood,
@@ -510,7 +512,7 @@ async function handleApi(req, res, url, user) {
     if (req.method !== 'GET') return methodNotAllowed(res);
     return json(res, 200, {
       providers: providerStatus(),
-      cloud: { status: 'connected', cacheTtlDays: NUTRITION_CACHE_TTL_DAYS },
+      cloud: { status: storage.usingPostgres() ? 'postgres' : 'local-json-fallback', cacheTtlDays: NUTRITION_CACHE_TTL_DAYS },
     });
   }
 
@@ -536,12 +538,10 @@ async function handleApi(req, res, url, user) {
     if (req.method !== 'POST') return methodNotAllowed(res);
     if (!user) return unauthorized(res);
     const body = await readBody(req);
-    const customFoods = readJson(files.customFoods, []);
-    const food = normalizeFood({ ...body, id: body.id || randomId('custom_food'), sourceProvider: 'custom_foods', source: 'custom_foods', sourceId: body.sourceId || body.id || randomId('custom_source'), userId: user.id, userEdited: true });
-    const next = customFoods.filter((item) => !(item.id === food.id && item.userId === user.id));
-    next.push(food);
-    writeJson(files.customFoods, next);
-    return json(res, 201, { food });
+    const sourceId = body.sourceId || body.id || randomId('custom_source');
+    const food = normalizeFood({ ...body, id: body.id || randomId('custom_food'), sourceProvider: 'custom_foods', source: 'custom_foods', sourceId, userId: user.id, userEdited: true });
+    const saved = await storage.createCustomFood(user.id, food);
+    return json(res, 201, { food: saved });
   }
 
   if (url.pathname === '/api/users/me') {
@@ -556,42 +556,33 @@ async function handleApi(req, res, url, user) {
     const email = String(body.email || '').trim().toLowerCase();
     const password = String(body.password || '');
     if (!email || !password) return json(res, 400, { error: 'email and password are required' });
-    const users = readJson(files.users, []);
-    let stored = users.find((item) => item.email === email);
+    let stored = await storage.getUserByEmail(email);
     if (!stored) {
       if (!AUTO_PROVISION_ACCOUNTS) return json(res, 401, { error: 'Invalid email or password' });
-      const passwordHash = hashPassword(password);
-      stored = { id: randomId('user'), email, name: body.name || email.split('@')[0], ...passwordHash, createdAt: nowIso(), updatedAt: nowIso(), language: body.language || 'en', theme: 'system', units: 'metric' };
-      users.push(stored);
-      writeJson(files.users, users);
-    } else {
-      const candidate = hashPassword(password, stored.salt);
-      if (!safeEqual(candidate.hash, stored.hash)) return json(res, 401, { error: 'Invalid email or password' });
+      stored = await storage.createUser({ id: randomId('user'), email, passwordHash: hashPassword(password), createdAt: nowIso(), updatedAt: nowIso() });
+    } else if (!verifyPassword(password, stored)) {
+      return json(res, 401, { error: 'Invalid email or password' });
     }
     const token = crypto.randomBytes(32).toString('hex');
-    const sessions = readJson(files.sessions, []).filter((item) => new Date(item.expiresAt).getTime() > Date.now());
-    sessions.push({ token, userId: stored.id, createdAt: nowIso(), expiresAt: addDays(new Date(), 30).toISOString(), ip: getClientIp(req) });
-    writeJson(files.sessions, sessions);
-    return json(res, 200, { user: publicUser(stored), token }, { 'Set-Cookie': `${SESSION_COOKIE}=${encodeURIComponent(token)}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${60 * 60 * 24 * 30}` });
+    await storage.createSession({ id: randomId('session'), userId: stored.id, tokenHash: hashSessionToken(token), createdAt: nowIso(), expiresAt: addDays(new Date(), 30).toISOString(), ip: getClientIp(req) });
+    return json(res, 200, { user: publicUser(stored), token }, { 'Set-Cookie': sessionCookie(token, req) });
   }
 
   if (url.pathname === '/api/auth/logout') {
     if (req.method !== 'POST') return methodNotAllowed(res);
     const token = getSessionToken(req);
-    if (token) writeJson(files.sessions, readJson(files.sessions, []).filter((item) => item.token !== token));
+    if (token) await storage.deleteSession(hashSessionToken(token));
     return noContent(res, { 'Set-Cookie': `${SESSION_COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0` });
   }
 
   if (url.pathname === '/api/recipes') {
     if (!user) return unauthorized(res);
-    const recipes = readJson(files.recipes, []);
-    if (req.method === 'GET') return json(res, 200, { recipes: recipes.filter((recipe) => recipe.userId === user.id) });
+    if (req.method === 'GET') return json(res, 200, { recipes: await storage.listRecipes(user.id) });
     if (req.method === 'POST') {
       const body = await readBody(req);
       const recipe = { ...body, id: body.id || randomId('recipe'), userId: user.id, createdAt: body.createdAt || nowIso(), updatedAt: nowIso() };
-      recipes.push(recipe);
-      writeJson(files.recipes, recipes);
-      return json(res, 201, { recipe });
+      const saved = await storage.createRecipe(user.id, recipe);
+      return json(res, 201, { recipe: saved });
     }
     return methodNotAllowed(res);
   }
@@ -600,18 +591,14 @@ async function handleApi(req, res, url, user) {
   if (recipeMatch) {
     if (!user) return unauthorized(res);
     const id = decodeURIComponent(recipeMatch[1]);
-    const recipes = readJson(files.recipes, []);
-    const index = recipes.findIndex((recipe) => recipe.id === id && recipe.userId === user.id);
     if (req.method === 'PUT') {
       const body = await readBody(req);
-      const recipe = { ...body, id, userId: user.id, updatedAt: nowIso(), createdAt: body.createdAt || recipes[index]?.createdAt || nowIso() };
-      if (index >= 0) recipes[index] = recipe;
-      else recipes.push(recipe);
-      writeJson(files.recipes, recipes);
-      return json(res, 200, { recipe });
+      const recipe = { ...body, id, userId: user.id, updatedAt: nowIso(), createdAt: body.createdAt || nowIso() };
+      const saved = await storage.updateRecipe(user.id, id, recipe);
+      return json(res, 200, { recipe: saved });
     }
     if (req.method === 'DELETE') {
-      if (index >= 0) writeJson(files.recipes, recipes.filter((recipe) => !(recipe.id === id && recipe.userId === user.id)));
+      await storage.deleteRecipe(user.id, id);
       return noContent(res);
     }
     return methodNotAllowed(res);
@@ -619,15 +606,33 @@ async function handleApi(req, res, url, user) {
 
   if (url.pathname === '/api/meal-plans') {
     if (!user) return unauthorized(res);
-    const mealPlans = readJson(files.mealPlans, []);
-    if (req.method === 'GET') return json(res, 200, { mealPlans: mealPlans.filter((plan) => plan.userId === user.id) });
+    if (req.method === 'GET') return json(res, 200, { mealPlans: await storage.listMealPlans(user.id) });
     if (req.method === 'POST') {
       const body = await readBody(req);
       const plan = { ...body, id: body.id || body.date || randomId('plan'), userId: user.id, updatedAt: nowIso() };
-      const next = mealPlans.filter((item) => !(item.id === plan.id && item.userId === user.id));
-      next.push(plan);
-      writeJson(files.mealPlans, next);
-      return json(res, 201, { mealPlan: plan });
+      const saved = await storage.saveMealPlan(user.id, plan);
+      return json(res, 201, { mealPlan: saved });
+    }
+    return methodNotAllowed(res);
+  }
+
+  const mealPlanMatch = url.pathname.match(/^\/api\/meal-plans\/([^/]+)$/);
+  if (mealPlanMatch) {
+    if (!user) return unauthorized(res);
+    const id = decodeURIComponent(mealPlanMatch[1]);
+    if (req.method === 'GET') {
+      const plan = await storage.getMealPlan(user.id, id);
+      return plan ? json(res, 200, { mealPlan: plan }) : notFound(res);
+    }
+    if (req.method === 'PUT') {
+      const body = await readBody(req);
+      const plan = { ...body, id, userId: user.id, updatedAt: nowIso() };
+      const saved = await storage.saveMealPlan(user.id, plan);
+      return json(res, 200, { mealPlan: saved });
+    }
+    if (req.method === 'DELETE') {
+      await storage.deleteMealPlan(user.id, id);
+      return noContent(res);
     }
     return methodNotAllowed(res);
   }
@@ -673,7 +678,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    const user = getUserFromRequest(req);
+    const user = await getUserFromRequest(req);
     if (url.pathname.startsWith('/api/')) return await handleApi(req, res, url, user);
     return serveStatic(req, res, url);
   } catch (error) {
@@ -682,8 +687,17 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
-  console.log(`Diet Planner backend listening on http://localhost:${PORT}`);
-  console.log(`USDA provider: ${USDA_FDC_API_KEY ? 'enabled' : 'disabled - set USDA_FDC_API_KEY'}`);
-  console.log(`Open Food Facts provider: ${OPENFOODFACTS_ENABLED ? 'enabled' : 'disabled'}`);
+async function start() {
+  await storage.initializeStorage();
+  server.listen(PORT, () => {
+    console.log(`Diet Planner backend listening on http://localhost:${PORT}`);
+    console.log(`Storage: ${storage.usingPostgres() ? 'PostgreSQL via DATABASE_URL' : 'local JSON fallback (non-production only)'}`);
+    console.log(`USDA provider: ${USDA_FDC_API_KEY ? 'enabled' : 'disabled - set USDA_FDC_API_KEY'}`);
+    console.log(`Open Food Facts provider: ${OPENFOODFACTS_ENABLED ? 'enabled' : 'disabled'}`);
+  });
+}
+
+start().catch((error) => {
+  console.error('Diet Planner backend failed to start:', error.message);
+  process.exit(1);
 });

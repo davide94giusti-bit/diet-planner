@@ -1,16 +1,29 @@
 # Diet Planner MVP
 
-Diet Planner is a mobile-first PWA with a Node backend for cloud login, backend-managed nutrition-provider integrations, recipe management, grocery planning, meal prep, body data, blood exams, and macro tracking.
+Diet Planner is a mobile-first PWA with a Node/Render backend for cloud login, backend-managed nutrition-provider integrations, recipes, grocery planning, meal prep, body data, blood exams, macro tracking, and cloud account persistence.
 
-## Current architecture
+## Current production architecture
 
-- The browser serves the PWA UI and stores an offline cache in IndexedDB.
-- The frontend calls Diet Planner's own backend endpoints under `/api/...`.
-- Normal users log in to Diet Planner only.
-- Normal users do **not** enter USDA, Open Food Facts, or other external provider API keys.
-- External nutrition provider credentials are configured once by the app owner as backend environment variables.
-- Local profiles remain available as offline/demo mode.
-- Cloud accounts are the production path for login and multi-device sync.
+```text
+Browser frontend -> Render Node backend -> Supabase Postgres
+```
+
+Production data must flow through Diet Planner's own backend API routes. Do not connect the browser directly to Supabase. Do not add `supabase-js` to the frontend. Do not expose `DATABASE_URL`, USDA keys, or provider keys in browser code.
+
+## Data storage model
+
+When `DATABASE_URL` is configured, the backend stores durable cloud data in Supabase Postgres:
+
+- users
+- sessions
+- recipes
+- custom foods
+- nutrition cache
+- meal plans
+
+Offline/demo data may remain local to the browser. Cloud account data is stored in Supabase Postgres through the Render backend. Cloud accounts are required for multi-device sync.
+
+When `DATABASE_URL` is missing and `NODE_ENV` is not `production`, the backend can use `./backend/data/*.json` as a non-production fallback for local development only. `DIET_PLANNER_DATA_DIR` is not part of the production architecture and should not be used for the Render/Supabase deployment.
 
 ## Run locally
 
@@ -19,6 +32,8 @@ Requirements: Node.js 18 or newer.
 ```bash
 cd diet-planner-mvp
 cp .env.example .env
+npm install
+npm run check
 npm start
 ```
 
@@ -30,35 +45,47 @@ http://localhost:3000
 
 Do not double-click `index.html` for normal testing. The backend serves both the app shell and `/api/...` endpoints from the same origin.
 
-## Local test login
-
-For local development, `.env.example` enables account auto-provisioning:
-
-```env
-DIET_PLANNER_AUTO_PROVISION=true
-```
-
-You can log in with any normal-looking test email and password, for example:
-
-```text
-Email: test@example.com
-Password: test1234
-```
-
 ## Backend environment variables
 
-Configure these only on the server/backend:
+Configure these only on the backend/server, not in frontend/static hosting variables:
 
 ```env
-USDA_FDC_API_KEY=
+DATABASE_URL=your_supabase_transaction_pooler_connection_string
+USDA_FDC_API_KEY=your_usda_key_here
 OPENFOODFACTS_ENABLED=true
 NUTRITION_CACHE_TTL_DAYS=30
-PORT=3000
 DIET_PLANNER_AUTO_PROVISION=true
-DIET_PLANNER_DATA_DIR=./backend/data
+PORT=3000
 ```
 
-Important: never put provider keys in frontend code, browser settings, localStorage, IndexedDB, or static hosting variables exposed to the client.
+For first Render testing, `DIET_PLANNER_AUTO_PROVISION=true` lets unknown users be created automatically on login. After test accounts are no longer needed, use:
+
+```env
+DIET_PLANNER_AUTO_PROVISION=false
+```
+
+Users only log in to Diet Planner. Users do not need USDA, Open Food Facts, Supabase, or external provider API keys. API keys are configured once on the backend using Render environment variables.
+
+## Render deployment
+
+Render service settings:
+
+```text
+Build Command: npm install
+Start Command: npm start
+```
+
+Required Render environment variables:
+
+```env
+DATABASE_URL=your_supabase_transaction_pooler_connection_string
+USDA_FDC_API_KEY=your_usda_key_here
+OPENFOODFACTS_ENABLED=true
+NUTRITION_CACHE_TTL_DAYS=30
+DIET_PLANNER_AUTO_PROVISION=true
+```
+
+Do not add `DIET_PLANNER_DATA_DIR` for this production architecture.
 
 ## Main backend endpoints
 
@@ -69,6 +96,12 @@ Nutrition and providers:
 - `GET /api/nutrition/food/:provider/:id`
 - `POST /api/nutrition/custom-foods`
 
+Auth/user:
+
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/users/me`
+
 Recipes:
 
 - `GET /api/recipes`
@@ -76,16 +109,12 @@ Recipes:
 - `PUT /api/recipes/:id`
 - `DELETE /api/recipes/:id`
 
-Auth/user:
-
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `GET /api/users/me`
-
 Meal plans:
 
 - `GET /api/meal-plans`
 - `POST /api/meal-plans`
+- `GET /api/meal-plans/:id`
+- `PUT /api/meal-plans/:id`
 
 ## Nutrition provider priority
 
@@ -96,7 +125,7 @@ Meal plans:
 5. Open Food Facts through backend
 6. Manual entry
 
-Normalized foods are cached in the backend with provider/source metadata. Browser data may also be cached locally for offline use.
+Normalized foods are cached in Postgres with provider/source metadata and expiry based on `NUTRITION_CACHE_TTL_DAYS`. Browser data may also be cached locally for offline use.
 
 ## App sections
 
@@ -112,18 +141,46 @@ The left navigation contains primary page sections:
 - Recipes
 - Settings
 
-Recipes are now a dedicated top-level section, not only a Settings panel.
+Recipes are a dedicated top-level section, not only a Settings panel.
 
 ## Commands
 
 ```bash
 npm start      # run backend + frontend locally
 npm run dev    # same as npm start for this MVP
-npm run check  # syntax check app.js and backend/server.js
+npm run check  # syntax check frontend and backend modules
 ```
 
-## Production notes
+## Validation checklist
 
-The MVP backend uses JSON files for persistence. For production, replace this with a durable database and proper account/session storage before onboarding real users.
+With a valid `DATABASE_URL`, run:
 
-See `docs/deployment.md` for deployment steps.
+```bash
+npm install
+npm run check
+npm start
+```
+
+Then test:
+
+```http
+GET /api/nutrition/providers
+POST /api/auth/login
+GET /api/users/me
+POST /api/nutrition/custom-foods
+GET /api/nutrition/search?q=chicken
+GET /api/recipes
+POST /api/recipes
+PUT /api/recipes/:id
+DELETE /api/recipes/:id
+```
+
+Persistence test:
+
+1. Create/login as a test user.
+2. Create a recipe.
+3. Create a custom food.
+4. Search a USDA/Open Food Facts item so it gets cached.
+5. Stop and restart the server.
+6. Confirm the user, recipe, custom food, and nutrition cache still exist.
+7. Redeploy/restart simulation should not erase data because durable cloud data is in Supabase Postgres.

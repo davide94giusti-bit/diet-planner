@@ -1,92 +1,91 @@
 # Deployment
 
-## What you are deploying
+## Target architecture
+
+```text
+Browser frontend -> Render Node backend -> Supabase Postgres
+```
 
 This project is a single Node app:
 
 - `backend/server.js` serves the frontend files.
-- `backend/server.js` also serves `/api/...` backend endpoints.
-- The frontend must be opened from the backend origin, for example `https://your-domain.com`, not as a standalone static file.
+- `backend/server.js` serves `/api/...` backend endpoints.
+- `backend/db.js` initializes the Postgres schema through `DATABASE_URL`.
+- `backend/storage.js` routes durable cloud data to Postgres when `DATABASE_URL` is configured.
+
+The frontend must be opened from the backend origin, for example `https://your-domain.com`, not as a standalone static file.
 
 ## Required production environment variables
 
-Set these in the host's backend/server environment:
+Set these in Render's backend/server environment:
 
 ```env
+DATABASE_URL=your_supabase_transaction_pooler_connection_string
 USDA_FDC_API_KEY=your_usda_key_here
 OPENFOODFACTS_ENABLED=true
 NUTRITION_CACHE_TTL_DAYS=30
-PORT=3000
-DIET_PLANNER_AUTO_PROVISION=false
-DIET_PLANNER_DATA_DIR=/var/lib/diet-planner
+DIET_PLANNER_AUTO_PROVISION=true
 ```
 
 Notes:
 
+- `DATABASE_URL` is required for production durable storage.
 - `USDA_FDC_API_KEY` must stay server-side only.
 - `OPENFOODFACTS_ENABLED` controls whether the backend calls Open Food Facts.
-- `NUTRITION_CACHE_TTL_DAYS` controls backend normalized-food cache freshness.
-- `DIET_PLANNER_AUTO_PROVISION=false` is recommended for production unless you intentionally want anyone to self-create an account.
-- `DIET_PLANNER_DATA_DIR` must point to durable storage if you keep the JSON-file MVP persistence layer.
+- `NUTRITION_CACHE_TTL_DAYS` controls normalized-food cache freshness.
+- `DIET_PLANNER_AUTO_PROVISION=true` is useful for initial testing; set `DIET_PLANNER_AUTO_PROVISION=false` after test account creation is no longer needed.
+- Do not use `DIET_PLANNER_DATA_DIR` for this production architecture.
 
-## Fast deployment path: Node app host
+## Render deployment settings
 
-Use a host that can run a normal long-lived Node server.
-
-Typical settings:
+Use a normal Node Web Service.
 
 ```text
-Build command: npm install
-Start command: npm start
+Build Command: npm install
+Start Command: npm start
 Runtime: Node 18+
-Port: use the platform-provided PORT environment variable
+Port: use Render's PORT environment variable
 ```
 
 After deployment:
 
-1. Open the hosted URL.
+1. Open the Render URL.
 2. Log in with a Diet Planner account.
 3. Go to Settings > Nutrition Sources.
 4. Confirm providers show as connected through Diet Planner Cloud.
 5. Search for a food and confirm the frontend never asks for a provider API key.
+6. Create a recipe and custom food.
+7. Restart/redeploy the Render service and confirm the data remains available.
 
-## VPS deployment path
+## Supabase Postgres notes
 
-On a Linux server:
+Use the Supabase transaction pooler connection string as `DATABASE_URL` when possible. The backend uses `pg.Pool` with SSL configured as:
+
+```js
+ssl: { rejectUnauthorized: false }
+```
+
+On startup, the backend creates these tables if missing:
+
+- `users`
+- `sessions`
+- `recipes`
+- `custom_foods`
+- `nutrition_cache`
+- `meal_plans`
+
+Do not expose Supabase credentials to the frontend. Users only authenticate with Diet Planner; they do not need Supabase, USDA, Open Food Facts, or other provider accounts.
+
+## Local development
 
 ```bash
-sudo apt update
-sudo apt install -y nodejs npm nginx
-cd /opt
-sudo git clone YOUR_REPO_URL diet-planner-mvp
-cd diet-planner-mvp
-sudo cp .env.example .env
-sudo nano .env
+cp .env.example .env
 npm install
 npm run check
 npm start
 ```
 
-For production, run the app with a process manager such as systemd or pm2 and put Nginx/Caddy in front of it for HTTPS.
-
-Example reverse proxy target:
-
-```text
-http://127.0.0.1:3000
-```
-
-## Docker-style deployment
-
-A minimal Dockerfile can be added later. The app only needs:
-
-```text
-node:18+
-working directory with project files
-npm install
-npm start
-```
-
-Mount a persistent volume for `DIET_PLANNER_DATA_DIR` if you use the MVP JSON store.
+For local Postgres testing, put a valid `DATABASE_URL` in `.env`. If `DATABASE_URL` is missing and `NODE_ENV` is not `production`, the backend uses `./backend/data/*.json` as a non-production fallback only.
 
 ## Static hosting warning
 
@@ -98,6 +97,7 @@ Do not deploy only `index.html`, `app.js`, and `styles.css` for production. Stat
 - USDA lookup
 - Open Food Facts lookup
 - Backend recipe sync
+- Cloud account persistence
 - Cross-device sync path
 
 Static-only is acceptable only for offline/demo UI testing.
@@ -123,11 +123,10 @@ Hosted HTTPS test:
 
 Before public release:
 
-- Replace JSON files with a real database.
+- Set `DIET_PLANNER_AUTO_PROVISION=false` unless self-signup is intentional.
 - Add password reset and email verification.
-- Disable automatic account provisioning if accounts are invitation-only.
-- Add durable session storage.
-- Add HTTPS and secure cookie settings behind a production proxy.
+- Add backups for Supabase Postgres.
+- Add stricter rate limits for auth and nutrition search.
 - Add structured logging and monitoring.
-- Add database backups.
-- Add stricter rate limits for nutrition search.
+- Review secure-cookie behavior behind HTTPS.
+- Add account administration/invite flows if needed.
