@@ -1,7 +1,7 @@
-const APP_VERSION = '0.3.3-cloud-sections';
+const APP_VERSION = '0.5.0-daily-os-scanner-recalc';
 const DB_NAME = 'diet-planner-local-db';
-const DB_VERSION = 3;
-const STORES = ['settings', 'macroTargets', 'foods', 'baseline', 'plans', 'body', 'blood', 'profiles', 'nutritionLookupCache', 'dashboardPreferences', 'recipes', 'recipeAlternatives', 'nutritionProviders'];
+const DB_VERSION = 4;
+const STORES = ['settings', 'macroTargets', 'foods', 'baseline', 'plans', 'body', 'blood', 'profiles', 'nutritionLookupCache', 'dashboardPreferences', 'recipes', 'recipeAlternatives', 'nutritionProviders', 'offlineQueue', 'pantry', 'supplements', 'checkIns'];
 const SESSION_KEY = 'dietPlanner.activeSession';
 const CLOUD_SESSION_KEY = 'dietPlanner.cloudSession';
 const API_BASE = '';
@@ -737,6 +737,410 @@ Object.assign(I18N.it, {
   'progress.noHistoricalData': 'Nessun dato storico completato.',
 });
 
+
+Object.assign(I18N.en, {
+  'nav.dashboardShort': 'Today',
+  'nav.meals': 'Meals',
+  'nav.mealsShort': 'Meals',
+  'nav.foods': 'Foods',
+  'nav.foodsShort': 'Foods',
+  'nav.mealPlans': 'Meal Plans',
+  'nav.mealPlansShort': 'Plan',
+  'nav.settingsShort': 'Settings',
+  'page.meals': 'Meals',
+  'page.foods': 'Foods',
+  'common.today': 'Today',
+  'common.view': 'View',
+  'common.addItem': 'Add item',
+  'common.changed': 'Changed',
+  'common.apply': 'Apply',
+  'common.reason': 'Reason',
+  'dashboard.todayFocus': 'Eat this next',
+  'dashboard.primarySummary': 'One tap to follow the plan, recover a skipped meal, or swap food without losing the day.',
+  'dashboard.planToday': 'Generate today',
+  'dashboard.nextMeal': 'Next meal',
+  'dashboard.nextMealDone': 'All meals handled',
+  'dashboard.remainingToday': 'Remaining today',
+  'dashboard.remainingHint': 'Based on eaten meals versus today\'s target.',
+  'dashboard.projectedToday': 'Projected today',
+  'dashboard.consumedToday': 'Consumed today',
+  'dashboard.goalMode': 'Goal',
+  'dashboard.workoutStatus': 'Training status',
+  'dashboard.mealsHint': 'Quick status for the whole day.',
+  'dashboard.optimizationNote': 'Some nutrition data needs review, but the daily plan remains usable.',
+  'dashboard.optimizerDetails': 'Show technical details',
+  'dashboard.eveningSummary': 'End-of-day summary',
+  'dashboard.tomorrowSuggestion': 'Tomorrow suggestion',
+  'dashboard.skippedTomorrowSuggestion': '{meal} was skipped. Add an easier backup option for that slot tomorrow.',
+  'dashboard.bestMacroHit': 'Best macro hit',
+  'dashboard.largestDeviation': 'Largest deviation',
+  'meal.remaining': 'Remaining',
+  'meal.viewDetails': 'Details',
+  'meal.foodPreview': 'Foods',
+  'meal.addMeal': 'Add meal',
+  'meal.ateThis': 'I ate this',
+  'meal.skippedThis': 'I skipped this',
+  'meal.ateDifferent': 'I ate something different',
+  'meal.swapMeal': 'Swap meal',
+  'meal.swapFood': 'Swap food',
+  'meal.makeFaster': 'Make faster',
+  'meal.makeCheaper': 'Make cheaper',
+  'meal.lowerFatPreWorkout': 'Lower fat pre-workout',
+  'meal.eatingOut': 'Eating out',
+  'meal.sourceRecipe': 'Recipe/source',
+  'meal.confidenceNote': 'Confidence',
+  'flow.ateDifferentTitle': 'What did you eat instead?',
+  'flow.foodType': 'Entry type',
+  'flow.savedFood': 'Saved food',
+  'flow.savedRecipe': 'Saved recipe',
+  'flow.barcodeProduct': 'Barcode/product',
+  'flow.manualItem': 'Manual item',
+  'flow.restaurantEstimate': 'Restaurant estimate',
+  'flow.foodOrBarcode': 'Food name or barcode',
+  'flow.quantity': 'Quantity',
+  'flow.unit': 'Unit',
+  'flow.manualMacros': 'Manual macros for the quantity entered',
+  'flow.saveCustom': 'Save as custom food',
+  'flow.adjustRemaining': 'Adjust remaining meals to compensate',
+  'flow.markEatenOnly': 'Mark this meal as eaten only',
+  'flow.preview': 'Macro preview',
+  'flow.applyDifferent': 'Save and update day',
+  'flow.resolveFood': 'Search/import food first',
+  'swap.title': 'Swap meal',
+  'swap.subtitle': 'Three alternatives close to the original meal macros.',
+  'swap.apply': 'Apply swap',
+  'swap.noAlternatives': 'No suitable alternatives yet. Add more recipes for this meal type.',
+  'swap.macroDelta': 'Macro difference',
+  'swap.reason.similar': 'similar macros',
+  'swap.reason.faster': 'faster prep',
+  'swap.reason.cheaper': 'staple-food friendly',
+  'swap.reason.preWorkout': 'lower fat before training',
+  'swap.reason.eatingOut': 'works as an eating-out estimate',
+  'swap.foodTitle': 'Swap food',
+  'swap.newQuantity': 'New quantity',
+  'swap.sameRole': 'Same food role',
+  'recalc.title': 'Adjusted remaining meals',
+  'recalc.summarySkipped': '{meal} skipped. I adjusted remaining meals toward today\'s target.',
+  'recalc.summaryChanged': '{meal} changed. I adjusted the rest of the day toward the target.',
+  'recalc.closeEnough': 'I adjusted the remaining meals as close as possible.',
+  'recalc.before': 'Before',
+  'recalc.after': 'After',
+  'recalc.projected': 'New projected daily totals',
+  'foods.title': 'Foods',
+  'foods.subtitle': 'Custom foods, curated foods, and imported provider products stay separated.',
+  'foods.custom': 'Custom foods',
+  'foods.curated': 'Curated foods',
+  'foods.provider': 'Provider/imported foods',
+  'foods.noCustom': 'No custom foods yet.',
+  'foods.noProvider': 'No imported provider foods yet.',
+  'foods.searchProvider': 'Search / barcode',
+  'plans.currentWeek': 'Current week',
+  'plans.subtitle': 'Generate meals from your baseline and recipes, then execute day by day.',
+  'plans.create': 'Generate plan',
+  'plans.startDate': 'Start date',
+  'plans.endDate': 'End date',
+  'plans.lunchMode': 'Lunch mode',
+  'plans.noPlans': 'No plans in this week',
+  'plans.noPlansHelp': 'Generate a plan to see daily meals.',
+  'progress.recommendation': 'Recommendation',
+  'progress.notEnoughData': 'Track more meals and weight entries before changing targets.',
+});
+
+Object.assign(I18N.it, {
+  'nav.dashboardShort': 'Oggi',
+  'nav.meals': 'Pasti',
+  'nav.mealsShort': 'Pasti',
+  'nav.foods': 'Alimenti',
+  'nav.foodsShort': 'Cibi',
+  'nav.mealPlans': 'Piani pasti',
+  'nav.mealPlansShort': 'Piano',
+  'nav.settingsShort': 'Impost.',
+  'page.meals': 'Pasti',
+  'page.foods': 'Alimenti',
+  'common.today': 'Oggi',
+  'common.view': 'Vedi',
+  'common.addItem': 'Aggiungi alimento',
+  'common.changed': 'Modificato',
+  'common.apply': 'Applica',
+  'common.reason': 'Motivo',
+  'dashboard.todayFocus': 'Mangia questo ora',
+  'dashboard.primarySummary': 'Un tap per seguire il piano, recuperare un pasto saltato o sostituire senza rovinare la giornata.',
+  'dashboard.planToday': 'Genera oggi',
+  'dashboard.nextMeal': 'Prossimo pasto',
+  'dashboard.nextMealDone': 'Tutti i pasti gestiti',
+  'dashboard.remainingToday': 'Rimanenti oggi',
+  'dashboard.remainingHint': 'Basato sui pasti mangiati rispetto al target di oggi.',
+  'dashboard.projectedToday': 'Previsti oggi',
+  'dashboard.consumedToday': 'Consumati oggi',
+  'dashboard.goalMode': 'Obiettivo',
+  'dashboard.workoutStatus': 'Stato allenamento',
+  'dashboard.mealsHint': 'Stato rapido di tutta la giornata.',
+  'dashboard.optimizationNote': 'Alcuni dati nutrizionali richiedono revisione, ma il piano resta utilizzabile.',
+  'dashboard.optimizerDetails': 'Mostra dettagli tecnici',
+  'dashboard.eveningSummary': 'Riepilogo fine giornata',
+  'dashboard.tomorrowSuggestion': 'Suggerimento per domani',
+  'dashboard.skippedTomorrowSuggestion': '{meal} è stato saltato. Aggiungi per domani un backup più facile per quello slot.',
+  'dashboard.bestMacroHit': 'Macro più precisa',
+  'dashboard.largestDeviation': 'Scostamento maggiore',
+  'meal.remaining': 'Rimanenti',
+  'meal.viewDetails': 'Dettagli',
+  'meal.foodPreview': 'Alimenti',
+  'meal.addMeal': 'Aggiungi pasto',
+  'meal.ateThis': 'L\'ho mangiato',
+  'meal.skippedThis': 'L\'ho saltato',
+  'meal.ateDifferent': 'Ho mangiato altro',
+  'meal.swapMeal': 'Sostituisci pasto',
+  'meal.swapFood': 'Sostituisci alimento',
+  'meal.makeFaster': 'Rendi più veloce',
+  'meal.makeCheaper': 'Rendi più economico',
+  'meal.lowerFatPreWorkout': 'Meno grassi pre-workout',
+  'meal.eatingOut': 'Mangio fuori',
+  'meal.sourceRecipe': 'Ricetta/fonte',
+  'meal.confidenceNote': 'Affidabilità',
+  'flow.ateDifferentTitle': 'Cosa hai mangiato invece?',
+  'flow.foodType': 'Tipo inserimento',
+  'flow.savedFood': 'Alimento salvato',
+  'flow.savedRecipe': 'Ricetta salvata',
+  'flow.barcodeProduct': 'Barcode/prodotto',
+  'flow.manualItem': 'Inserimento manuale',
+  'flow.restaurantEstimate': 'Stima ristorante',
+  'flow.foodOrBarcode': 'Nome alimento o barcode',
+  'flow.quantity': 'Quantità',
+  'flow.unit': 'Unità',
+  'flow.manualMacros': 'Macro manuali per la quantità inserita',
+  'flow.saveCustom': 'Salva come alimento personalizzato',
+  'flow.adjustRemaining': 'Regola i pasti rimanenti per compensare',
+  'flow.markEatenOnly': 'Segna solo come mangiato',
+  'flow.preview': 'Anteprima macro',
+  'flow.applyDifferent': 'Salva e aggiorna giornata',
+  'flow.resolveFood': 'Cerca/importa prima l\'alimento',
+  'swap.title': 'Sostituisci pasto',
+  'swap.subtitle': 'Tre alternative vicine ai macro del pasto originale.',
+  'swap.apply': 'Applica sostituzione',
+  'swap.noAlternatives': 'Nessuna alternativa adatta. Aggiungi altre ricette per questo tipo di pasto.',
+  'swap.macroDelta': 'Differenza macro',
+  'swap.reason.similar': 'macro simili',
+  'swap.reason.faster': 'preparazione più veloce',
+  'swap.reason.cheaper': 'usa alimenti base',
+  'swap.reason.preWorkout': 'meno grassi prima dell\'allenamento',
+  'swap.reason.eatingOut': 'adatto come stima fuori casa',
+  'swap.foodTitle': 'Sostituisci alimento',
+  'swap.newQuantity': 'Nuova quantità',
+  'swap.sameRole': 'Stesso ruolo alimentare',
+  'recalc.title': 'Pasti rimanenti regolati',
+  'recalc.summarySkipped': '{meal} saltato. Ho regolato i pasti rimanenti verso il target di oggi.',
+  'recalc.summaryChanged': '{meal} modificato. Ho regolato il resto della giornata verso il target.',
+  'recalc.closeEnough': 'Ho regolato i pasti rimanenti il più vicino possibile.',
+  'recalc.before': 'Prima',
+  'recalc.after': 'Dopo',
+  'recalc.projected': 'Nuovi totali giornalieri previsti',
+  'foods.title': 'Alimenti',
+  'foods.subtitle': 'Alimenti personalizzati, curati e importati dai provider restano separati.',
+  'foods.custom': 'Alimenti personalizzati',
+  'foods.curated': 'Alimenti curati',
+  'foods.provider': 'Alimenti provider/importati',
+  'foods.noCustom': 'Nessun alimento personalizzato.',
+  'foods.noProvider': 'Nessun alimento importato.',
+  'foods.searchProvider': 'Cerca / barcode',
+  'plans.currentWeek': 'Settimana corrente',
+  'plans.subtitle': 'Genera pasti da dieta base e ricette, poi esegui giorno per giorno.',
+  'plans.create': 'Genera piano',
+  'plans.startDate': 'Data inizio',
+  'plans.endDate': 'Data fine',
+  'plans.lunchMode': 'Modalità pranzo',
+  'plans.noPlans': 'Nessun piano in questa settimana',
+  'plans.noPlansHelp': 'Genera un piano per vedere i pasti giornalieri.',
+  'progress.recommendation': 'Raccomandazione',
+  'progress.notEnoughData': 'Traccia più pasti e peso prima di modificare i target.',
+});
+
+
+Object.assign(I18N.en, {
+  'auth.register': 'Create account',
+  'auth.forgotPassword': 'Forgot password placeholder',
+  'auth.accountExportDelete': 'Account export/delete placeholder',
+  'onboarding.sex': 'Sex',
+  'onboarding.age': 'Age',
+  'onboarding.height': 'Height cm',
+  'onboarding.weight': 'Weight kg',
+  'onboarding.workouts': 'Workouts/week',
+  'onboarding.activity': 'Activity',
+  'onboarding.starterTarget': 'Starter target. You can edit it anytime.',
+  'common.name': 'Name',
+  'common.type': 'Type',
+  'common.dose': 'Dose',
+  'common.unit': 'Unit',
+  'common.schedule': 'Schedule',
+  'common.notes': 'Notes',
+  'common.category': 'Category',
+  'common.priority': 'Priority',
+  'common.gramsEstimate': 'Grams estimate',
+  'progress.workingQuestion': 'Is this diet working?',
+  'checkin.title': 'Weekly check-in',
+  'checkin.subtitle': 'Conservative review: weight, hunger, energy, gym performance, digestion and adherence.',
+  'checkin.averageWeight': 'Average weight',
+  'checkin.hunger': 'Hunger 1-5',
+  'checkin.energy': 'Energy 1-5',
+  'checkin.gym': 'Gym performance 1-5',
+  'checkin.digestion': 'Digestion 1-5',
+  'checkin.adherence': 'Adherence %',
+  'checkin.saved': 'Weekly check-in saved.',
+  'checkin.save': 'Save check-in',
+  'progress.sevenDayAverage': '7-day average',
+  'progress.previousAverage': 'Previous average',
+  'progress.trend': 'Trend',
+  'common.male': 'Male',
+  'common.female': 'Female',
+  'scanner.scanBarcode': 'Scan barcode',
+  'scanner.title': 'Scan barcode',
+  'scanner.help': 'Point your camera at the product barcode.',
+  'scanner.permission': 'The camera is used only for barcode detection. Product lookup still goes through the Diet Planner backend.',
+  'scanner.manual': 'Manual barcode',
+  'scanner.lookup': 'Look up product',
+  'scanner.cancel': 'Cancel scan',
+  'scanner.detected': 'Barcode detected',
+  'scanner.searching': 'Looking up product…',
+  'scanner.notFound': 'Product not found. Try again or type another barcode.',
+  'scanner.permissionDenied': 'Camera access was blocked. You can still type the barcode manually.',
+  'scanner.unsupported': 'Camera scanning is not available on this browser. Type the barcode manually.',
+  'scanner.loadingCamera': 'Opening camera…',
+  'scanner.useForMeal': 'Use for this meal',
+  'scanner.saveFood': 'Save to foods',
+  'scanner.tryAgain': 'Try again',
+  'scanner.productPreview': 'Product preview',
+  'scanner.asSold': 'As sold / label',
+  'sync.online': 'Online',
+  'sync.offline': 'Offline: changes are saved locally and queued',
+  'sync.lastSynced': 'Last synced',
+  'sync.localOnly': 'Local-only mode',
+  'sync.neverSynced': 'Never synced',
+  'sync.queue': 'Sync queued',
+  'sync.queued': 'queued',
+  'onboarding.title': 'Set up your diet OS',
+  'onboarding.subtitle': 'One guided pass. You can skip details and edit them later.',
+  'onboarding.step': 'Step {current} of {total}',
+  'onboarding.goal': 'Goal mode',
+  'onboarding.body': 'Body data',
+  'onboarding.macro': 'Macro target',
+  'onboarding.baseline': 'Baseline diet',
+  'onboarding.preferences': 'Food preferences',
+  'onboarding.workout': 'Workout schedule',
+  'onboarding.generate': 'Generate first week',
+  'onboarding.skip': 'Skip onboarding for now',
+  'goal.fat_loss': 'Fat loss',
+  'goal.lean_bulk': 'Lean bulk',
+  'goal.maintenance': 'Maintenance',
+  'goal.recomposition': 'Recomposition',
+  'goal.performance': 'Performance',
+  'goal.custom_nutritionist_plan': 'Custom nutritionist plan',
+  'pantry.title': 'Pantry mode',
+  'pantry.subtitle': 'Prefer foods you already have when swapping or planning.',
+  'supplements.title': 'Supplement tracking',
+  'supplements.subtitle': 'Optional adherence tracking only. No medical claims.',
+  'admin.placeholder': 'Admin nutrition review is scaffolded for food corrections, aliases, duplicates, and confidence review.',
+  'progress.intelligence': 'Progress intelligence',
+  'progress.trendStable': 'Weight trend is stable.',
+  'progress.insufficient': 'More entries are needed before adjusting targets.',
+});
+
+Object.assign(I18N.it, {
+  'auth.register': 'Crea account',
+  'auth.forgotPassword': 'Password dimenticata placeholder',
+  'auth.accountExportDelete': 'Export/eliminazione account placeholder',
+  'onboarding.sex': 'Sesso',
+  'onboarding.age': 'Età',
+  'onboarding.height': 'Altezza cm',
+  'onboarding.weight': 'Peso kg',
+  'onboarding.workouts': 'Allenamenti/settimana',
+  'onboarding.activity': 'Attività',
+  'onboarding.starterTarget': 'Target iniziale. Puoi modificarlo quando vuoi.',
+  'common.name': 'Nome',
+  'common.type': 'Tipo',
+  'common.dose': 'Dose',
+  'common.unit': 'Unità',
+  'common.schedule': 'Programma',
+  'common.notes': 'Note',
+  'common.category': 'Categoria',
+  'common.priority': 'Priorità',
+  'common.gramsEstimate': 'Stima grammi',
+  'progress.workingQuestion': 'Questa dieta sta funzionando?',
+  'checkin.title': 'Check-in settimanale',
+  'checkin.subtitle': 'Revisione prudente: peso, fame, energia, performance in palestra, digestione e aderenza.',
+  'checkin.averageWeight': 'Peso medio',
+  'checkin.hunger': 'Fame 1-5',
+  'checkin.energy': 'Energia 1-5',
+  'checkin.gym': 'Performance palestra 1-5',
+  'checkin.digestion': 'Digestione 1-5',
+  'checkin.adherence': 'Aderenza %',
+  'checkin.saved': 'Check-in settimanale salvato.',
+  'checkin.save': 'Salva check-in',
+  'progress.sevenDayAverage': 'Media 7 giorni',
+  'progress.previousAverage': 'Media precedente',
+  'progress.trend': 'Trend',
+  'common.male': 'Maschio',
+  'common.female': 'Femmina',
+  'scanner.scanBarcode': 'Scansiona barcode',
+  'scanner.title': 'Scansiona barcode',
+  'scanner.help': 'Inquadra il barcode del prodotto con la fotocamera.',
+  'scanner.permission': 'La fotocamera viene usata solo per rilevare il barcode. La ricerca prodotto passa sempre dal backend Diet Planner.',
+  'scanner.manual': 'Barcode manuale',
+  'scanner.lookup': 'Cerca prodotto',
+  'scanner.cancel': 'Annulla scansione',
+  'scanner.detected': 'Barcode rilevato',
+  'scanner.searching': 'Ricerca prodotto…',
+  'scanner.notFound': 'Prodotto non trovato. Riprova o inserisci un altro barcode.',
+  'scanner.permissionDenied': 'Accesso alla fotocamera bloccato. Puoi comunque digitare il barcode manualmente.',
+  'scanner.unsupported': 'La scansione con fotocamera non è disponibile su questo browser. Inserisci il barcode manualmente.',
+  'scanner.loadingCamera': 'Apertura fotocamera…',
+  'scanner.useForMeal': 'Usa per questo pasto',
+  'scanner.saveFood': 'Salva negli alimenti',
+  'scanner.tryAgain': 'Riprova',
+  'scanner.productPreview': 'Anteprima prodotto',
+  'scanner.asSold': 'Come venduto / etichetta',
+  'sync.online': 'Online',
+  'sync.offline': 'Offline: le modifiche sono salvate localmente e messe in coda',
+  'sync.lastSynced': 'Ultima sincronizzazione',
+  'sync.localOnly': 'Solo locale',
+  'sync.neverSynced': 'Mai sincronizzato',
+  'sync.queue': 'Sincronizzazione in coda',
+  'sync.queued': 'in coda',
+  'onboarding.title': 'Configura il tuo diet OS',
+  'onboarding.subtitle': 'Un percorso guidato. Puoi saltare i dettagli e modificarli più tardi.',
+  'onboarding.step': 'Passo {current} di {total}',
+  'onboarding.goal': 'Obiettivo',
+  'onboarding.body': 'Dati corporei',
+  'onboarding.macro': 'Target macro',
+  'onboarding.baseline': 'Dieta base',
+  'onboarding.preferences': 'Preferenze alimentari',
+  'onboarding.workout': 'Programma allenamenti',
+  'onboarding.generate': 'Genera prima settimana',
+  'onboarding.skip': 'Salta onboarding per ora',
+  'goal.fat_loss': 'Dimagrimento',
+  'goal.lean_bulk': 'Massa magra',
+  'goal.maintenance': 'Mantenimento',
+  'goal.recomposition': 'Ricomposizione',
+  'goal.performance': 'Performance',
+  'goal.custom_nutritionist_plan': 'Piano personalizzato nutrizionista',
+  'settings.menu.pantry': 'Dispensa',
+  'settings.menu.supplements': 'Integratori',
+  'settings.menu.admin': 'Admin nutrizione',
+  'pantry.title': 'Modalità dispensa',
+  'pantry.subtitle': 'Preferisci gli alimenti che hai già in casa per sostituzioni e piani.',
+  'pantry.addFood': 'Aggiungi alimento disponibile',
+  'pantry.rawName': 'Nome alimento',
+  'pantry.expires': 'Scadenza',
+  'pantry.location': 'Posizione',
+  'pantry.empty': 'Nessun alimento in dispensa.',
+  'supplements.title': 'Tracking integratori',
+  'supplements.subtitle': 'Solo tracking opzionale dell’aderenza. Nessuna indicazione medica.',
+  'supplements.add': 'Aggiungi integratore',
+  'supplements.empty': 'Nessun integratore.',
+  'admin.placeholder': 'La revisione nutrizionale admin è predisposta per correzioni, alias, duplicati e affidabilità.',
+  'progress.intelligence': 'Intelligenza progresso',
+  'progress.trendStable': 'Il trend peso è stabile.',
+  'progress.insufficient': 'Servono più dati prima di modificare i target.',
+});
+
 function getCloudSession() {
   try { return JSON.parse(localStorage.getItem(CLOUD_SESSION_KEY) || 'null'); } catch { return null; }
 }
@@ -808,6 +1212,9 @@ function normalizeCloudProfile(user) {
     passwordHash: '',
     passwordSalt: '',
     authMethod: 'diet_planner_cloud',
+    role: user.role || 'user',
+    onboardingCompleted: Boolean(user.onboarding_completed || user.onboardingCompleted),
+    onboardingStep: Number(user.onboarding_step ?? user.onboardingStep ?? 0),
     lastLoginAt: new Date().toISOString(),
   };
 }
@@ -1109,6 +1516,13 @@ const state = {
   needsOnboarding: false,
   detailFocusReturn: null,
   deferredInstallPrompt: null,
+  scanner: { stream: null, detector: null, rafId: null, fallbackControls: null, lookupInFlight: false, lastBarcode: '', context: null },
+  online: navigator.onLine,
+  lastSyncedAt: localStorage.getItem('dietPlanner.lastSyncedAt') || '',
+  syncQueue: [],
+  pantryItems: [],
+  supplements: [],
+  supplementLogs: [],
 };
 
 function foodSeed(id, name, aliases, defaultUnit, unitGrams, calories, protein, carbs, fat, department, source, confidence, minG = 0, maxG = 1000, extra = {}) {
@@ -1171,7 +1585,9 @@ function normalizeFoodRecord(food) {
   base.sourceId ||= base.id;
   base.sourceUrl ||= '';
   base.confidence ||= 'unknown';
-  base.rawOrCookedState ||= inferFoodState(base.name);
+  base.rawOrCookedState ||= base.raw_cooked_state || inferFoodState(base.name);
+  base.raw_cooked_state = base.rawOrCookedState;
+  base.confidence_score = base.confidenceScore ?? base.confidence_score ?? (base.confidence === 'high' ? 0.9 : base.confidence === 'medium' ? 0.7 : base.confidence === 'low' ? 0.45 : 0.25);
   base.importedAt ||= base.lastUpdated || new Date().toISOString();
   base.lastVerifiedAt ||= base.lastUpdated || new Date().toISOString();
   base.notes ||= 'Values may vary by brand and preparation method.';
@@ -1179,6 +1595,13 @@ function normalizeFoodRecord(food) {
   base.minG ??= 0;
   base.maxG ??= 1000;
   return base;
+}
+
+function localized(value) {
+  if (value == null) return '';
+  if (typeof value === 'string') return value;
+  const lang = normalizeLanguage(state.settings?.language || detectInitialLanguage());
+  return value[lang] || value.en || value.it || Object.values(value).find(Boolean) || '';
 }
 
 function localizedFoodName(food) {
@@ -1439,15 +1862,29 @@ function calcDayProjected(day) {
 
 function calcDayCompleted(day) {
   return (day?.meals || [])
-    .filter((m) => m.status === 'completed')
+    .filter((m) => m.status === 'completed' || m.status === 'changed')
     .reduce((acc, meal) => addMacros(acc, calcMealMacros(meal)), emptyMacros());
 }
+
 
 function calcDaySkipped(day) {
   return (day?.meals || [])
     .filter((m) => m.status === 'skipped')
     .reduce((acc, meal) => addMacros(acc, calcMealMacros(meal)), emptyMacros());
 }
+
+function clampRemainingMacros(target, completed) {
+  const diff = subtractMacros(target, completed);
+  return { calories: Math.max(0, diff.calories || 0), protein: Math.max(0, diff.protein || 0), carbs: Math.max(0, diff.carbs || 0), fat: Math.max(0, diff.fat || 0) };
+}
+
+function isMealDone(meal) { return meal?.status === 'completed' || meal?.status === 'changed'; }
+function mealStatusText(meal) { if (meal?.status === 'completed') return tr('common.completed'); if (meal?.status === 'changed') return tr('common.changed'); if (meal?.status === 'skipped') return tr('common.skipped'); return tr('common.planned'); }
+function mealStatusClass(meal) { if (meal?.status === 'completed' || meal?.status === 'changed') return 'completed'; if (meal?.status === 'skipped') return 'skipped'; return ''; }
+function mealConfidence(meal) { const items = meal?.items || []; if (!items.length) return 'unknown'; if (items.some((item) => item.confidence === 'unknown')) return 'unknown'; if (items.some((item) => item.confidence === 'low')) return 'low'; if (items.some((item) => item.confidence === 'medium')) return 'medium'; return 'high'; }
+function macroDistance(a, b) { return Math.abs((a.calories || 0) - (b.calories || 0)) + Math.abs((a.protein || 0) - (b.protein || 0)) * 15 + Math.abs((a.carbs || 0) - (b.carbs || 0)) * 6 + Math.abs((a.fat || 0) - (b.fat || 0)) * 9; }
+function foodRole(food) { if (!food) return 'snack'; const p = Number(food.proteinPer100g) || 0; const c = Number(food.carbsPer100g) || 0; const f = Number(food.fatPer100g) || 0; const n = normalizeText(`${food.name} ${food.department || ''} ${food.category || ''}`); if (n.includes('vegetable') || n.includes('verdure') || n.includes('fruit')) return 'vegetable'; if (p >= c * 0.7 && p >= f * 1.6 && p >= 8) return 'protein'; if (c >= p * 1.5 && c >= f * 1.8 && c >= 12) return 'carb'; if (f >= p * 0.8 && f >= c * 0.35 && f >= 8) return 'fat'; return 'snack'; }
+function calmOptimizationWarning(warning) { return String(warning || '').replace('Not enough known nutrition data to optimize this plan. Add or correct food nutrition values.', tr('macro.needsData')).replace('Closest practical adjustment still differs from target:', tr('recalc.closeEnough')); }
 
 function getTargetForDay(dayOrDate) {
   const day = typeof dayOrDate === 'string' ? findPlan(dayOrDate) : dayOrDate;
@@ -1639,7 +2076,7 @@ async function __legacy_loadState_1_unused() {
 }
 
 async function saveSettings(settings) {
-  state.settings = normalizeSettingsRecord({ ...state.settings, ...settings, id: 'settings', userId: state.activeUserId });
+  state.settings = normalizeSettingsRecord(touchSyncMetadata({ ...state.settings, ...settings, id: 'settings', userId: state.activeUserId }, 'local', isCloudSessionActive()));
   localStorage.setItem('dietPlanner.language', state.settings.language);
   localStorage.setItem('dietPlanner.theme', state.settings.theme);
   await idbPut('settings', state.settings);
@@ -1648,11 +2085,13 @@ async function saveSettings(settings) {
     await idbPut('profiles', state.activeProfile);
   }
   applyLanguageAndTheme();
+  await savePreferencesToCloud({ ...settings });
 }
 
 async function saveTarget(target) {
-  state.target = { ...target, id: 'default', userId: state.activeUserId, updatedAt: new Date().toISOString() };
+  state.target = touchSyncMetadata({ ...target, id: 'default', userId: state.activeUserId }, 'local', isCloudSessionActive());
   await idbPut('macroTargets', state.target);
+  await savePreferencesToCloud({ macroTargets: state.target });
 }
 
 function applyLanguageAndTheme() {
@@ -1684,6 +2123,52 @@ function cryptoRandomSalt() {
   return [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+function calculateStarterTarget({ sex = 'male', age = 30, height = 175, weight = 75, activity = 1.45, workouts = 4, goalMode = 'maintenance' } = {}) {
+  const w = Number(weight) || 75;
+  const h = Number(height) || 175;
+  const a = Number(age) || 30;
+  const sexAdj = sex === 'female' ? -161 : 5;
+  const bmr = (10 * w) + (6.25 * h) - (5 * a) + sexAdj;
+  const tdee = bmr * (Number(activity) || 1.45);
+  const goalMultiplier = {
+    fat_loss: 0.86,
+    lean_bulk: 1.08,
+    maintenance: 1,
+    recomposition: 0.96,
+    performance: 1.04,
+    custom_nutritionist_plan: 1,
+  }[goalMode] || 1;
+  const calories = Math.round((tdee * goalMultiplier) / 25) * 25;
+  const proteinPerKg = goalMode === 'lean_bulk' ? 2.0 : goalMode === 'performance' ? 1.8 : 2.1;
+  const protein = Math.round(w * proteinPerKg);
+  const fat = Math.round(Math.max(w * 0.7, calories * 0.22 / 9));
+  const carbs = Math.max(80, Math.round((calories - (protein * 4) - (fat * 9)) / 4));
+  return { calories, protein, carbs, fat, source: 'starter_target', goalMode };
+}
+
+function readOnboardingTargetFromGate() {
+  const manualCalories = Number($('onboardCalories')?.value || 0);
+  if (manualCalories > 0) {
+    return {
+      calories: manualCalories,
+      protein: Number($('onboardProtein')?.value || DEFAULT_TARGET.protein),
+      carbs: Number($('onboardCarbs')?.value || DEFAULT_TARGET.carbs),
+      fat: Number($('onboardFat')?.value || DEFAULT_TARGET.fat),
+      source: 'manual_onboarding',
+      goalMode: $('onboardGoalMode')?.value || 'maintenance',
+    };
+  }
+  return calculateStarterTarget({
+    sex: $('onboardSex')?.value || 'male',
+    age: Number($('onboardAge')?.value || 30),
+    height: Number($('onboardHeight')?.value || 175),
+    weight: Number($('onboardWeight')?.value || 75),
+    activity: Number($('onboardActivity')?.value || 1.45),
+    workouts: Number($('onboardWorkouts')?.value || 4),
+    goalMode: $('onboardGoalMode')?.value || 'maintenance',
+  });
+}
+
 async function createLocalProfileFromForm() {
   const displayName = $('profileDisplayName')?.value.trim();
   if (!displayName) { toast('Display name is required.'); return; }
@@ -1707,7 +2192,11 @@ async function createLocalProfileFromForm() {
   await idbPut('profiles', profile);
   localStorage.setItem(SESSION_KEY, JSON.stringify({ userId: profile.id, startedAt: now }));
   await attachLegacyData(profile.id);
-  await saveSettings({ language, theme, units });
+  const starterTarget = readOnboardingTargetFromGate();
+  await saveSettings({ language, theme, units, goalMode: starterTarget.goalMode, onboardingCompleted: false, onboardingStep: 3 });
+  await saveTarget(starterTarget);
+  const weight = Number($('onboardWeight')?.value || 0);
+  if (weight > 0) await idbPut('body', { id: uuid('body'), userId: profile.id, date: todayISO(), bodyWeight: weight, source: 'onboarding', createdAt: now, updatedAt: now });
   await loadState();
   if (state.activeProfile) await ensureStarterPlan();
   renderNav();
@@ -1830,6 +2319,8 @@ function parseFoodLine(line) {
     notes,
     source: food?.source || 'Manual value required',
     confidence: food?.confidence || 'unknown',
+    rawOrCookedState: food?.rawOrCookedState || food?.raw_cooked_state || 'unknown',
+    nutritionPer100g: food ? { calories: Number(food.caloriesPer100g) || 0, protein: Number(food.proteinPer100g) || 0, carbs: Number(food.carbsPer100g) || 0, fat: Number(food.fatPer100g) || 0 } : null,
   };
   if (normalizedUnit === 'kg' || normalizedUnit === 'l') item.quantity = grams;
   return item;
@@ -1852,6 +2343,8 @@ function createItemFromFood(foodId, quantity, unit) {
     notes: '',
     source: food?.source || 'Manual value required',
     confidence: food?.confidence || 'unknown',
+    rawOrCookedState: food?.rawOrCookedState || food?.raw_cooked_state || 'unknown',
+    nutritionPer100g: food ? { calories: Number(food.caloriesPer100g) || 0, protein: Number(food.proteinPer100g) || 0, carbs: Number(food.carbsPer100g) || 0, fat: Number(food.fatPer100g) || 0 } : null,
   };
 }
 
@@ -2119,7 +2612,7 @@ async function __legacy_generatePlans_1_unused(start, end, includeWeekends, lunc
     }
     const day = makeDayPlan(dates[i], lunchOverride);
     scaleDayToTarget(day, getTargetForDay(day));
-    await idbPut('plans', day);
+    await persistPlan(day);
     created.push(day);
   }
   await loadState();
@@ -2208,8 +2701,29 @@ function renderProfileGate() {
           <label class="field"><span>${tr('auth.cloudEmail')}</span><input id="cloudLoginEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>
           <label class="field"><span>${tr('auth.cloudPassword')}</span><input id="cloudLoginPassword" type="password" autocomplete="current-password"></label>
         </div>
-        <button class="primary-button" data-action="cloud-login">${tr('auth.cloudLogin')}</button>
+        <div class="actions"><button class="primary-button" data-action="cloud-login">${tr('auth.cloudLogin')}</button><button class="secondary-button" data-action="cloud-register">${tr('auth.register')}</button></div>
         <div id="cloudLoginStatus" class="small muted"></div>
+      </section>
+
+      <section class="card stack auth-card onboarding-card">
+        <div>
+          <p class="eyebrow">${tr('onboarding.step', { current: 1, total: 9 })}</p>
+          <h2>${tr('onboarding.title')}</h2>
+          <p class="muted small">${tr('onboarding.subtitle')}</p>
+        </div>
+        <div class="step-list compact">
+          <span>${tr('onboarding.goal')}</span><span>${tr('onboarding.body')}</span><span>${tr('onboarding.macro')}</span><span>${tr('onboarding.baseline')}</span><span>${tr('onboarding.preferences')}</span><span>${tr('onboarding.workout')}</span><span>${tr('onboarding.generate')}</span>
+        </div>
+        <div class="form-grid three">
+          <label class="field"><span>${tr('onboarding.goal')}</span><select id="onboardGoalMode"><option value="fat_loss">${tr('goal.fat_loss')}</option><option value="lean_bulk">${tr('goal.lean_bulk')}</option><option value="maintenance" selected>${tr('goal.maintenance')}</option><option value="recomposition">${tr('goal.recomposition')}</option><option value="performance">${tr('goal.performance')}</option><option value="custom_nutritionist_plan">${tr('goal.custom_nutritionist_plan')}</option></select></label>
+          <label class="field"><span>${tr('onboarding.sex')}</span><select id="onboardSex"><option value="male">${tr('common.male')}</option><option value="female">${tr('common.female')}</option></select></label>
+          <label class="field"><span>${tr('onboarding.age')}</span><input id="onboardAge" type="number" min="14" max="90" value="30"></label>
+          <label class="field"><span>${tr('onboarding.height')}</span><input id="onboardHeight" type="number" min="120" max="230" value="175"></label>
+          <label class="field"><span>${tr('onboarding.weight')}</span><input id="onboardWeight" type="number" min="35" max="250" value="75"></label>
+          <label class="field"><span>${tr('onboarding.workouts')}</span><input id="onboardWorkouts" type="number" min="0" max="14" value="4"></label>
+          <label class="field"><span>${tr('onboarding.activity')}</span><select id="onboardActivity"><option value="1.3">Light</option><option value="1.45" selected>Moderate</option><option value="1.6">High</option></select></label>
+        </div>
+        <details class="collapsible"><summary>${tr('macro.dailyTarget')} · ${tr('onboarding.starterTarget')}</summary><div class="form-grid four"><label class="field"><span>kcal</span><input id="onboardCalories" type="number"></label><label class="field"><span>P</span><input id="onboardProtein" type="number"></label><label class="field"><span>C</span><input id="onboardCarbs" type="number"></label><label class="field"><span>F</span><input id="onboardFat" type="number"></label></div></details>
       </section>
 
       <section class="card stack auth-card">
@@ -2237,6 +2751,37 @@ function renderProfileGate() {
     </div>`;
 }
 
+async function cloudRegisterFromForm() {
+  const email = $('cloudLoginEmail')?.value.trim();
+  const password = $('cloudLoginPassword')?.value || '';
+  const status = $('cloudLoginStatus');
+  if (!email || !password) { if (status) status.textContent = 'Email and password are required.'; return; }
+  if (status) status.textContent = `${tr('common.loading')}...`;
+  try {
+    const payload = await apiRequest('/api/auth/register', { method: 'POST', body: { email, password, name: email.split('@')[0], language: detectInitialLanguage(), theme: 'system', units: 'metric' } });
+    if (!payload?.user) throw new Error('No user returned by backend.');
+    const profile = normalizeCloudProfile(payload.user);
+    await idbPut('profiles', profile);
+    localStorage.setItem(CLOUD_SESSION_KEY, JSON.stringify({ user: payload.user, token: payload.token || '', startedAt: new Date().toISOString() }));
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ userId: profile.id, startedAt: new Date().toISOString(), mode: 'cloud' }));
+    await attachLegacyData(profile.id);
+    await loadState();
+    await savePreferencesToCloud({ onboardingCompleted: false, onboardingStep: 1 });
+    await loadCloudPreferencesIfAvailable();
+    await loadCloudRecipesIfAvailable();
+    await loadCloudMealPlansIfAvailable();
+    await loadCloudPantryIfAvailable();
+    await loadCloudSupplementsIfAvailable();
+    if (state.activeProfile) await ensureStarterPlan();
+    renderNav();
+    render();
+    toast(tr('auth.cloudConnected'));
+  } catch (error) {
+    if (status) status.textContent = error.message;
+    toast(error.message);
+  }
+}
+
 async function cloudLoginFromForm() {
   const email = $('cloudLoginEmail')?.value.trim();
   const password = $('cloudLoginPassword')?.value || '';
@@ -2252,7 +2797,11 @@ async function cloudLoginFromForm() {
     localStorage.setItem(SESSION_KEY, JSON.stringify({ userId: profile.id, startedAt: new Date().toISOString(), mode: 'cloud' }));
     await attachLegacyData(profile.id);
     await loadState();
+    await loadCloudPreferencesIfAvailable();
     await loadCloudRecipesIfAvailable();
+    await loadCloudMealPlansIfAvailable();
+    await loadCloudPantryIfAvailable();
+    await loadCloudSupplementsIfAvailable();
     await loadState();
     if (state.activeProfile) await ensureStarterPlan();
     renderNav();
@@ -2313,6 +2862,21 @@ function progressRows(target, completed, projected, day, includeProjected = fals
   }).join('')}</div>`;
 }
 
+function formatTimestamp(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString(currentLocale(), { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function renderSyncStatus() {
+  const queued = state.syncQueue?.filter((item) => item.status !== 'synced').length || 0;
+  const last = state.lastSyncedAt ? formatTimestamp(state.lastSyncedAt) : tr('sync.neverSynced');
+  const stateKey = state.online ? (queued ? 'sync.queue' : 'sync.online') : 'sync.offline';
+  const cls = state.online ? (queued ? 'warn' : 'good') : 'danger';
+  return `<section class="soft-note sync-status-row"><span class="status-pill ${cls}">${tr(stateKey)}</span><span class="muted small">${tr('sync.lastSynced')}: ${escapeHtml(last)}${queued ? ` · ${queued} ${tr('sync.queued')}` : ''}</span></section>`;
+}
+
 function renderToday() {
   const date = todayISO();
   const day = findPlan(date);
@@ -2329,62 +2893,58 @@ function renderToday() {
   const target = getTargetForDay(day);
   const completed = calcDayCompleted(day);
   const projected = calcDayProjected(day);
+  const remaining = clampRemainingMacros(target, completed);
   const warnings = [...(day.generationWarnings || []), ...(day.recalculationLog?.slice(-1)[0]?.warnings || [])].filter(Boolean);
   const status = macroStatus(target, projected);
-  const totalMeals = day.meals.length;
-  const completedMeals = day.meals.filter((m) => m.status === 'completed').length;
-  const plannedMeals = day.meals.filter((m) => m.status === 'planned').length;
-  const overallPct = totalMeals ? Math.round((completedMeals / totalMeals) * 100) : 0;
-  const nextMeal = day.meals.find((m) => m.status === 'planned') || day.meals[0];
+  const nextMeal = day.meals.find((m) => m.status === 'planned') || null;
   return html`
-    <div class="screen dashboard-screen">
-      <section class="hero-card dashboard-hero">
+    <div class="screen dashboard-screen daily-os-screen">
+      <section class="hero-card dashboard-hero daily-hero">
         <div class="hero-copy">
           <p class="eyebrow">${formatDate(date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           <h2>${tr('dashboard.todayFocus')}</h2>
           <p class="muted small">${tr('dashboard.primarySummary')}</p>
+          <div class="chip-row"><span class="status-pill blue">${tr('dashboard.goalMode')}: ${escapeHtml(day.goalMode || state.settings.goalMode || 'custom')}</span><span class="status-pill ${day.workout?.isWorkout ? 'good' : ''}">${day.workout?.isWorkout ? tr('dashboard.workoutDay') : tr('dashboard.restDay')}</span></div>
         </div>
-        <div class="hero-action"><button class="primary-button" data-action="regenerate-day" data-date="${day.date}">${tr('dashboard.planToday')}</button></div>
+        <div class="daily-hero-metrics"><span>${tr('dashboard.projectedToday')}</span><strong>${round(projected.calories)} / ${round(target.calories)} kcal</strong><span class="status-pill ${status.cls}">${status.label}</span></div>
       </section>
-
-      <section class="quick-summary-grid">
-        ${dashboardCard('open-macro-detail', tr('macro.dailyTarget'), `${round(completed.calories)} / ${round(target.calories)} kcal<br><span class="muted">P ${round(completed.protein, 1)}/${round(target.protein, 1)}g · C ${round(completed.carbs, 1)}/${round(target.carbs, 1)}g · F ${round(completed.fat, 1)}/${round(target.fat, 1)}g</span>`, `<span class="status-pill ${status.cls}">${status.label}</span>`)}
-        ${dashboardCard('open-progress-detail', tr('progress.title'), `${tr('progress.overall')}: <span class="inline-bar"><i style="--value:${overallPct}%"></i></span> ${overallPct}%<br><span class="muted">${tr('progress.completedMeals', { completed: completedMeals, total: totalMeals })}</span>`, '')}
-        ${dashboardCard('nav', tr('nav.meals'), `${plannedMeals ? `${plannedMeals} ${tr('meal.remaining').toLowerCase()}` : tr('common.completed')}<br><span class="muted">${nextMeal ? `${mealLabel(nextMeal.slot)} · ${round(calcMealMacros(nextMeal).calories)} kcal` : '—'}</span>`, '', 'dashboard-card-route', 'meals')}
-      </section>
-
-      ${warnings.length ? `<section class="soft-note"><span>${tr('dashboard.optimizationNote')}</span><details class="collapsible"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="small muted">${warnings.map(escapeHtml).join('<br>')}</div></details></section>` : ''}
-
-      <section class="card stack meal-checklist-card clean-card">
-        <div class="card-title-row compact">
-          <div>
-            <h2>${tr('dashboard.mealChecklist')}</h2>
-            <p class="muted small">${tr('dashboard.mealsHint')}</p>
-          </div>
-          <button class="secondary-button" data-action="nav" data-view="meals">${tr('common.open')}</button>
-        </div>
-        <div class="meal-checklist-list">${day.meals.map((meal) => renderMealChecklistRow(day, meal)).join('')}</div>
-      </section>
+      ${renderSyncStatus()}
+      ${renderNextMealCard(day, nextMeal)}
+      ${renderRemainingMacroPanel(target, completed, remaining)}
+      ${warnings.length ? `<section class="soft-note"><span>${tr('dashboard.optimizationNote')}</span><details class="collapsible"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="small muted">${warnings.map(calmOptimizationWarning).map(escapeHtml).join('<br>')}</div></details></section>` : ''}
+      <section class="card stack meal-checklist-card clean-card"><div class="card-title-row compact"><div><h2>${tr('dashboard.mealChecklist')}</h2><p class="muted small">${tr('dashboard.mealsHint')}</p></div><button class="secondary-button" data-action="nav" data-view="meals">${tr('common.open')}</button></div><div class="meal-checklist-list">${day.meals.map((meal) => renderMealChecklistRow(day, meal)).join('')}</div></section>
+      ${renderEveningSummary(day, target, completed, projected)}
     </div>`;
+}
+
+function renderNextMealCard(day, meal) {
+  if (!meal) return `<section class="card clean-card next-meal-card done"><p class="eyebrow">${tr('dashboard.nextMeal')}</p><h2>${tr('dashboard.nextMealDone')}</h2><p class="muted small">${totalsText(calcDayCompleted(day))}</p></section>`;
+  const macros = calcMealMacros(meal);
+  const foods = meal.items || [];
+  return html`<section class="card clean-card next-meal-card"><div class="next-meal-header"><div><p class="eyebrow">${tr('dashboard.nextMeal')}</p><h2>${escapeHtml(mealLabel(meal.slot))}</h2><p class="muted small">${escapeHtml(meal.time || '')} · ${escapeHtml(meal.recipeName || tr('meal.recipeViewer'))}</p></div>${confidencePill(mealConfidence(meal))}</div><div class="next-meal-foods">${foods.map((item) => `<div><strong>${escapeHtml(item.foodName)}</strong><span>${displayQuantity(item)}</span></div>`).join('') || `<p class="muted small">${tr('meal.noFoods')}</p>`}</div><div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(macros.calories)} kcal</span><span class="macro-pill">P ${round(macros.protein, 1)}g</span><span class="macro-pill">C ${round(macros.carbs, 1)}g</span><span class="macro-pill">F ${round(macros.fat, 1)}g</span></div><div class="actions next-meal-actions"><button class="primary-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateThis')}</button><button class="secondary-button" data-action="open-ate-different" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateDifferent')}</button><button class="ghost-button" data-action="skip-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.skippedThis')}</button><button class="ghost-button" data-action="open-swap-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.swapMeal')}</button><button class="ghost-button" data-action="edit-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.edit')}</button></div></section>`;
+}
+
+function renderRemainingMacroPanel(target, completed, remaining) {
+  const rows = [[tr('macro.calories'), remaining.calories, target.calories, 'kcal'], [tr('macro.protein'), remaining.protein, target.protein, 'g'], [tr('macro.carbs'), remaining.carbs, target.carbs, 'g'], [tr('macro.fat'), remaining.fat, target.fat, 'g']];
+  return html`<section class="card clean-card remaining-panel"><div class="card-title-row compact"><div><h2>${tr('dashboard.remainingToday')}</h2><p class="muted small">${tr('dashboard.remainingHint')}</p></div><span class="status-pill blue">${tr('dashboard.consumedToday')}: ${round(completed.calories)} kcal</span></div><div class="remaining-grid">${rows.map(([label, value, goal, unit]) => { const consumed = Math.max(0, (goal || 0) - (value || 0)); const pct = goal ? clamp((consumed / goal) * 100, 0, 125) : 0; return `<div class="remaining-macro"><div class="row between"><span>${escapeHtml(label)}</span><strong>${round(value, unit === 'kcal' ? 0 : 1)} ${unit}</strong></div><div class="bar"><i style="--value:${pct}%"></i></div></div>`; }).join('')}</div></section>`;
+}
+
+function renderEveningSummary(day, target, completed, projected) {
+  const skipped = day.meals.filter((m) => m.status === 'skipped');
+  const diff = subtractMacros(projected, target);
+  const deltas = [[tr('macro.calories'), Math.abs(diff.calories || 0), `${round(diff.calories)} kcal`], [tr('macro.protein'), Math.abs(diff.protein || 0), `${round(diff.protein, 1)} g`], [tr('macro.carbs'), Math.abs(diff.carbs || 0), `${round(diff.carbs, 1)} g`], [tr('macro.fat'), Math.abs(diff.fat || 0), `${round(diff.fat, 1)} g`]].sort((a, b) => a[1] - b[1]);
+  const suggestion = skipped.length ? tr('dashboard.skippedTomorrowSuggestion', { meal: mealLabel(skipped[0].slot) }) : tr('progress.notEnoughData');
+  return html`<section class="card clean-card evening-summary"><details class="collapsible"><summary><strong>${tr('dashboard.eveningSummary')}</strong><span class="muted small">${totalsText(completed)}</span></summary><div class="grid three"><div class="card flat"><h3>${tr('macro.target')}</h3><p>${totalsText(target)}</p></div><div class="card flat"><h3>${tr('macro.consumed')}</h3><p>${totalsText(completed)}</p></div><div class="card flat"><h3>${tr('macro.projected')}</h3><p>${totalsText(projected)}</p></div></div><div class="grid two"><div class="card flat"><h3>${tr('dashboard.bestMacroHit')}</h3><p>${escapeHtml(deltas[0][0])}: ${escapeHtml(deltas[0][2])}</p></div><div class="card flat"><h3>${tr('dashboard.largestDeviation')}</h3><p>${escapeHtml(deltas[deltas.length - 1][0])}: ${escapeHtml(deltas[deltas.length - 1][2])}</p></div></div><div class="info-box small"><strong>${tr('dashboard.tomorrowSuggestion')}:</strong> ${escapeHtml(suggestion)}</div></details></section>`;
 }
 
 function renderMealChecklistRow(day, meal) {
   const macros = calcMealMacros(meal);
-  const statusClass = meal.status === 'completed' ? 'completed' : meal.status === 'skipped' ? 'skipped' : '';
-  const statusText = meal.status === 'completed' ? tr('common.completed') : meal.status === 'skipped' ? tr('common.skipped') : tr('common.planned');
-  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'skipped' ? '×' : '';
+  const statusClass = mealStatusClass(meal);
+  const statusText = mealStatusText(meal);
+  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'changed' ? '↺' : meal.status === 'skipped' ? '×' : '';
   const preview = (meal.items || []).slice(0, 2).map((item) => item.foodName).join(', ') || tr('meal.noFoods');
   const extra = (meal.items || []).length > 2 ? ` +${(meal.items || []).length - 2}` : '';
-  return html`
-    <article class="meal-check-row ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">
-      <button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button>
-      <div class="meal-check-copy">
-        <strong>${escapeHtml(mealLabel(meal.slot))}</strong>
-        <span>${escapeHtml(meal.time || '')} · ${escapeHtml(preview)}${extra}</span>
-      </div>
-      <div class="meal-check-metrics"><strong>${round(macros.calories)} kcal</strong><span>P ${round(macros.protein, 1)}g</span></div>
-      <span class="status-pill ${meal.status === 'completed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span>
-    </article>`;
+  return html`<article class="meal-check-row ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}"><button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button><div class="meal-check-copy"><strong>${escapeHtml(mealLabel(meal.slot))}</strong><span>${escapeHtml(meal.time || '')} · ${escapeHtml(preview)}${extra}</span></div><div class="meal-check-metrics"><strong>${round(macros.calories)} kcal</strong><span>P ${round(macros.protein, 1)}g</span></div><span class="status-pill ${meal.status === 'completed' || meal.status === 'changed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span></article>`;
 }
 
 function dashboardCard(action, title, body, badge = '', extraClass = '', view = '') {
@@ -2456,7 +3016,7 @@ function renderWorkoutControls(day) {
     <div class="form-grid three">
       <label class="checkbox-row"><input type="checkbox" id="workoutIsToday" ${day.workout?.isWorkout ? 'checked' : ''}> <span>Workout day</span></label>
       <label class="field"><span>Workout time</span><input type="time" id="workoutTime" value="${escapeHtml(day.workout?.time || '18:30')}"></label>
-      <label class="field"><span>Type</span><select id="workoutType">
+      <label class="field"><span>${tr('common.type')}</span><select id="workoutType">
         ${['Strength', 'Cardio', 'Mixed', 'Rest'].map((v) => `<option ${day.workout?.type === v ? 'selected' : ''}>${v}</option>`).join('')}
       </select></label>
     </div>
@@ -2466,39 +3026,12 @@ function renderWorkoutControls(day) {
 
 function renderMealCard(day, meal) {
   const macros = calcMealMacros(meal);
-  const statusClass = meal.status === 'completed' ? 'completed' : meal.status === 'skipped' ? 'skipped' : '';
-  const statusText = meal.status === 'completed' ? tr('common.completed') : meal.status === 'skipped' ? tr('common.skipped') : tr('common.planned');
-  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'skipped' ? '×' : '';
+  const statusClass = mealStatusClass(meal);
+  const statusText = mealStatusText(meal);
+  const checkText = meal.status === 'completed' ? '✓' : meal.status === 'changed' ? '↺' : meal.status === 'skipped' ? '×' : '';
   const foods = meal.items || [];
   const preview = foods.slice(0, 4);
-  return html`
-    <article class="meal-card ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}" tabindex="0">
-      <div class="meal-main clean-meal-main">
-        <button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button>
-        <div class="meal-summary-copy">
-          <div class="row between no-wrap">
-            <div>
-              <h3>${escapeHtml(mealLabel(meal.slot))}</h3>
-              <div class="small muted">${escapeHtml(meal.time || '')} · ${escapeHtml(meal.recipeName || 'Meal')}</div>
-            </div>
-            <span class="status-pill ${meal.status === 'completed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span>
-          </div>
-          <div class="macro-pills macro-pills-prominent">
-            <span class="macro-pill">${round(macros.calories)} kcal</span>
-            <span class="macro-pill">P ${round(macros.protein, 1)}g</span>
-            <span class="macro-pill">C ${round(macros.carbs, 1)}g</span>
-            <span class="macro-pill">F ${round(macros.fat, 1)}g</span>
-          </div>
-          <div class="food-preview-line"><span class="label">${tr('meal.foodPreview')}</span>${preview.map((item) => `<span>${escapeHtml(item.foodName)} · ${displayQuantity(item)}</span>`).join('') || `<span>${tr('meal.noFoods')}</span>`}${foods.length > preview.length ? `<span>+${foods.length - preview.length}</span>` : ''}</div>
-        </div>
-      </div>
-      <div class="actions meal-actions-clean">
-        <button class="secondary-button" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.viewDetails')}</button>
-        <button class="ghost-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.completed')}</button>
-        <button class="ghost-button" data-action="skip-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.skipped')}</button>
-        <button class="ghost-button" data-action="edit-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('common.edit')}</button>
-      </div>
-    </article>`;
+  return html`<article class="meal-card ${statusClass}" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}" tabindex="0"><div class="meal-main clean-meal-main"><button class="check-circle ${statusClass}" data-action="toggle-meal" data-date="${day.date}" data-meal-id="${meal.id}" aria-label="Toggle ${escapeHtml(meal.slot)} completion">${checkText}</button><div class="meal-summary-copy"><div class="row between no-wrap"><div><h3>${escapeHtml(mealLabel(meal.slot))}</h3><div class="small muted">${escapeHtml(meal.time || '')} · ${escapeHtml(meal.recipeName || 'Meal')}</div></div><span class="status-pill ${meal.status === 'completed' || meal.status === 'changed' ? 'good' : meal.status === 'skipped' ? 'bad' : ''}">${statusText}</span></div><div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(macros.calories)} kcal</span><span class="macro-pill">P ${round(macros.protein, 1)}g</span><span class="macro-pill">C ${round(macros.carbs, 1)}g</span><span class="macro-pill">F ${round(macros.fat, 1)}g</span></div><div class="food-preview-line"><span class="label">${tr('meal.foodPreview')}</span>${preview.map((item) => `<span>${escapeHtml(item.foodName)} · ${displayQuantity(item)}</span>`).join('') || `<span>${tr('meal.noFoods')}</span>`}${foods.length > preview.length ? `<span>+${foods.length - preview.length}</span>` : ''}</div></div></div><div class="actions meal-actions-clean"><button class="secondary-button" data-action="open-meal-detail" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.viewDetails')}</button><button class="ghost-button" data-action="complete-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateThis')}</button><button class="ghost-button" data-action="open-ate-different" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.ateDifferent')}</button><button class="ghost-button" data-action="open-swap-meal" data-date="${day.date}" data-meal-id="${meal.id}">${tr('meal.swapMeal')}</button></div></article>`;
 }
 
 function renderMeals() {
@@ -2537,7 +3070,7 @@ function renderFoods() {
           <h2>${tr('foods.title')}</h2>
           <p class="muted small">${tr('foods.subtitle')}</p>
         </div>
-        <div class="actions"><button class="primary-button" data-action="open-food-editor">${tr('settings.foodDatabase.add')}</button><button class="secondary-button" data-action="open-food-lookup">${tr('foods.searchProvider')}</button></div>
+        <div class="actions"><button class="primary-button" data-action="open-food-editor">${tr('settings.foodDatabase.add')}</button><button class="secondary-button" data-action="open-food-lookup">${tr('foods.searchProvider')}</button><button class="secondary-button" data-action="open-barcode-scanner">${tr('scanner.scanBarcode')}</button></div>
       </section>
       <section class="food-source-grid">
         <div class="card clean-card stack-sm"><div class="row between"><h2>${tr('foods.custom')}</h2><span class="status-pill blue">${custom.length}</span></div>${custom.length ? renderFoodCardList(custom.slice(0, 12)) : `<p class="muted small">${tr('foods.noCustom')}</p>`}</div>
@@ -2795,6 +3328,57 @@ function renderPrepInstructions(list, label) {
     <div class="warning-box small">Storage guidance is generic. Use local food-safety standards and package instructions.</div>`;
 }
 
+function buildProgressIntelligence(analysis) {
+  const weights = (state.bodyEntries || []).filter((e) => Number(e.bodyWeight) > 0).sort(sortByDate);
+  const recent = weights.slice(-7);
+  const previous = weights.slice(-14, -7);
+  const avgWeight = (rows) => rows.length ? rows.reduce((sum, row) => sum + Number(row.bodyWeight || 0), 0) / rows.length : null;
+  const recentAvg = avgWeight(recent);
+  const previousAvg = avgWeight(previous);
+  const trend = recentAvg != null && previousAvg != null ? recentAvg - previousAvg : null;
+  const diagnostics = [];
+  if (analysis.days < 7 || weights.length < 2) diagnostics.push(tr('progress.insufficient'));
+  else if (analysis.adherence < 80) diagnostics.push('Adherence is low. Improve tracking consistency before changing targets.');
+  else if (trend != null && Math.abs(trend) < 0.2) diagnostics.push(`${tr('progress.trendStable')} ${state.settings.goalMode === 'fat_loss' ? 'Consider -150 kcal/day only if adherence is accurate.' : 'Keep the target unless gym performance or hunger suggests a change.'}`);
+  else if (trend != null && trend < -0.7) diagnostics.push('Weight is dropping quickly. Consider a smaller deficit or review energy and gym performance.');
+  else if (trend != null && trend > 0.7 && state.settings.goalMode === 'fat_loss') diagnostics.push('Weight trend is rising while fat loss is selected. Review adherence before reducing calories.');
+  else diagnostics.push('Current data does not show a clear reason to change targets.');
+  return { recentAvg, previousAvg, trend, diagnostics };
+}
+
+function renderProgressIntelligence(analysis) {
+  const intelligence = buildProgressIntelligence(analysis);
+  return `<section class="card clean-card stack-sm"><div class="card-title-row"><div><h2>${tr('progress.intelligence')}</h2><p class="muted small">${tr('progress.workingQuestion')}</p></div></div><div class="metric-grid compact"><div class="metric"><span>${tr('progress.sevenDayAverage')}</span><strong>${intelligence.recentAvg ? `${round(intelligence.recentAvg, 1)} kg` : '—'}</strong></div><div class="metric"><span>${tr('progress.previousAverage')}</span><strong>${intelligence.previousAvg ? `${round(intelligence.previousAvg, 1)} kg` : '—'}</strong></div><div class="metric"><span>${tr('progress.trend')}</span><strong>${intelligence.trend == null ? '—' : `${round(intelligence.trend, 2)} kg`}</strong></div></div><div class="stack-sm">${intelligence.diagnostics.map((line) => `<div class="info-box small">${escapeHtml(line)}</div>`).join('')}</div></section>`;
+}
+
+function renderWeeklyCheckInCard() {
+  return `<section class="card clean-card stack-sm"><div class="card-title-row"><div><h2>${tr('checkin.title')}</h2><p class="muted small">${tr('checkin.subtitle')}</p></div></div><div class="form-grid three"><label class="field"><span>${tr('checkin.averageWeight')}</span><input id="checkWeight" type="number" step="0.1"></label><label class="field"><span>${tr('checkin.hunger')}</span><input id="checkHunger" type="number" min="1" max="5"></label><label class="field"><span>${tr('checkin.energy')}</span><input id="checkEnergy" type="number" min="1" max="5"></label><label class="field"><span>${tr('checkin.gym')}</span><input id="checkGym" type="number" min="1" max="5"></label><label class="field"><span>${tr('checkin.digestion')}</span><input id="checkDigestion" type="number" min="1" max="5"></label><label class="field"><span>${tr('checkin.adherence')}</span><input id="checkAdherence" type="number" min="0" max="100"></label></div><label class="field"><span>${tr('common.notes')}</span><textarea id="checkNotes"></textarea></label><button class="primary-button" data-action="save-weekly-checkin">${tr('checkin.save')}</button></section>`;
+}
+
+async function saveWeeklyCheckIn() {
+  const checkIn = {
+    id: uuid('checkin'),
+    userId: state.activeUserId,
+    date: todayISO(),
+    averageWeight: Number($('checkWeight')?.value || 0),
+    hunger: Number($('checkHunger')?.value || 0),
+    energy: Number($('checkEnergy')?.value || 0),
+    gymPerformance: Number($('checkGym')?.value || 0),
+    digestion: Number($('checkDigestion')?.value || 0),
+    adherence: Number($('checkAdherence')?.value || 0),
+    notes: $('checkNotes')?.value || '',
+    recommendation: 'Keep the current plan unless adherence is accurate and the weight trend is clearly off target.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  await idbPut('checkIns', touchSyncMetadata(checkIn, 'local', isCloudSessionActive()));
+  if (isCloudSessionActive()) {
+    try { await apiRequest('/api/check-ins', { method: 'POST', body: checkIn }); setLastSyncedAt(); }
+    catch (error) { await queueOfflineAction({ kind: 'checkIn', path: '/api/check-ins', method: 'POST', body: checkIn, error: error.message }); }
+  }
+  toast(tr('checkin.saved'));
+}
+
 function renderProgress() {
   const analysis = buildHistoricalAnalysis();
   const overall = clamp(round(analysis.adherence || 0), 0, 150);
@@ -2815,6 +3399,8 @@ function renderProgress() {
         <div class="card metric clean-card"><span>${tr('progress.macroAdherence')}</span><strong>${round(analysis.adherence)}%</strong><div class="small muted">${tr('progress.caloriesTargetRatio')}</div></div>
       </section>
 
+      ${renderProgressIntelligence(analysis)}
+      ${renderWeeklyCheckInCard()}
       <section class="card clean-card stack-sm">
         <div class="card-title-row"><div><h2>${tr('progress.details')}</h2><p class="muted small">${tr('progress.explainer')}</p></div></div>
         <details class="collapsible roomy-details">
@@ -2900,7 +3486,7 @@ function renderBody() {
           ${bodyField('arm', 'Arm (cm)', 'number')}
           ${bodyField('leg', 'Leg (cm)', 'number')}
         </div>
-        <label class="field"><span>Notes</span><textarea id="body_notes" placeholder="Measurement conditions, device, hydration, etc."></textarea></label>
+        <label class="field"><span>${tr('common.notes')}</span><textarea id="body_notes" placeholder="Measurement conditions, device, hydration, etc."></textarea></label>
         <div class="actions">
           <button class="primary-button" data-action="save-body-entry">Save body entry</button>
           <button class="ghost-button" data-action="export-body-csv">Export body CSV</button>
@@ -2970,7 +3556,7 @@ function renderBlood() {
         <div class="warning-box small">Review source documents and professional notes outside the app when needed.</div>
         <div class="form-grid">
           <label class="field"><span>Exam date</span><input id="bloodDate" type="date" value="${todayISO()}"></label>
-          <label class="field"><span>Notes</span><input id="bloodNotes" placeholder="Lab, fasting state, medication notes..."></label>
+          <label class="field"><span>${tr('common.notes')}</span><input id="bloodNotes" placeholder="Lab, fasting state, medication notes..."></label>
         </div>
         <label class="field"><span>Paste exam text</span><textarea id="bloodText" placeholder="Glucose 91 mg/dL reference 70-99..."></textarea></label>
         <div class="actions">
@@ -3126,7 +3712,7 @@ function __legacy_renderMacroForm_1_unused() {
       ${macroInput('tolCarbs', 'Carbs tolerance g', t.tolerance?.carbs ?? 10, 'g')}
       ${macroInput('tolFat', 'Fat tolerance g', t.tolerance?.fat ?? 5, 'g')}
     </div>
-    <label class="field"><span>Notes</span><textarea id="macro_notes">${escapeHtml(t.notes || '')}</textarea></label>
+    <label class="field"><span>${tr('common.notes')}</span><textarea id="macro_notes">${escapeHtml(t.notes || '')}</textarea></label>
     ${macroValidationMessage(t)}
     <details class="collapsible">
       <summary>Optional workout/rest targets</summary>
@@ -3233,6 +3819,7 @@ function openDetailPanel(title, bodyHtml) {
 }
 
 function closeModal() {
+  stopBarcodeScanner();
   $('modal').hidden = true;
   $('modal').classList.remove('detail-panel');
   $('modalBody').innerHTML = '';
@@ -3254,7 +3841,7 @@ async function toggleMeal(date, mealId) {
   if (!meal) return;
   meal.status = meal.status === 'completed' ? 'planned' : 'completed';
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
 }
@@ -3263,9 +3850,20 @@ async function setMealStatus(date, mealId, status) {
   const day = findPlan(date);
   const meal = day?.meals.find((m) => m.id === mealId);
   if (!meal) return;
+  const action = status === 'completed' ? 'complete' : null;
+  if (action && isCloudSessionActive()) {
+    const payload = await syncMealActionWithCloud(action, date, mealId, { target: getTargetForDay(day), recalculate: true });
+    if (payload?.mealPlan) {
+      await loadState();
+      render();
+      const summary = localized(payload.recalculation?.userSummary);
+      if (summary) toast(summary);
+      return;
+    }
+  }
   meal.status = status;
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
 }
@@ -3289,18 +3887,30 @@ async function skipAndRecalculate(date, mealId, recalc = true) {
   const day = findPlan(date);
   const meal = day?.meals.find((m) => m.id === mealId);
   if (!meal) return;
+  if (isCloudSessionActive()) {
+    const payload = await syncMealActionWithCloud('skip', date, mealId, { target: getTargetForDay(day), recalculate: recalc });
+    if (payload?.mealPlan) {
+      await loadState();
+      closeModal();
+      render();
+      const comparison = recalcResponseToComparison(payload.recalculation, { date, mealLabel: mealLabel(meal.slot) });
+      if (comparison && recalc) showRecalcComparison(comparison);
+      else if (localized(payload.recalculation?.userSummary)) toast(localized(payload.recalculation.userSummary));
+      return;
+    }
+  }
   meal.status = 'skipped';
   let comparison = null;
-  if (recalc) comparison = recalcRemainingMeals(day);
+  if (recalc) comparison = recalcRemainingMeals(day, { type: 'skipped', mealLabel: mealLabel(meal.slot) });
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   closeModal();
   render();
   if (comparison) showRecalcComparison(comparison);
 }
 
-function recalcRemainingMeals(day) {
+function recalcRemainingMeals(day, context = {}) {
   const target = getTargetForDay(day);
   const completed = calcDayCompleted(day);
   const remainingTarget = subtractMacros(target, completed);
@@ -3313,27 +3923,16 @@ function recalcRemainingMeals(day) {
   const result = scaleMealsToTarget(remainingMeals, remainingTarget);
   const after = remainingMeals.map((m) => ({ slot: m.slot, macros: calcMealMacros(m), items: m.items.map((i) => ({ name: i.foodName, qty: displayQuantity(i) })) }));
   const projected = calcDayProjected(day);
-  const comparison = { date: day.date, remainingTarget, before, after, projected, target, warnings: result.warnings };
+  const comparison = { date: day.date, remainingTarget, before, after, projected, target, warnings: result.warnings, context };
   day.recalculationLog ||= [];
-  day.recalculationLog.push({ at: new Date().toISOString(), skippedMealHandled: true, projected, warnings: result.warnings });
+  day.recalculationLog.push({ at: new Date().toISOString(), eventType: context.type || 'recalculation', projected, warnings: result.warnings });
   return comparison;
 }
 
 function showRecalcComparison(c) {
-  openModal('Remaining meals recalculated', html`
-    <div class="stack">
-      <div class="info-box small">To stay close to your daily targets, the app adjusted remaining uncompleted meals. If the target cannot be reached within portion limits, the closest practical result is shown.</div>
-      ${c.warnings.length ? `<div class="warning-box small">${c.warnings.map(escapeHtml).join('<br>')}</div>` : ''}
-      <div class="grid two">
-        <div class="card flat stack-sm"><h3>Before</h3>${renderMiniMealList(c.before)}</div>
-        <div class="card flat stack-sm"><h3>After</h3>${renderMiniMealList(c.after)}</div>
-      </div>
-      <div class="card flat stack-sm">
-        <h3>New projected daily totals</h3>
-        <div>${totalsText(c.projected)}</div>
-        ${macroDiffHtml(c.projected, c.target)}
-      </div>
-    </div>`);
+  const meal = c.context?.mealLabel || tr('meal.recipeViewer');
+  const summaryKey = c.context?.type === 'changed' ? 'recalc.summaryChanged' : 'recalc.summarySkipped';
+  openModal(tr('recalc.title'), html`<div class="stack"><div class="info-box small">${tr(summaryKey, { meal })}</div>${c.warnings.length ? `<details class="collapsible warning-details"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="warning-box small">${c.warnings.map(calmOptimizationWarning).map(escapeHtml).join('<br>')}</div></details>` : ''}<div class="grid two"><div class="card flat stack-sm"><h3>${tr('recalc.before')}</h3>${renderMiniMealList(c.before)}</div><div class="card flat stack-sm"><h3>${tr('recalc.after')}</h3>${renderMiniMealList(c.after)}</div></div><div class="card flat stack-sm"><h3>${tr('recalc.projected')}</h3><div>${totalsText(c.projected)}</div>${macroDiffHtml(c.projected, c.target)}</div></div>`);
 }
 
 function renderMiniMealList(rows) {
@@ -3368,7 +3967,7 @@ async function __legacy_changeRecipe_1_unused(date, mealId) {
   selected.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'recipe_change', from: original.recipeName, to: selected.recipeName }];
   day.meals[idx] = selected;
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   openModal('Recipe changed', html`
@@ -3394,6 +3993,355 @@ function __legacy_openMealDetail_1_unused(date, mealId) {
       ${meal.instructions?.length ? `<section class="card flat"><h3>Recipe steps</h3><ol>${meal.instructions.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol></section>` : ''}
       <div class="actions"><button class="secondary-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.completed')}</button><button class="ghost-button" data-action="skip-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.skipped')}</button><button class="ghost-button" data-action="edit-meal" data-date="${date}" data-meal-id="${mealId}">Edit meal</button></div>
     </div>`);
+}
+
+function openAteDifferentFlow(date, mealId) {
+  const day = findPlan(date);
+  const meal = day?.meals.find((m) => m.id === mealId);
+  if (!meal) return;
+  const foodOptions = state.foods.slice(0, 180).map((food) => `<option value="${escapeHtml(localizedFoodName(food))}"></option>`).join('');
+  const recipeOptions = getAllRecipes().map((recipeRecord) => `<option value="${escapeHtml(recipeRecord.id)}">${escapeHtml(recipeDisplayName(recipeRecord))} · ${escapeHtml(mealLabel(recipeRecord.mealType))}</option>`).join('');
+  openModal(tr('flow.ateDifferentTitle'), html`<div class="stack ate-different-flow"><div class="info-box small">${escapeHtml(mealLabel(meal.slot))} · ${totalsText(calcMealMacros(meal))}</div><label class="field"><span>${tr('flow.foodType')}</span><select id="differentType"><option value="food">${tr('flow.savedFood')}</option><option value="recipe">${tr('flow.savedRecipe')}</option><option value="barcode">${tr('flow.barcodeProduct')}</option><option value="manual">${tr('flow.manualItem')}</option><option value="restaurant">${tr('flow.restaurantEstimate')}</option></select></label><label class="field"><span>${tr('flow.foodOrBarcode')}</span><input id="differentName" list="differentFoodList" placeholder="Greek yogurt / yogurt greco / 800..."></label><button class="secondary-button" data-action="open-barcode-scanner" data-date="${date}" data-meal-id="${mealId}">${tr('scanner.scanBarcode')}</button><datalist id="differentFoodList">${foodOptions}</datalist><label class="field"><span>${tr('flow.savedRecipe')}</span><select id="differentRecipe"><option value="">—</option>${recipeOptions}</select></label><div class="form-grid three"><label class="field"><span>${tr('flow.quantity')}</span><input id="differentQty" type="number" step="0.1" value="100"></label><label class="field"><span>${tr('flow.unit')}</span><select id="differentUnit"><option value="g">g</option><option value="ml">ml</option><option value="piece">pieces</option></select></label><label class="field"><span>${tr('common.confidence')}</span><select id="differentConfidence"><option value="medium">medium</option><option value="low">low</option><option value="high">high</option></select></label></div><section class="card flat stack-sm"><h3>${tr('flow.manualMacros')}</h3><div class="form-grid four"><label class="field"><span>kcal</span><input id="differentKcal" type="number" step="1"></label><label class="field"><span>P</span><input id="differentProtein" type="number" step="0.1"></label><label class="field"><span>C</span><input id="differentCarbs" type="number" step="0.1"></label><label class="field"><span>F</span><input id="differentFat" type="number" step="0.1"></label></div></section><div class="stack-sm"><label class="checkbox-row"><input type="checkbox" id="differentAdjust" checked> <span>${tr('flow.adjustRemaining')}</span></label><label class="checkbox-row"><input type="checkbox" id="differentSaveCustom"> <span>${tr('flow.saveCustom')}</span></label></div><div class="actions"><button class="primary-button" data-action="save-ate-different" data-date="${date}" data-meal-id="${mealId}">${tr('flow.applyDifferent')}</button><button class="ghost-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('flow.markEatenOnly')}</button></div></div>`);
+}
+
+async function saveAteDifferent(date, mealId) {
+  const day = findPlan(date);
+  const idx = day?.meals.findIndex((m) => m.id === mealId);
+  if (!day || idx < 0) return;
+  const original = day.meals[idx];
+  const type = $('differentType')?.value || 'food';
+  const quantity = Number($('differentQty')?.value || 100);
+  const unit = $('differentUnit')?.value || 'g';
+  const confidence = $('differentConfidence')?.value || 'medium';
+  let newMeal = null;
+  if (type === 'recipe' && $('differentRecipe')?.value) {
+    const recipeRecord = getRecipeById($('differentRecipe').value);
+    if (recipeRecord) newMeal = createMealFromRecipe({ ...recipeRecord, mealType: original.slot, slot: original.slot }, date);
+  } else {
+    let name = $('differentName')?.value.trim() || (type === 'restaurant' ? `${mealLabel(original.slot)} estimate` : 'Manual food');
+    let food = lookupFood(name);
+    if (type === 'barcode' && name) food = await importBarcodeFood(name).catch(() => null) || food;
+    if (!food || type === 'manual' || type === 'restaurant') {
+      const grams = quantityToGrams(quantity, normalizeUnit(unit, quantity, food), food);
+      const per100Factor = grams > 0 ? 100 / grams : 1;
+      const manual = normalizeFoodRecord({ id: uuid(type === 'restaurant' ? 'restaurant_food' : 'manual_food'), userId: state.activeUserId, name, displayNameEn: name, displayNameIt: name, aliases: [name], defaultUnit: unit, unitGrams: unit === 'piece' ? grams : 100, gramsPerUnit: unit === 'piece' ? grams : 100, caloriesPer100g: Number($('differentKcal')?.value || 0) * per100Factor, proteinPer100g: Number($('differentProtein')?.value || 0) * per100Factor, carbsPer100g: Number($('differentCarbs')?.value || 0) * per100Factor, fatPer100g: Number($('differentFat')?.value || 0) * per100Factor, sourceProvider: type === 'restaurant' ? 'restaurant_estimate' : 'manual', source: type === 'restaurant' ? 'restaurant_estimate' : 'manual', confidence, rawOrCookedState: 'unknown', userEdited: true, notes: type === 'restaurant' ? 'Eating-out estimate entered by user.' : 'Manual entry from ate-something-different flow.' });
+      food = manual;
+      if ($('differentSaveCustom')?.checked || type === 'manual' || type === 'restaurant') await idbPut('foods', manual);
+      await saveCustomFoodToCloud(manual);
+      state.foods = (await idbGetAll('foods')).map(normalizeFoodRecord);
+    }
+    const item = createItemFromFood(food.id, quantity, unit);
+    item.confidence = confidence || food.confidence || 'unknown';
+    newMeal = { ...deepClone(original), items: [item], recipeName: name, source: type, status: 'changed' };
+  }
+  if (!newMeal) { toast(tr('flow.resolveFood')); return; }
+  newMeal.id = original.id; newMeal.date = date; newMeal.slot = original.slot; newMeal.time = original.time; newMeal.status = 'changed'; newMeal.originalItems = deepClone(original.originalItems || original.items || []); newMeal.actualItems = deepClone(newMeal.items || []); newMeal.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'ate_different', from: original.recipeName, to: newMeal.recipeName }];
+  day.meals[idx] = newMeal;
+  day.mealEvents ||= [];
+  day.mealEvents.push({ id: uuid('event'), userId: state.activeUserId, mealPlanId: day.id || day.date, plannedMealId: original.id, eventType: type === 'restaurant' ? 'restaurant_estimate' : 'replaced', actualItems: deepClone(newMeal.items), actualMacroSnapshot: calcMealMacros(newMeal), adjustmentApplied: Boolean($('differentAdjust')?.checked), createdAt: new Date().toISOString() });
+  const shouldAdjust = Boolean($('differentAdjust')?.checked);
+  if (isCloudSessionActive()) {
+    const payload = await syncMealActionWithCloud('replace', date, mealId, {
+      meal: newMeal,
+      actualItems: deepClone(newMeal.items),
+      actualMacroSnapshot: calcMealMacros(newMeal),
+      adjustmentApplied: shouldAdjust,
+      target: getTargetForDay(day),
+      recalculate: shouldAdjust,
+    });
+    if (payload?.mealPlan) {
+      await loadState();
+      closeModal();
+      render();
+      const comparison = recalcResponseToComparison(payload.recalculation, { date, mealLabel: mealLabel(original.slot) });
+      if (comparison && shouldAdjust) showRecalcComparison(comparison);
+      else if (localized(payload.recalculation?.userSummary)) toast(localized(payload.recalculation.userSummary));
+      return;
+    }
+  }
+  let comparison = null;
+  if (shouldAdjust) comparison = recalcRemainingMeals(day, { type: 'changed', mealLabel: mealLabel(original.slot) });
+  day.updatedAt = new Date().toISOString();
+  await persistPlan(day); await loadState(); closeModal(); render(); if (comparison) showRecalcComparison(comparison);
+}
+
+async function importBarcodeFood(barcode) {
+  const clean = String(barcode || '').replace(/[^0-9]/g, '');
+  if (!clean) return null;
+  const payload = await apiRequest(`/api/nutrition/barcode/${encodeURIComponent(clean)}`);
+  if (!payload?.food) return null;
+  const food = normalizeFoodRecord({ ...payload.food, id: payload.food.id || uuid('food'), userId: state.activeUserId });
+  await idbPut('foods', food);
+  state.foods = [...state.foods.filter((item) => item.id !== food.id), food].sort((a, b) => localizedFoodName(a).localeCompare(localizedFoodName(b)));
+  return food;
+}
+
+
+function scannerServingGrams(food) {
+  const serving = Number(food?.servingQuantity || food?.serving_quantity || 0);
+  if (serving > 0) return serving;
+  const unit = Number(food?.unitGrams || food?.gramsPerUnit || 0);
+  return unit > 0 ? unit : 100;
+}
+
+function scannerStatus(message, kind = 'info') {
+  const box = $('scannerStatus');
+  if (!box) return;
+  const cls = kind === 'error' ? 'warning-box' : kind === 'success' ? 'success-box' : 'info-box';
+  box.innerHTML = `<div class="${cls} small">${escapeHtml(message)}</div>`;
+}
+
+function openBarcodeScanner(context = {}) {
+  state.scanner.context = context || {};
+  state.scanner.food = null;
+  state.scanner.lastBarcode = '';
+  openModal(tr('scanner.title'), html`
+    <div class="stack scanner-modal">
+      <div class="info-box small">${tr('scanner.permission')}</div>
+      <p class="muted small">${tr('scanner.help')}</p>
+      <div class="scanner-preview-wrap">
+        <video id="scannerVideo" class="scanner-video" autoplay muted playsinline></video>
+        <div class="scanner-frame" aria-hidden="true"></div>
+      </div>
+      <div id="scannerStatus" class="scanner-status"></div>
+      <div id="scannerProductPreview" class="stack-sm"></div>
+      <div class="form-grid two scanner-manual-grid">
+        <label class="field"><span>${tr('scanner.manual')}</span><input id="scannerManualBarcode" inputmode="numeric" autocomplete="off" placeholder="8000500037560"></label>
+        <label class="field"><span>${tr('flow.quantity')}</span><input id="scannerQuantity" type="number" step="1" value="100"></label>
+      </div>
+      <div class="actions scanner-actions">
+        <button class="primary-button" data-action="scanner-manual-lookup">${tr('scanner.lookup')}</button>
+        <button class="secondary-button" data-action="scanner-try-again">${tr('scanner.tryAgain')}</button>
+        <button class="ghost-button" data-action="scanner-cancel">${tr('common.cancel')}</button>
+      </div>
+    </div>`);
+  const cancel = document.querySelector('[data-action="scanner-cancel"]');
+  if (cancel) cancel.addEventListener('click', closeModal, { once: true });
+  setTimeout(() => startBarcodeScanner().catch((error) => {
+    console.warn('Scanner failed:', error);
+    scannerStatus(error?.name === 'NotAllowedError' ? tr('scanner.permissionDenied') : tr('scanner.unsupported'), 'error');
+  }), 30);
+}
+
+async function startBarcodeScanner() {
+  stopBarcodeScanner();
+  state.scanner.lookupInFlight = false;
+  scannerStatus(tr('scanner.loadingCamera'));
+  if (!navigator.mediaDevices?.getUserMedia) {
+    scannerStatus(tr('scanner.unsupported'), 'error');
+    return;
+  }
+  const video = $('scannerVideo');
+  if (!video) return;
+  const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+  state.scanner.stream = stream;
+  video.srcObject = stream;
+  await video.play().catch(() => {});
+  if ('BarcodeDetector' in window) {
+    const formats = ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'itf'];
+    state.scanner.detector = new BarcodeDetector({ formats });
+    scannerStatus(tr('scanner.help'));
+    scanNativeBarcodeFrame();
+    return;
+  }
+  await startZxingFallback(video);
+}
+
+function scanNativeBarcodeFrame() {
+  const video = $('scannerVideo');
+  if (!video || !state.scanner.detector || !state.scanner.stream) return;
+  const scan = async () => {
+    if (!state.scanner.stream || state.scanner.lookupInFlight) return;
+    try {
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        const codes = await state.scanner.detector.detect(video);
+        const code = codes?.[0]?.rawValue || codes?.[0]?.rawValueText || '';
+        if (code) await handleDetectedBarcode(code);
+      }
+    } catch (error) {
+      console.warn('Native barcode scan failed:', error.message);
+    }
+    if (state.scanner.stream && !state.scanner.lookupInFlight) state.scanner.rafId = requestAnimationFrame(scan);
+  };
+  state.scanner.rafId = requestAnimationFrame(scan);
+}
+
+async function loadZxingFallbackScript() {
+  if (window.ZXingBrowser?.BrowserMultiFormatReader) return;
+  await new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'assets/vendor/zxing-browser.min.js';
+    script.async = true;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('ZXing fallback failed to load'));
+    document.head.appendChild(script);
+  });
+}
+
+async function startZxingFallback(video) {
+  await loadZxingFallbackScript();
+  const Reader = window.ZXingBrowser?.BrowserMultiFormatReader;
+  if (!Reader) {
+    scannerStatus(tr('scanner.unsupported'), 'error');
+    return;
+  }
+  scannerStatus(tr('scanner.help'));
+  const reader = new Reader();
+  state.scanner.fallbackControls = await reader.decodeFromVideoDevice(null, video, async (result) => {
+    if (!result || state.scanner.lookupInFlight) return;
+    const text = typeof result.getText === 'function' ? result.getText() : result.text;
+    if (text) await handleDetectedBarcode(text);
+  });
+}
+
+function stopBarcodeScanner() {
+  if (!state?.scanner) return;
+  if (state.scanner.rafId) cancelAnimationFrame(state.scanner.rafId);
+  state.scanner.rafId = null;
+  try { state.scanner.fallbackControls?.stop?.(); } catch {}
+  state.scanner.fallbackControls = null;
+  if (state.scanner.stream) {
+    for (const track of state.scanner.stream.getTracks()) track.stop();
+  }
+  state.scanner.stream = null;
+  const video = $('scannerVideo');
+  if (video) video.srcObject = null;
+}
+
+async function handleDetectedBarcode(rawCode) {
+  const barcode = String(rawCode || '').replace(/[^0-9]/g, '');
+  if (!barcode || state.scanner.lookupInFlight || barcode === state.scanner.lastBarcode) return;
+  state.scanner.lookupInFlight = true;
+  state.scanner.lastBarcode = barcode;
+  stopBarcodeScanner();
+  const input = $('scannerManualBarcode');
+  if (input) input.value = barcode;
+  scannerStatus(`${tr('scanner.detected')}: ${barcode}. ${tr('scanner.searching')}`);
+  await lookupScannerBarcode(barcode);
+}
+
+async function scannerManualLookup() {
+  const barcode = String($('scannerManualBarcode')?.value || '').replace(/[^0-9]/g, '');
+  if (!barcode) return;
+  state.scanner.lastBarcode = '';
+  await handleDetectedBarcode(barcode);
+}
+
+async function lookupScannerBarcode(barcode) {
+  try {
+    const food = await importBarcodeFood(barcode);
+    if (!food) throw new Error('not found');
+    state.scanner.food = food;
+    const qty = $('scannerQuantity');
+    if (qty && (!qty.value || Number(qty.value) === 100)) qty.value = scannerServingGrams(food);
+    renderScannerProductPreview(food);
+    scannerStatus(`${tr('scanner.detected')}: ${barcode}`, 'success');
+  } catch (error) {
+    state.scanner.food = null;
+    const box = $('scannerProductPreview');
+    if (box) box.innerHTML = `<div class="warning-box small">${tr('scanner.notFound')}</div>`;
+    scannerStatus(tr('scanner.notFound'), 'error');
+  } finally {
+    state.scanner.lookupInFlight = false;
+  }
+}
+
+function renderScannerProductPreview(food) {
+  const box = $('scannerProductPreview');
+  if (!box || !food) return;
+  box.innerHTML = html`
+    <section class="card flat stack-sm scanner-product-card">
+      <div class="row between"><div><p class="eyebrow">${tr('scanner.productPreview')}</p><h3>${escapeHtml(localizedFoodName(food))}</h3><p class="muted small">${escapeHtml(food.brand || 'Open Food Facts')}</p></div>${confidencePill(food.confidence || 'medium')}</div>
+      <div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(food.caloriesPer100g)} kcal / 100g</span><span class="macro-pill">P ${round(food.proteinPer100g, 1)}g</span><span class="macro-pill">C ${round(food.carbsPer100g, 1)}g</span><span class="macro-pill">F ${round(food.fatPer100g, 1)}g</span></div>
+      <div class="chip-row"><span class="status-pill blue">${escapeHtml(food.sourceProvider || 'open_food_facts')}</span><span class="status-pill">${escapeHtml(food.servingSize || `${scannerServingGrams(food)}g`)}</span><span class="status-pill">${escapeHtml(food.rawOrCookedState || tr('scanner.asSold'))}</span></div>
+      <div class="actions"><button class="primary-button" data-action="scanner-use-food" ${state.scanner.context?.mealId ? '' : 'disabled'}>${tr('scanner.useForMeal')}</button><button class="secondary-button" data-action="scanner-save-food">${tr('scanner.saveFood')}</button><button class="ghost-button" data-action="scanner-try-again">${tr('scanner.tryAgain')}</button></div>
+    </section>`;
+}
+
+async function saveScannerProduct() {
+  const food = state.scanner.food;
+  if (!food) return;
+  await idbPut('foods', { ...food, userId: state.activeUserId, savedAt: new Date().toISOString() });
+  await saveCustomFoodToCloud({ ...food, userId: state.activeUserId });
+  await loadState();
+  render();
+  toast(tr('scanner.saveFood'));
+}
+
+async function useScannerProductForMeal() {
+  const food = state.scanner.food;
+  const { date, mealId } = state.scanner.context || {};
+  if (!food || !date || !mealId) return;
+  await idbPut('foods', { ...food, userId: state.activeUserId, savedAt: new Date().toISOString() });
+  state.foods = (await idbGetAll('foods')).map(normalizeFoodRecord);
+  const grams = Number($('scannerQuantity')?.value || scannerServingGrams(food) || 100);
+  const day = findPlan(date);
+  const idx = day?.meals.findIndex((meal) => meal.id === mealId);
+  if (!day || idx < 0) return;
+  const original = day.meals[idx];
+  const item = createItemFromFood(food.id, grams, 'g');
+  item.confidence = food.confidence || 'medium';
+  const newMeal = { ...deepClone(original), items: [item], recipeName: localizedFoodName(food), source: 'barcode_product', status: 'changed', actualItems: [item], originalItems: deepClone(original.originalItems || original.items || []) };
+  newMeal.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'barcode_product', barcode: food.sourceId || '', to: localizedFoodName(food) }];
+  day.meals[idx] = newMeal;
+  day.mealEvents ||= [];
+  day.mealEvents.push({ id: uuid('event'), userId: state.activeUserId, mealPlanId: day.id || day.date, plannedMealId: original.id, eventType: 'replaced', actualItems: [item], actualMacroSnapshot: calcMealMacros(newMeal), adjustmentApplied: true, createdAt: new Date().toISOString() });
+  let comparison = null;
+  const cloud = await syncMealActionWithCloud('replace', date, mealId, { meal: newMeal, target: getTargetForDay(day), event: day.mealEvents.at(-1) });
+  if (cloud?.mealPlan) {
+    await idbPut('plans', cloud.mealPlan);
+    comparison = cloud.recalculation || recalcResponseToComparison(cloud.recalculation);
+  } else {
+    comparison = recalcRemainingMeals(day, { type: 'changed', mealLabel: mealLabel(original.slot) });
+    await persistPlan(day);
+  }
+  await loadState();
+  closeModal();
+  render();
+  if (comparison) showRecalcComparison(comparison);
+}
+
+async function restartScanner() {
+  state.scanner.food = null;
+  state.scanner.lastBarcode = '';
+  state.scanner.lookupInFlight = false;
+  const box = $('scannerProductPreview');
+  if (box) box.innerHTML = '';
+  await startBarcodeScanner().catch((error) => scannerStatus(error?.name === 'NotAllowedError' ? tr('scanner.permissionDenied') : tr('scanner.unsupported'), 'error'));
+}
+
+function openSwapMealFlow(date, mealId, mode = 'similar') {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); if (!meal) return;
+  const suggestions = scoreMealSwapSuggestions(day, meal, mode).slice(0, 3);
+  openModal(tr('swap.title'), html`<div class="stack swap-flow"><div><p class="muted small">${tr('swap.subtitle')}</p><div class="chip-row"><button class="pill-button ${mode === 'similar' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="similar">${tr('meal.swapMeal')}</button><button class="pill-button ${mode === 'faster' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="faster">${tr('meal.makeFaster')}</button><button class="pill-button ${mode === 'cheaper' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="cheaper">${tr('meal.makeCheaper')}</button><button class="pill-button ${mode === 'preworkout' ? 'active' : ''}" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}" data-mode="preworkout">${tr('meal.lowerFatPreWorkout')}</button></div></div>${suggestions.length ? suggestions.map((x) => renderSwapSuggestion(day, meal, x)).join('') : `<div class="warning-box small">${tr('swap.noAlternatives')}</div>`}</div>`);
+}
+
+function scoreMealSwapSuggestions(day, meal, mode = 'similar') {
+  const targetMacros = calcMealMacros(meal); const excluded = normalizeText(`${state.settings.excludedFoods || ''} ${state.settings.allergies || ''}`);
+  return getAllRecipes().filter((recipeRecord) => recipeRecord.mealType === meal.slot && recipeDisplayName(recipeRecord) !== meal.recipeName).filter((recipeRecord) => !recipeIngredients(recipeRecord).some((ingredient) => excluded && excluded.includes(normalizeText(ingredient.name)))).map((recipeRecord) => { const candidate = createMealFromRecipe(recipeRecord, day.date); scaleMealsToTarget([candidate], targetMacros, { tolerance: { caloriesPct: 8, protein: 8, carbs: 10, fat: 6 } }); const macros = calcMealMacros(candidate); let score = macroDistance(macros, targetMacros); const prep = Number(recipeRecord.prepTimeMinutes || recipeRecord.prepMinutes || 0) + Number(recipeRecord.cookTimeMinutes || recipeRecord.cookMinutes || 0); const tags = (recipeRecord.tags || []).map(normalizeText); if (mode === 'faster') score += prep * 8 - (tags.includes('quick') || tags.includes('no cook') ? 80 : 0); if (mode === 'cheaper') score += recipeIngredients(recipeRecord).length * 10 - (tags.includes('cheap') ? 80 : 0); if (mode === 'preworkout') score += macros.fat * 25 - macros.carbs * 1.5 - (tags.includes('pre workout') ? 80 : 0); const reason = mode === 'faster' ? tr('swap.reason.faster') : mode === 'cheaper' ? tr('swap.reason.cheaper') : mode === 'preworkout' ? tr('swap.reason.preWorkout') : tr('swap.reason.similar'); return { recipeRecord, candidate, macros, targetMacros, score, reason, prep }; }).sort((a, b) => a.score - b.score);
+}
+
+function renderSwapSuggestion(day, meal, suggestion) {
+  const recipeRecord = suggestion.recipeRecord; const macros = suggestion.macros;
+  return html`<article class="card flat swap-suggestion"><div class="row between"><div><h3>${escapeHtml(recipeDisplayName(recipeRecord))}</h3><p class="muted small">${escapeHtml(suggestion.reason)} · ${round(suggestion.prep)} min</p></div>${confidencePill(recipeRecord.confidence || 'medium')}</div><div class="macro-pills macro-pills-prominent"><span class="macro-pill">${round(macros.calories)} kcal</span><span class="macro-pill">P ${round(macros.protein, 1)}g</span><span class="macro-pill">C ${round(macros.carbs, 1)}g</span><span class="macro-pill">F ${round(macros.fat, 1)}g</span></div><div><span class="small muted">${tr('swap.macroDelta')}</span>${macroDiffHtml(macros, suggestion.targetMacros)}</div><button class="primary-button" data-action="apply-recipe-alternative" data-date="${day.date}" data-meal-id="${meal.id}" data-recipe-id="${recipeRecord.id}">${tr('swap.apply')}</button></article>`;
+}
+
+function openFoodSwapFlow(date, mealId) {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); if (!meal) return;
+  const options = (meal.items || []).map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.foodName)} · ${displayQuantity(item)}</option>`).join('');
+  openModal(tr('swap.foodTitle'), html`<div class="stack"><label class="field"><span>${tr('meal.swapFood')}</span><select id="swapFoodItem">${options}</select></label><button class="primary-button" data-action="show-food-swap-options" data-date="${date}" data-meal-id="${mealId}">${tr('common.apply')}</button></div>`);
+}
+
+function showFoodSwapOptions(date, mealId) {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); const item = meal?.items.find((x) => x.id === $('swapFoodItem')?.value); if (!day || !meal || !item) return;
+  const food = getFoodById(item.foodId); const role = foodRole(food); const itemMacros = calcItemMacros(item);
+  const candidates = state.foods.filter((candidate) => candidate.id !== food?.id && foodRole(candidate) === role).map((candidate) => { const dominant = role === 'protein' ? 'protein' : role === 'carb' ? 'carbs' : role === 'fat' ? 'fat' : 'calories'; const grams = perGram(candidate, dominant) > 0 ? clamp((itemMacros[dominant] || itemMacros.calories) / perGram(candidate, dominant), candidate.minG || 10, candidate.maxG || 500) : item.grams; const testItem = createItemFromFood(candidate.id, grams, 'g'); const macros = calcItemMacros(testItem); return { candidate, grams, macros, score: macroDistance(macros, itemMacros) }; }).sort((a, b) => a.score - b.score).slice(0, 5);
+  openModal(tr('swap.foodTitle'), html`<div class="stack"><div class="info-box small">${escapeHtml(item.foodName)} · ${tr('swap.sameRole')}: ${role}</div>${candidates.map((x) => `<article class="card flat"><div class="row between"><strong>${escapeHtml(localizedFoodName(x.candidate))}</strong><span>${tr('swap.newQuantity')}: ${round(x.grams)} g</span></div>${macroDiffHtml(x.macros, itemMacros)}<button class="secondary-button" data-action="apply-food-swap" data-date="${date}" data-meal-id="${mealId}" data-item-id="${item.id}" data-food-id="${x.candidate.id}" data-grams="${round(x.grams, 1)}">${tr('swap.apply')}</button></article>`).join('')}</div>`);
+}
+
+async function applyFoodSwap(date, mealId, itemId, foodId, grams) {
+  const day = findPlan(date); const meal = day?.meals.find((m) => m.id === mealId); const idx = meal?.items.findIndex((item) => item.id === itemId); if (!day || !meal || idx == null || idx < 0) return;
+  const old = meal.items[idx]; const replacement = createItemFromFood(foodId, Number(grams), 'g'); replacement.originalGrams = old.originalGrams || old.grams; meal.items[idx] = replacement; meal.adjustments ||= []; meal.adjustments.push({ at: new Date().toISOString(), type: 'food_swap', from: old.foodName, to: replacement.foodName }); day.updatedAt = new Date().toISOString(); await persistPlan(day); await loadState(); closeModal(); render(); openMealDetail(date, mealId);
 }
 
 function openMealEditor(date, mealId) {
@@ -3481,7 +4429,7 @@ async function saveNewMeal(date) {
   day.meals.push(meal);
   day.meals.sort((a, b) => timeToMinutes(a.time || '23:59') - timeToMinutes(b.time || '23:59'));
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   closeModal();
   render();
@@ -3492,7 +4440,7 @@ function renderEditMealItem(item = {}, i = 0) {
   return html`<div class="grid three card flat meal-edit-row">
     <label class="field"><span>Food</span><input class="meal-food" value="${escapeHtml(item.rawName || item.foodName || '')}" list="foodNameList"></label>
     <label class="field"><span>Quantity</span><input class="meal-qty" type="number" step="0.1" value="${escapeHtml(item.quantity ?? item.grams ?? 0)}"></label>
-    <label class="field"><span>Unit</span><select class="meal-unit"><option value="g" ${item.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${item.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label>
+    <label class="field"><span>${tr('common.unit')}</span><select class="meal-unit"><option value="g" ${item.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${item.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label>
   </div>`;
 }
 
@@ -3527,7 +4475,7 @@ async function saveMealEdit(date, mealId) {
   meal.adjustments ||= [];
   meal.adjustments.push({ at: new Date().toISOString(), type: 'manual_edit' });
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   closeModal();
   render();
@@ -3549,7 +4497,7 @@ async function applyWorkout(date) {
     day.workout.reason = '';
   }
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   if (isWorkout) openModal('Workout meal adjusted', `<div class="stack"><div class="info-box small">${escapeHtml(day.workout.reason)}</div><p class="muted">Daily totals were recalculated by adjusting the rest of the uncompleted meals where possible.</p></div>`);
@@ -3606,7 +4554,7 @@ function __legacy_openBaselineReview_1_unused() {
         <div class="grid three baseline-row" data-meal-index="${mi}">
           <label class="field"><span>Food</span><input class="baseline-food" value="${escapeHtml(item.rawName || item.foodName)}"></label>
           <label class="field"><span>Quantity</span><input class="baseline-qty" type="number" step="0.1" value="${escapeHtml(item.quantity)}"></label>
-          <label class="field"><span>Unit</span><select class="baseline-unit"><option value="g" ${item.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${item.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label>
+          <label class="field"><span>${tr('common.unit')}</span><select class="baseline-unit"><option value="g" ${item.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${item.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label>
         </div>`).join('') || '<p class="muted small">No items parsed.</p>'}</div>`).join('')}
       <button class="primary-button" data-action="save-parsed-baseline">Save baseline</button>
     </div>`);
@@ -3675,7 +4623,7 @@ function openFoodEditor(foodId = null) {
         ${foodInput('foodMaxG', 'Maximum practical grams', f.maxG ?? 1000, 'number')}
       </div>
       <label class="field"><span>Source</span><input id="foodSource" value="${escapeHtml(f.source || '')}"></label>
-      <label class="field"><span>Notes</span><textarea id="foodNotes">${escapeHtml(f.notes || '')}</textarea></label>
+      <label class="field"><span>${tr('common.notes')}</span><textarea id="foodNotes">${escapeHtml(f.notes || '')}</textarea></label>
       <div class="actions">
         <button class="primary-button" data-action="save-food" data-food-id="${food?.id || ''}">Save food</button>
         ${food ? `<button class="danger-button" data-action="delete-food" data-food-id="${food.id}">Delete</button>` : ''}
@@ -3892,7 +4840,7 @@ async function __legacy_regenerateDay_1_unused(date) {
   if (lunchMode === 'rotating') lunchOverride = RECIPE_LIBRARY.filter((r) => r.slot === 'Lunch')[0];
   const day = makeDayPlan(date, lunchOverride);
   scaleDayToTarget(day, getTargetForDay(day));
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   toast('Day regenerated.');
@@ -3917,7 +4865,13 @@ async function saveBodyEntry() {
   }
   entry.notes = $('body_notes')?.value || '';
   if (!entry.date) { toast('Date is required.'); return; }
-  await idbPut('body', entry);
+  entry.userId = state.activeUserId;
+  entry.updatedAt = new Date().toISOString();
+  await idbPut('body', touchSyncMetadata(entry, 'local', isCloudSessionActive()));
+  if (isCloudSessionActive()) {
+    try { await apiRequest('/api/body-measurements', { method: 'POST', body: entry }); setLastSyncedAt(); }
+    catch (error) { await queueOfflineAction({ kind: 'bodyMeasurement', body: entry, error: error.message }); }
+  }
   await loadState();
   render();
   toast('Body entry saved.');
@@ -4029,6 +4983,7 @@ function setupEvents() {
     if (!button) return;
     const action = button.dataset.action;
     if (action === 'cloud-login') { await cloudLoginFromForm(); return; }
+    if (action === 'cloud-register') { await cloudRegisterFromForm(); return; }
     if (action === 'create-profile') { await createLocalProfileFromForm(); return; }
     if (action === 'login-profile') { await loginProfile(button.dataset.profileId); return; }
     if (action === 'logout-profile') { await logoutProfile(); return; }
@@ -4038,6 +4993,12 @@ function setupEvents() {
     if (action === 'open-grocery-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.grocerySummary'), renderGroceryDetail(day)); return; }
     if (action === 'open-prep-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.mealPrepSummary'), renderPrepDetail(day)); return; }
     if (action === 'open-meal-detail') { openMealDetail(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'open-ate-different') { openAteDifferentFlow(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'save-ate-different') { await saveAteDifferent(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'open-swap-meal') { openSwapMealFlow(button.dataset.date, button.dataset.mealId, button.dataset.mode || 'similar'); return; }
+    if (action === 'open-food-swap') { openFoodSwapFlow(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'show-food-swap-options') { showFoodSwapOptions(button.dataset.date, button.dataset.mealId); return; }
+    if (action === 'apply-food-swap') { await applyFoodSwap(button.dataset.date, button.dataset.mealId, button.dataset.itemId, button.dataset.foodId, button.dataset.grams); return; }
     if (action === 'nav') { setView(button.dataset.view); return; }
     if (action === 'toggle-meal') await toggleMeal(button.dataset.date, button.dataset.mealId);
     if (action === 'complete-meal') await setMealStatus(button.dataset.date, button.dataset.mealId, 'completed');
@@ -4074,6 +5035,7 @@ function setupEvents() {
       render();
     }
     if (action === 'save-body-entry') await saveBodyEntry();
+    if (action === 'save-weekly-checkin') await saveWeeklyCheckIn();
     if (action === 'delete-body') { await idbDelete('body', button.dataset.id); await loadState(); render(); }
     if (action === 'parse-blood') await parseAndReviewBlood();
     if (action === 'save-blood-exam') await saveBloodExamFromModal(button);
@@ -4082,6 +5044,9 @@ function setupEvents() {
     if (action === 'open-baseline-editor') { setView('settings'); setTimeout(() => $('baselineSettingsCard')?.scrollIntoView({ behavior: 'smooth' }), 50); }
     if (action === 'save-target') { await saveTarget(readMacroForm()); await loadState(); render(); toast('Macro targets saved. Regenerate plans to apply them.'); }
     if (action === 'save-preferences') await savePreferencesFromForm();
+    if (action === 'save-pantry-item') await savePantryItemFromForm();
+    if (action === 'delete-pantry-item') await deletePantryItem(button.dataset.id);
+    if (action === 'save-supplement') await saveSupplementFromForm();
     if (action === 'parse-baseline') openBaselineReview();
     if (action === 'save-parsed-baseline') await saveParsedBaseline();
     if (action === 'reset-sample-baseline') { $('baselineText').value = SAMPLE_BASELINE; }
@@ -4089,6 +5054,11 @@ function setupEvents() {
     if (action === 'save-food') await saveFood(button.dataset.foodId || null);
     if (action === 'delete-food') { await idbDelete('foods', button.dataset.foodId); await loadState(); closeModal(); render(); toast('Food deleted.'); }
     if (action === 'open-food-lookup') openFoodLookup();
+    if (action === 'open-barcode-scanner') openBarcodeScanner({ date: button.dataset.date || '', mealId: button.dataset.mealId || '' });
+    if (action === 'scanner-manual-lookup') await scannerManualLookup();
+    if (action === 'scanner-save-food') await saveScannerProduct();
+    if (action === 'scanner-use-food') await useScannerProductForMeal();
+    if (action === 'scanner-try-again') await restartScanner();
     if (action === 'perform-food-lookup') await performFoodLookup();
     if (action === 'import-off-food') await importOffFood(button.dataset.index);
     if (action === 'import-lookup-food') await importLookupFood(button.dataset.index);
@@ -4109,6 +5079,16 @@ function setupEvents() {
       localStorage.setItem('grocery.slots', JSON.stringify([...document.querySelectorAll('.grocery-slot:checked')].map((x) => x.value)));
       render();
     }
+  });
+
+  window.addEventListener('online', async () => {
+    state.online = true;
+    await flushOfflineQueue();
+    render();
+  });
+  window.addEventListener('offline', () => {
+    state.online = false;
+    render();
   });
 
   window.addEventListener('beforeinstallprompt', (event) => {
@@ -4270,6 +5250,8 @@ function createItemFromIngredient(ingredient) {
     notes: ingredient.notes || '',
     source: food?.source || 'Manual value required',
     confidence: food?.confidence || 'unknown',
+    rawOrCookedState: food?.rawOrCookedState || food?.raw_cooked_state || 'unknown',
+    nutritionPer100g: food ? { calories: Number(food.caloriesPer100g) || 0, protein: Number(food.proteinPer100g) || 0, carbs: Number(food.carbsPer100g) || 0, fat: Number(food.fatPer100g) || 0 } : null,
   };
 }
 
@@ -4319,6 +5301,309 @@ async function ensureNutritionProviders() {
   }
 }
 
+async function persistPlan(day) {
+  await idbPut('plans', day);
+  await saveMealPlanToCloud(day);
+}
+
+async function loadCloudMealPlansIfAvailable() {
+  if (!isCloudSessionActive()) return;
+  try {
+    const start = addDays(startOfWeekISO(todayISO()), -14);
+    const end = addDays(todayISO(), 30);
+    const payload = await apiRequest(`/api/meal-plans?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+    if (Array.isArray(payload?.mealPlans)) {
+      for (const plan of payload.mealPlans) await idbPut('plans', touchSyncMetadata(plan, 'cloud', false));
+      setLastSyncedAt();
+    }
+  } catch (error) { console.warn('Cloud meal-plan sync failed:', error.message); }
+}
+
+async function saveMealPlanToCloud(day) {
+  if (!isCloudSessionActive() || !day) return;
+  const plan = { ...touchSyncMetadata(day, 'local', true), id: day.id || day.date, date: day.date, updatedAt: new Date().toISOString() };
+  if (!navigator.onLine) {
+    await queueOfflineAction({ kind: 'mealPlan', body: plan });
+    return;
+  }
+  try {
+    await apiRequest('/api/meal-plans', { method: 'POST', body: plan });
+    setLastSyncedAt();
+  } catch (error) {
+    console.warn('Cloud meal-plan save failed:', error.message);
+    await queueOfflineAction({ kind: 'mealPlan', body: plan, error: error.message });
+  }
+}
+
+async function saveCustomFoodToCloud(food) {
+  if (!isCloudSessionActive() || !food) return;
+  try { await apiRequest('/api/nutrition/custom-foods', { method: 'POST', body: food }); } catch (error) { console.warn('Cloud custom food save failed:', error.message); }
+}
+
+
+function currentCloudUserId() {
+  const session = getCloudSession();
+  return session?.user?.id || state.activeProfile?.cloudUserId || state.activeUserId || null;
+}
+
+function touchSyncMetadata(record, source = 'local', dirty = !navigator.onLine) {
+  const now = new Date().toISOString();
+  return {
+    ...record,
+    updatedAt: record?.updatedAt || now,
+    syncedAt: source === 'cloud' ? now : record?.syncedAt,
+    localDirty: Boolean(dirty),
+    source,
+    version: Number(record?.version || 0) + 1,
+  };
+}
+
+function setLastSyncedAt(value = new Date().toISOString()) {
+  state.lastSyncedAt = value;
+  localStorage.setItem('dietPlanner.lastSyncedAt', value);
+}
+
+async function queueOfflineAction(action) {
+  const queued = {
+    id: uuid('offline_action'),
+    userId: state.activeUserId,
+    status: 'queued',
+    createdAt: new Date().toISOString(),
+    ...action,
+  };
+  state.syncQueue.push(queued);
+  await idbPut('offlineQueue', queued);
+  return queued;
+}
+
+async function flushOfflineQueue() {
+  if (!navigator.onLine || !isCloudSessionActive()) return;
+  const queued = (await idbGetAll('offlineQueue').catch(() => [])).filter((item) => item.status !== 'synced');
+  for (const item of queued) {
+    try {
+      if (item.kind === 'mealAction') {
+        await apiRequest(item.path, { method: 'POST', body: item.body || {} });
+      } else if (item.kind === 'preferences') {
+        await apiRequest('/api/preferences', { method: 'PUT', body: item.body || {} });
+      } else if (item.kind === 'mealPlan') {
+        await apiRequest('/api/meal-plans', { method: 'POST', body: item.body || {} });
+      } else if (item.kind === 'bodyMeasurement') {
+        await apiRequest('/api/body-measurements', { method: 'POST', body: item.body || {} });
+      } else if (item.kind === 'pantry') {
+        await apiRequest(item.path || '/api/pantry', { method: item.method || 'POST', body: item.body || {} });
+      } else if (item.kind === 'checkIn') {
+        await apiRequest(item.path || '/api/check-ins', { method: item.method || 'POST', body: item.body || {} });
+      } else if (item.kind === 'supplement') {
+        await apiRequest(item.path || '/api/supplements', { method: item.method || 'POST', body: item.body || {} });
+      }
+      await idbPut('offlineQueue', { ...item, status: 'synced', syncedAt: new Date().toISOString() });
+      setLastSyncedAt();
+    } catch (error) {
+      await idbPut('offlineQueue', { ...item, status: 'failed', lastError: error.message, failedAt: new Date().toISOString() });
+      break;
+    }
+  }
+  state.syncQueue = (await idbGetAll('offlineQueue').catch(() => [])).filter((item) => item.status !== 'synced');
+}
+
+function cloudPreferencePayload(extra = {}) {
+  return {
+    ...state.settings,
+    ...extra,
+    goalMode: extra.goalMode || state.settings.goalMode || 'maintenance',
+    macroTargets: extra.macroTargets || state.target || DEFAULT_TARGET,
+    workoutPreferences: extra.workoutPreferences || state.settings.workoutPreferences || state.settings.workout || {},
+    groceryPreferences: extra.groceryPreferences || state.settings.groceryPreferences || {},
+    dashboardPreferences: extra.dashboardPreferences || state.settings.dashboardPreferences || {},
+    userId: currentCloudUserId(),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+async function savePreferencesToCloud(extra = {}) {
+  if (!isCloudSessionActive()) return;
+  const body = cloudPreferencePayload(extra);
+  if (!navigator.onLine) {
+    await queueOfflineAction({ kind: 'preferences', body });
+    return;
+  }
+  try {
+    const payload = await apiRequest('/api/preferences', { method: 'PUT', body });
+    if (payload?.preferences) {
+      setLastSyncedAt();
+      await idbPut('settings', touchSyncMetadata({ ...state.settings, ...payload.preferences, id: 'settings', userId: state.activeUserId }, 'cloud', false));
+    }
+  } catch (error) {
+    console.warn('Cloud preferences save failed:', error.message);
+    await queueOfflineAction({ kind: 'preferences', body });
+  }
+}
+
+async function loadCloudPreferencesIfAvailable() {
+  if (!isCloudSessionActive()) return;
+  try {
+    const payload = await apiRequest('/api/preferences', { timeoutMs: 5000 });
+    const prefs = payload?.preferences || null;
+    if (!prefs) return;
+    const mergedSettings = normalizeSettingsRecord({ ...state.settings, ...prefs, id: 'settings', userId: state.activeUserId, source: 'cloud', localDirty: false, syncedAt: new Date().toISOString() });
+    state.settings = mergedSettings;
+    await idbPut('settings', mergedSettings);
+    if (prefs.macroTargets || prefs.macro_targets) {
+      state.target = { ...(prefs.macroTargets || prefs.macro_targets), id: 'default', userId: state.activeUserId, source: 'cloud', localDirty: false, syncedAt: new Date().toISOString() };
+      await idbPut('macroTargets', state.target);
+    }
+    setLastSyncedAt();
+  } catch (error) {
+    console.warn('Cloud preferences sync failed:', error.message);
+  }
+}
+
+
+async function loadCloudPantryIfAvailable() {
+  if (!isCloudSessionActive()) return;
+  try {
+    const payload = await apiRequest('/api/pantry', { timeoutMs: 5000 });
+    const items = payload?.items || payload?.pantryItems || [];
+    if (Array.isArray(items)) {
+      for (const item of items) await idbPut('pantry', touchSyncMetadata(item, 'cloud', false));
+      state.pantryItems = (await idbGetAll('pantry').catch(() => [])).filter((item) => !item.userId || !state.activeUserId || item.userId === state.activeUserId);
+      setLastSyncedAt();
+    }
+  } catch (error) {
+    console.warn('Cloud pantry sync failed:', error.message);
+  }
+}
+
+async function loadCloudSupplementsIfAvailable() {
+  if (!isCloudSessionActive()) return;
+  try {
+    const payload = await apiRequest('/api/supplements', { timeoutMs: 5000 });
+    if (Array.isArray(payload?.supplements)) {
+      for (const item of payload.supplements) await idbPut('supplements', touchSyncMetadata(item, 'cloud', false));
+      state.supplements = (await idbGetAll('supplements').catch(() => [])).filter((item) => !item.userId || !state.activeUserId || item.userId === state.activeUserId);
+      setLastSyncedAt();
+    }
+  } catch (error) {
+    console.warn('Cloud supplements sync failed:', error.message);
+  }
+}
+
+async function savePantryItemFromForm() {
+  const now = new Date().toISOString();
+  const item = touchSyncMetadata({
+    id: uuid('pantry'),
+    userId: state.activeUserId,
+    rawName: $('pantryName')?.value?.trim() || '',
+    quantity: Number($('pantryQty')?.value || 1),
+    unit: $('pantryUnit')?.value || 'g',
+    grams: Number($('pantryGrams')?.value || 0),
+    category: $('pantryCategory')?.value || 'general',
+    location: $('pantryLocation')?.value || 'pantry',
+    expiresAt: $('pantryExpires')?.value || null,
+    priority: $('pantryPriority')?.value || 'normal',
+    createdAt: now,
+    updatedAt: now,
+  }, 'local', isCloudSessionActive());
+  if (!item.rawName) return toast(tr('pantry.addFood'));
+  await idbPut('pantry', item);
+  if (isCloudSessionActive()) {
+    try { await apiRequest('/api/pantry', { method: 'POST', body: item }); setLastSyncedAt(); }
+    catch (error) { await queueOfflineAction({ kind: 'pantry', path: '/api/pantry', method: 'POST', body: item, error: error.message }); }
+  }
+  state.pantryItems = await idbGetAll('pantry').catch(() => []);
+  render();
+}
+
+async function deletePantryItem(id) {
+  await idbDelete('pantry', id);
+  if (isCloudSessionActive()) {
+    try { await apiRequest(`/api/pantry/${encodeURIComponent(id)}`, { method: 'DELETE' }); setLastSyncedAt(); }
+    catch (error) { await queueOfflineAction({ kind: 'pantry', path: `/api/pantry/${encodeURIComponent(id)}`, method: 'DELETE', error: error.message }); }
+  }
+  state.pantryItems = await idbGetAll('pantry').catch(() => []);
+  render();
+}
+
+async function saveSupplementFromForm() {
+  const now = new Date().toISOString();
+  const supplement = touchSyncMetadata({
+    id: uuid('supplement'),
+    userId: state.activeUserId,
+    name: $('suppName')?.value?.trim() || '',
+    type: $('suppType')?.value || 'custom',
+    dose: $('suppDose')?.value || '',
+    unit: $('suppUnit')?.value || '',
+    schedule: { frequency: $('suppSchedule')?.value || 'daily' },
+    active: true,
+    notes: $('suppNotes')?.value || '',
+    createdAt: now,
+    updatedAt: now,
+  }, 'local', isCloudSessionActive());
+  if (!supplement.name) return toast(tr('supplements.add'));
+  await idbPut('supplements', supplement);
+  if (isCloudSessionActive()) {
+    try { await apiRequest('/api/supplements', { method: 'POST', body: supplement }); setLastSyncedAt(); }
+    catch (error) { await queueOfflineAction({ kind: 'supplement', path: '/api/supplements', method: 'POST', body: supplement, error: error.message }); }
+  }
+  state.supplements = await idbGetAll('supplements').catch(() => []);
+  render();
+}
+
+function recalcResponseToComparison(recalculation, fallbackContext = {}) {
+  if (!recalculation) return null;
+  const contextMeal = recalculation.changedMeals?.[0]?.mealName || fallbackContext.mealLabel || tr('meal.recipeViewer');
+  const rowFromMeal = (meal) => ({
+    slot: meal.mealName || meal.slot || meal.id || 'Meal',
+    macros: meal.macros || calcMealMacros(meal),
+    items: (meal.items || meal.changes || []).map((item) => ({
+      name: item.foodName || item.item || item.name || 'Food',
+      qty: item.qty || item.quantityText || (item.newGrams ? `${round(item.newGrams)} g` : ''),
+    })),
+  });
+  return {
+    date: fallbackContext.date || todayISO(),
+    remainingTarget: recalculation.after?.gap || emptyMacros(),
+    before: (recalculation.before?.remainingMeals || []).map(rowFromMeal),
+    after: (recalculation.after?.remainingMeals || []).map(rowFromMeal),
+    projected: recalculation.after?.projected || emptyMacros(),
+    target: recalculation.target || DEFAULT_TARGET,
+    warnings: (recalculation.warnings || []).map((warning) => typeof warning === 'string' ? warning : warning.message || JSON.stringify(warning)),
+    context: {
+      type: (recalculation.event?.type || '').includes('skip') ? 'skipped' : 'changed',
+      mealLabel: contextMeal,
+      summary: localized(recalculation.userSummary),
+    },
+  };
+}
+
+async function syncMealActionWithCloud(action, date, mealId, body = {}) {
+  if (!isCloudSessionActive()) return null;
+  const path = `/api/meals/${encodeURIComponent(mealId)}/${encodeURIComponent(action)}`;
+  const payloadBody = {
+    planDate: date,
+    target: body.target || getTargetForDay(findPlan(date) || date),
+    recalculate: body.recalculate !== false,
+    ...body,
+  };
+  if (!navigator.onLine) {
+    await queueOfflineAction({ kind: 'mealAction', path, body: payloadBody });
+    return null;
+  }
+  try {
+    const payload = await apiRequest(path, { method: 'POST', body: payloadBody });
+    if (payload?.mealPlan) {
+      const plan = touchSyncMetadata(payload.mealPlan, 'cloud', false);
+      await idbPut('plans', plan);
+      setLastSyncedAt();
+    }
+    return payload;
+  } catch (error) {
+    console.warn(`Cloud meal action ${action} failed:`, error.message);
+    await queueOfflineAction({ kind: 'mealAction', path, body: payloadBody, error: error.message });
+    return null;
+  }
+}
+
 async function loadState() {
   state.profiles = (await idbGetAll('profiles')).sort((a, b) => String(a.displayName || '').localeCompare(String(b.displayName || '')));
   const session = getActiveSession();
@@ -4340,6 +5625,12 @@ async function loadState() {
   state.plans = (await idbGetAll('plans')).filter((p) => !p.userId || !state.activeUserId || p.userId === state.activeUserId).sort(sortByDate);
   state.bodyEntries = (await idbGetAll('body')).filter((p) => !p.userId || !state.activeUserId || p.userId === state.activeUserId).sort(sortByDate);
   state.bloodExams = (await idbGetAll('blood')).filter((p) => !p.userId || !state.activeUserId || p.userId === state.activeUserId).sort(sortByDate);
+  state.pantryItems = (await idbGetAll('pantry').catch(() => [])).filter((p) => !p.userId || !state.activeUserId || p.userId === state.activeUserId);
+  state.supplements = (await idbGetAll('supplements').catch(() => [])).filter((p) => !p.userId || !state.activeUserId || p.userId === state.activeUserId);
+  state.supplementLogs = (await idbGetAll('supplementLogs').catch(() => [])).filter((p) => !p.userId || !state.activeUserId || p.userId === state.activeUserId);
+  state.syncQueue = (await idbGetAll('offlineQueue').catch(() => [])).filter((item) => item.status !== 'synced');
+  state.online = navigator.onLine;
+  state.lastSyncedAt = localStorage.getItem('dietPlanner.lastSyncedAt') || state.lastSyncedAt || '';
   applyLanguageAndTheme();
 }
 
@@ -4402,7 +5693,7 @@ async function generatePlans(start, end, includeWeekends, lunchMode = state.sett
     }
     const day = makeDayPlan(dates[i], lunchOverride);
     scaleDayToTarget(day, getTargetForDay(day));
-    await idbPut('plans', day);
+    await persistPlan(day);
     created.push(day);
   }
   await loadState();
@@ -4437,6 +5728,9 @@ function renderSettings() {
         ${settingsSummaryCard('foodDatabase', tr('settings.menu.foodDatabase'), `${tr('settings.foodDatabase.summary', { count: state.foods.length })}<br><span class="muted small">${tr('settings.foodDatabase.add')} · ${tr('settings.foodDatabase.export')}</span>`, [])}
         ${settingsSummaryCard('data', tr('settings.menu.data'), `${tr('settings.data.localFirst')}<br><span class="muted small">${tr('settings.data.exportJson')} / ${tr('settings.data.importJson')}</span>`, [tr('common.localOnly')])}
         ${settingsSummaryCard('preferences', tr('settings.menu.preferences'), `${tr('settings.language')}: ${normalizeLanguage(state.settings.language) === 'it' ? 'Italiano' : 'English'}<br><span class="muted small">${tr('settings.theme')}: ${escapeHtml(state.settings.theme || 'system')}</span>`, [])}
+        ${settingsSummaryCard('pantry', tr('settings.menu.pantry'), `${state.pantryItems.length} ${tr('pantry.title').toLowerCase()}<br><span class="muted small">${tr('pantry.subtitle')}</span>`, [])}
+        ${settingsSummaryCard('supplements', tr('settings.menu.supplements'), `${state.supplements.length} ${tr('settings.menu.supplements').toLowerCase()}<br><span class="muted small">${tr('supplements.subtitle')}</span>`, [])}
+        ${settingsSummaryCard('admin', tr('settings.menu.admin'), `${tr('admin.placeholder')}<br><span class="muted small">${tr('common.backendManaged')}</span>`, [])}
         ${settingsSummaryCard('about', tr('settings.menu.about'), `${tr('settings.about.version')} ${APP_VERSION}<br><span class="muted small">${tr('settings.about.localFirst')}</span>`, [])}
       </section>
     </div>`;
@@ -4480,6 +5774,9 @@ function openSettingsPanel(panel) {
     foodDatabase: [tr('settings.menu.foodDatabase'), renderFoodDatabasePanel],
     data: [tr('settings.menu.data'), renderDataPanel],
     preferences: [tr('settings.menu.preferences'), renderPreferencesForm],
+    pantry: [tr('settings.menu.pantry'), renderPantryPanel],
+    supplements: [tr('settings.menu.supplements'), renderSupplementsPanel],
+    admin: [tr('settings.menu.admin'), renderAdminPanel],
     about: [tr('settings.menu.about'), renderAboutPanel],
   };
   const entry = renderers[panel];
@@ -4580,7 +5877,7 @@ function openBaselineReview() {
         <div class="grid three baseline-row" data-meal-index="${mi}">
           <label class="field"><span>${tr('table.food')}</span><input class="baseline-food" value="${escapeHtml(item.rawName || item.foodName)}"></label>
           <label class="field"><span>Quantity</span><input class="baseline-qty" type="number" step="0.1" value="${escapeHtml(item.quantity)}"></label>
-          <label class="field"><span>Unit</span><select class="baseline-unit"><option value="g" ${item.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${item.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label>
+          <label class="field"><span>${tr('common.unit')}</span><select class="baseline-unit"><option value="g" ${item.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${item.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label>
         </div>`).join('') || `<p class="muted small">${tr('settings.baseline.noItems')}</p>`}</div>`).join('')}
       <button class="primary-button" data-action="save-parsed-baseline">${tr('common.save')}</button>
     </div>`);
@@ -4609,6 +5906,21 @@ async function saveParsedBaseline() {
   closeModal();
   render();
   toast(tr('settings.baseline.saved'));
+}
+
+function renderPantryPanel() {
+  const items = state.pantryItems || [];
+  return html`<section class="stack"><div class="info-box small">${tr('pantry.subtitle')}</div><div class="form-grid three"><label class="field"><span>${tr('pantry.rawName')}</span><input id="pantryName" placeholder="Chicken, rice, yogurt"></label><label class="field"><span>${tr('flow.quantity')}</span><input id="pantryQty" type="number" step="0.1" value="1"></label><label class="field"><span>${tr('flow.unit')}</span><input id="pantryUnit" value="g"></label><label class="field"><span>${tr('common.gramsEstimate')}</span><input id="pantryGrams" type="number" step="1"></label><label class="field"><span>${tr('common.category')}</span><input id="pantryCategory" placeholder="protein / carb / fat"></label><label class="field"><span>${tr('pantry.location')}</span><select id="pantryLocation"><option value="pantry">Pantry</option><option value="fridge">Fridge</option><option value="freezer">Freezer</option></select></label><label class="field"><span>${tr('pantry.expires')}</span><input id="pantryExpires" type="date"></label><label class="field"><span>${tr('common.priority')}</span><select id="pantryPriority"><option value="normal">Normal</option><option value="high">Use soon</option><option value="avoid">Unavailable</option></select></label></div><div class="actions"><button class="primary-button" data-action="save-pantry-item">${tr('pantry.addFood')}</button></div><div class="stack-sm">${items.length ? items.map((item) => `<div class="card flat row between"><div><strong>${escapeHtml(item.rawName || item.raw_name || '')}</strong><p class="muted small">${escapeHtml(item.location || 'pantry')} · ${escapeHtml(String(item.quantity || ''))} ${escapeHtml(item.unit || '')}${item.expiresAt || item.expires_at ? ` · ${tr('pantry.expires')}: ${escapeHtml(item.expiresAt || item.expires_at)}` : ''}</p></div><button class="ghost-button" data-action="delete-pantry-item" data-id="${escapeHtml(item.id)}">${tr('common.delete')}</button></div>`).join('') : `<p class="muted small">${tr('pantry.empty')}</p>`}</div></section>`;
+}
+
+function renderSupplementsPanel() {
+  const items = state.supplements || [];
+  return html`<section class="stack"><div class="info-box small">${tr('supplements.subtitle')}</div><div class="form-grid three"><label class="field"><span>${tr('common.name')}</span><input id="suppName" placeholder="Creatine"></label><label class="field"><span>${tr('common.type')}</span><select id="suppType"><option value="whey">Whey</option><option value="creatine">Creatine</option><option value="caffeine">Caffeine / pre-workout</option><option value="omega_3">Omega-3</option><option value="vitamin_d">Vitamin D</option><option value="magnesium">Magnesium</option><option value="custom">Custom</option></select></label><label class="field"><span>${tr('common.dose')}</span><input id="suppDose" placeholder="5"></label><label class="field"><span>${tr('common.unit')}</span><input id="suppUnit" placeholder="g / mg / capsule"></label><label class="field"><span>${tr('common.schedule')}</span><select id="suppSchedule"><option value="daily">Daily</option><option value="workout_days">Workout days</option><option value="custom">Custom</option></select></label><label class="field"><span>${tr('common.notes')}</span><input id="suppNotes"></label></div><div class="actions"><button class="primary-button" data-action="save-supplement">${tr('supplements.add')}</button></div><div class="stack-sm">${items.length ? items.map((item) => `<div class="card flat"><strong>${escapeHtml(item.name || '')}</strong><p class="muted small">${escapeHtml(item.type || 'custom')} · ${escapeHtml(item.dose || '')} ${escapeHtml(item.unit || '')}</p></div>`).join('') : `<p class="muted small">${tr('supplements.empty')}</p>`}</div></section>`;
+}
+
+function renderAdminPanel() {
+  const isAdmin = state.activeProfile?.role === 'admin' || getCloudSession()?.user?.role === 'admin';
+  return html`<section class="stack"><div class="${isAdmin ? 'info-box' : 'warning-box'} small">${tr('admin.placeholder')}</div><div class="card flat stack-sm"><h3>Backend scaffold</h3><p class="muted small">Admin-only routes exist for food review, issue type, before/after payloads, duplicate correction and confidence review. Normal users cannot access the admin review endpoint.</p></div></section>`;
 }
 
 function renderNutritionSourcesPanel() {
@@ -4819,7 +6131,7 @@ function openRecipeEditor(recipeId = null) {
 function renderRecipeIngredientRow(ingredient = {}) {
   const food = ingredient.foodId ? getFoodById(ingredient.foodId) : null;
   const name = food ? localizedFoodName(food) : (ingredient.name || '');
-  return `<div class="grid three card flat recipe-ingredient-row"><label class="field"><span>${tr('table.food')}</span><input class="recipe-food" value="${escapeHtml(name)}" list="foodNameList"></label><label class="field"><span>Quantity</span><input class="recipe-qty" type="number" step="0.1" value="${escapeHtml(ingredient.quantity ?? '')}"></label><label class="field"><span>Unit</span><select class="recipe-unit"><option value="g" ${ingredient.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${ingredient.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${ingredient.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label></div>`;
+  return `<div class="grid three card flat recipe-ingredient-row"><label class="field"><span>${tr('table.food')}</span><input class="recipe-food" value="${escapeHtml(name)}" list="foodNameList"></label><label class="field"><span>Quantity</span><input class="recipe-qty" type="number" step="0.1" value="${escapeHtml(ingredient.quantity ?? '')}"></label><label class="field"><span>${tr('common.unit')}</span><select class="recipe-unit"><option value="g" ${ingredient.unit === 'g' ? 'selected' : ''}>g</option><option value="ml" ${ingredient.unit === 'ml' ? 'selected' : ''}>ml</option><option value="piece" ${ingredient.unit === 'piece' ? 'selected' : ''}>pieces</option></select></label></div>`;
 }
 
 async function saveRecipeFromEditor(recipeId = null) {
@@ -4900,8 +6212,8 @@ function openMealDetail(date, mealId) {
       <div class="card flat stack-sm"><div class="row between"><div><h3>${escapeHtml(meal.recipeName || tr('meal.recipeViewer'))}</h3><p>${totalsText(macros)}</p></div>${confidencePill((meal.items || []).some((i) => i.confidence === 'unknown') ? 'unknown' : 'medium')}</div></div>
       <section class="card flat stack-sm"><h3>${tr('meal.ingredients')}</h3><ul class="food-list detail-food-list">${(meal.items || []).map((item) => `<li><strong>${escapeHtml(item.foodName)}</strong><span>${displayQuantity(item)} · ${confidencePill(item.confidence || 'unknown')}</span></li>`).join('') || `<li><span>${tr('meal.noFoods')}</span></li>`}</ul></section>
       ${meal.instructions?.length ? `<section class="card flat"><h3>${tr('meal.instructions')}</h3><ol>${meal.instructions.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol></section>` : ''}
-      <section class="card flat stack-sm"><h3>${tr('recipe.alternatives')}</h3>${alternativeRecipes.slice(0, 5).map((recipeRecord) => renderMealAlternative(day, meal, recipeRecord)).join('') || `<p class="muted small">${tr('recipe.noRecipes')}</p>`}</section>
-      <div class="actions"><button class="secondary-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.completed')}</button><button class="ghost-button" data-action="skip-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.skipped')}</button><button class="ghost-button" data-action="change-recipe" data-date="${date}" data-meal-id="${mealId}">${tr('meal.changeRecipe')}</button><button class="ghost-button" data-action="edit-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.editMeal')}</button></div>
+      <section class="card flat stack-sm"><div class="row between"><h3>${tr('recipe.alternatives')}</h3><button class="pill-button" data-action="open-food-swap" data-date="${date}" data-meal-id="${mealId}">${tr('meal.swapFood')}</button></div>${alternativeRecipes.slice(0, 5).map((recipeRecord) => renderMealAlternative(day, meal, recipeRecord)).join('') || `<p class="muted small">${tr('recipe.noRecipes')}</p>`}</section>
+      <div class="actions"><button class="secondary-button" data-action="complete-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.ateThis')}</button><button class="ghost-button" data-action="open-ate-different" data-date="${date}" data-meal-id="${mealId}">${tr('meal.ateDifferent')}</button><button class="ghost-button" data-action="skip-meal" data-date="${date}" data-meal-id="${mealId}">${tr('common.skipped')}</button><button class="ghost-button" data-action="open-swap-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.swapMeal')}</button><button class="ghost-button" data-action="edit-meal" data-date="${date}" data-meal-id="${mealId}">${tr('meal.editMeal')}</button></div>
     </div>`);
 }
 
@@ -4927,11 +6239,12 @@ async function applyRecipeAlternative(date, mealId, recipeId) {
   selected.originalItems = deepClone(original.originalItems || original.items);
   selected.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'recipe_alternative', from: original.recipeName, to: selected.recipeName }];
   day.meals[idx] = selected;
+  const comparison = recalcRemainingMeals(day, { type: 'changed', mealLabel: mealLabel(original.slot) });
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
-  openMealDetail(date, mealId);
+  showRecalcComparison(comparison);
 }
 
 async function changeRecipe(date, mealId) {
@@ -4959,7 +6272,7 @@ async function changeRecipe(date, mealId) {
   selected.adjustments = [...(original.adjustments || []), { at: new Date().toISOString(), type: 'recipe_change', from: original.recipeName, to: selected.recipeName }];
   day.meals[idx] = selected;
   day.updatedAt = new Date().toISOString();
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   openDetailPanel('Recipe changed', `<div class="stack"><div class="success-box small">Changed ${escapeHtml(mealLabel(original.slot))} to <strong>${escapeHtml(selected.recipeName)}</strong>.</div><div class="grid two"><div class="card flat"><h3>Original macros</h3><p>${totalsText(targetMacros)}</p></div><div class="card flat"><h3>New macros</h3><p>${totalsText(calcMealMacros(selected))}</p>${macroDiffHtml(calcMealMacros(selected), targetMacros)}</div></div></div>`);
@@ -4998,7 +6311,7 @@ async function regenerateDay(date) {
   if (lunchMode === 'rotating') lunchOverride = getAllRecipes().find((recipeRecord) => recipeRecord.mealType === 'Lunch') || null;
   const day = makeDayPlan(date, lunchOverride);
   scaleDayToTarget(day, getTargetForDay(day));
-  await idbPut('plans', day);
+  await persistPlan(day);
   await loadState();
   render();
   toast('Day regenerated.');
@@ -5075,7 +6388,12 @@ async function init() {
   await seedIfNeeded();
   await refreshCloudUser();
   await loadState();
+  await loadCloudPreferencesIfAvailable();
   await loadCloudRecipesIfAvailable();
+  await loadCloudMealPlansIfAvailable();
+  await loadCloudPantryIfAvailable();
+  await loadCloudSupplementsIfAvailable();
+  await flushOfflineQueue();
   await loadState();
   if (state.activeProfile) await ensureStarterPlan();
   renderNav();
@@ -5088,7 +6406,7 @@ async function init() {
 
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {
       // Service worker can fail on file://. The app still works when served locally.
     });
   }

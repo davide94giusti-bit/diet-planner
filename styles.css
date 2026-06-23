@@ -1968,3 +1968,271 @@ select {
     justify-content: flex-start;
   }
 }
+
+/* Daily execution operating-system layer */
+.daily-os-screen {
+  gap: 14px;
+}
+
+.daily-hero {
+  align-items: stretch;
+}
+
+.daily-hero-metrics {
+  display: grid;
+  gap: 6px;
+  min-width: min(100%, 220px);
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.daily-hero-metrics span:first-child {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.daily-hero-metrics strong {
+  font-size: clamp(1.25rem, 4vw, 1.8rem);
+  letter-spacing: -0.04em;
+}
+
+.next-meal-card {
+  display: grid;
+  gap: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  box-shadow: var(--shadow-card);
+}
+
+.next-meal-card.done {
+  border-color: var(--line);
+}
+
+.next-meal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.next-meal-header h2 {
+  margin: 2px 0 4px;
+  font-size: clamp(1.45rem, 6vw, 2.15rem);
+  letter-spacing: -0.055em;
+}
+
+.next-meal-foods {
+  display: grid;
+  gap: 8px;
+}
+
+.next-meal-foods > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-muted);
+}
+
+.next-meal-foods span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.next-meal-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.remaining-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.remaining-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.remaining-macro {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-muted);
+}
+
+.remaining-macro span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.evening-summary summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.ate-different-flow .form-grid.four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.swap-flow,
+.swap-suggestion {
+  gap: 12px;
+}
+
+.swap-suggestion .primary-button {
+  width: 100%;
+}
+
+.warning-details summary {
+  cursor: pointer;
+}
+
+@media (min-width: 760px) {
+  .daily-hero {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .next-meal-actions {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .remaining-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 759px) {
+  .next-meal-card,
+  .remaining-panel,
+  .evening-summary {
+    border-radius: 22px;
+  }
+
+  .next-meal-foods > div {
+    align-items: flex-start;
+    display: grid;
+  }
+
+  .next-meal-foods span {
+    white-space: normal;
+  }
+
+  .remaining-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ate-different-flow .form-grid.four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Iteration 0.5: scanner, sync, onboarding, pantry scaffolding */
+.scanner-modal {
+  max-width: 720px;
+}
+
+.scanner-preview-wrap {
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: #020617;
+}
+
+.scanner-video {
+  display: block;
+  width: 100%;
+  min-height: 280px;
+  max-height: 58vh;
+  object-fit: cover;
+  background: #020617;
+}
+
+.scanner-frame {
+  position: absolute;
+  inset: 18% 10%;
+  border: 2px solid rgba(255, 255, 255, 0.88);
+  border-radius: 18px;
+  box-shadow: 0 0 0 999px rgba(2, 6, 23, 0.34);
+  pointer-events: none;
+}
+
+.scanner-frame::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.scanner-status:empty,
+#scannerProductPreview:empty {
+  display: none;
+}
+
+.scanner-product-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  background: var(--surface);
+}
+
+.scanner-product-card .macro-pills {
+  margin-top: 8px;
+}
+
+.sync-status-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.onboarding-card .step-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.onboarding-card .step-list span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+@media (max-width: 759px) {
+  .scanner-preview-wrap,
+  .scanner-video {
+    min-height: 240px;
+  }
+
+  .scanner-manual-grid,
+  .scanner-actions {
+    grid-template-columns: 1fr;
+  }
+}
