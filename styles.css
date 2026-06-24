@@ -2255,3 +2255,159 @@ body.modal-scroll-lock {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
+
+/* First-login guided onboarding pass */
+.onboarding-shell {
+  max-width: 1080px;
+  margin: 0 auto 48px;
+}
+
+.onboarding-hero {
+  display: grid;
+  gap: 18px;
+  overflow: hidden;
+}
+
+.onboarding-hero h2 {
+  max-width: 780px;
+  font-size: clamp(2rem, 7vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.onboarding-hero .muted {
+  max-width: 680px;
+  font-size: 1.04rem;
+}
+
+.onboarding-loop,
+.onboarding-path-grid,
+.goal-option-grid,
+.week-chip-grid,
+.chip-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.onboarding-loop {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.onboarding-loop span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 10px 12px;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.onboarding-progress {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.onboarding-progress i {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand) var(--value), var(--brand-soft) var(--value));
+}
+
+.onboarding-path-grid,
+.goal-option-grid {
+  grid-template-columns: 1fr;
+}
+
+.onboarding-path-card,
+.goal-option {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 16px;
+  box-shadow: none;
+}
+
+.onboarding-path-card span,
+.goal-option span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.onboarding-path-card.active,
+.goal-option:has(input:checked) {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.goal-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip-grid,
+.week-chip-grid {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+}
+
+.chip-check input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip-check span {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 9px 12px;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.chip-check input:checked + span {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.onboarding-account-grid .card.flat {
+  background: var(--surface-2);
+}
+
+.template-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.coach-tip-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+  background: var(--surface-2);
+}
+
+@media (min-width: 760px) {
+  .onboarding-path-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .goal-option-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -13,6 +13,16 @@ const files = {
   nutritionCache: path.join(DATA_DIR, 'nutrition-cache.json'),
   recipes: path.join(DATA_DIR, 'recipes.json'),
   mealPlans: path.join(DATA_DIR, 'meal-plans.json'),
+  mealEvents: path.join(DATA_DIR, 'meal-events.json'),
+  preferences: path.join(DATA_DIR, 'preferences.json'),
+  bodyMeasurements: path.join(DATA_DIR, 'body-measurements.json'),
+  progressLogs: path.join(DATA_DIR, 'progress-logs.json'),
+  groceryLists: path.join(DATA_DIR, 'grocery-lists.json'),
+  checkIns: path.join(DATA_DIR, 'check-ins.json'),
+  pantryItems: path.join(DATA_DIR, 'pantry-items.json'),
+  supplements: path.join(DATA_DIR, 'supplements.json'),
+  supplementLogs: path.join(DATA_DIR, 'supplement-logs.json'),
+  adminFoodReviews: path.join(DATA_DIR, 'admin-food-reviews.json'),
 };
 
 function usingPostgres() {
@@ -81,6 +91,14 @@ function userFromRow(row) {
     id: row.id,
     email: row.email,
     passwordHash: row.password_hash,
+    name: row.display_name || row.email,
+    displayName: row.display_name || row.email,
+    language: row.language || 'en',
+    theme: row.theme || 'system',
+    units: row.units || 'metric',
+    role: row.role || 'user',
+    onboardingCompleted: Boolean(row.onboarding_completed),
+    onboardingStep: Number(row.onboarding_step || 0),
     createdAt: iso(row.created_at),
     updatedAt: iso(row.updated_at),
   };
@@ -94,6 +112,7 @@ function sessionFromRow(row) {
     tokenHash: row.token_hash,
     createdAt: iso(row.created_at),
     expiresAt: iso(row.expires_at),
+    revokedAt: iso(row.revoked_at),
   };
 }
 
@@ -145,11 +164,11 @@ async function getUserById(id) {
 async function createUser(user) {
   if (usingPostgres()) {
     const result = await db.query(
-      `INSERT INTO users (id, email, password_hash, created_at, updated_at)
-       VALUES ($1, $2, $3, COALESCE($4::timestamptz, NOW()), COALESCE($5::timestamptz, NOW()))
+      `INSERT INTO users (id, email, password_hash, display_name, language, theme, units, role, onboarding_completed, onboarding_step, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, COALESCE($5, 'en'), COALESCE($6, 'system'), COALESCE($7, 'metric'), COALESCE($8, 'user'), COALESCE($9::boolean, FALSE), COALESCE($10::integer, 0), COALESCE($11::timestamptz, NOW()), COALESCE($12::timestamptz, NOW()))
        ON CONFLICT (email) DO NOTHING
        RETURNING *`,
-      [user.id, user.email, user.passwordHash || user.password_hash, user.createdAt || null, user.updatedAt || null]
+      [user.id, user.email, user.passwordHash || user.password_hash, user.displayName || user.name || null, user.language || null, user.theme || null, user.units || null, user.role || 'user', Boolean(user.onboardingCompleted || user.onboarding_completed), Number(user.onboardingStep || user.onboarding_step || 0), user.createdAt || null, user.updatedAt || null]
     );
     if (result.rows[0]) return userFromRow(result.rows[0]);
     return getUserByEmail(user.email);
@@ -160,6 +179,41 @@ async function createUser(user) {
   users.push(user);
   writeJson(files.users, users);
   return user;
+}
+
+async function updateUser(userId, updates = {}) {
+  const allowed = {
+    displayName: updates.displayName || updates.name,
+    language: updates.language,
+    theme: updates.theme,
+    units: updates.units,
+    onboardingCompleted: updates.onboardingCompleted ?? updates.onboarding_completed,
+    onboardingStep: updates.onboardingStep ?? updates.onboarding_step,
+  };
+  if (usingPostgres()) {
+    const current = await getUserById(userId);
+    if (!current) return null;
+    const result = await db.query(
+      `UPDATE users SET
+         display_name = COALESCE($2, display_name),
+         language = COALESCE($3, language),
+         theme = COALESCE($4, theme),
+         units = COALESCE($5, units),
+         onboarding_completed = COALESCE($6::boolean, onboarding_completed),
+         onboarding_step = COALESCE($7::integer, onboarding_step),
+         updated_at = NOW()
+       WHERE id = $1
+       RETURNING *`,
+      [userId, allowed.displayName || null, allowed.language || null, allowed.theme || null, allowed.units || null, allowed.onboardingCompleted == null ? null : Boolean(allowed.onboardingCompleted), allowed.onboardingStep == null ? null : Number(allowed.onboardingStep)]
+    );
+    return userFromRow(result.rows[0]);
+  }
+  const users = readJson(files.users, []);
+  const index = users.findIndex((item) => item.id === userId);
+  if (index < 0) return null;
+  users[index] = { ...users[index], ...Object.fromEntries(Object.entries(allowed).filter(([, value]) => value !== undefined && value !== null && value !== '')), updatedAt: new Date().toISOString() };
+  writeJson(files.users, users);
+  return users[index];
 }
 
 async function createSession(session) {
@@ -182,7 +236,7 @@ async function getSessionByTokenHash(tokenHash) {
   if (usingPostgres()) {
     const result = await db.query(
       `SELECT * FROM sessions
-       WHERE token_hash = $1 AND (expires_at IS NULL OR expires_at > NOW())
+       WHERE token_hash = $1 AND revoked_at IS NULL AND (expires_at IS NULL OR expires_at > NOW())
        LIMIT 1`,
       [tokenHash]
     );
@@ -193,7 +247,7 @@ async function getSessionByTokenHash(tokenHash) {
 
 async function deleteSession(tokenHash) {
   if (usingPostgres()) {
-    await db.query('DELETE FROM sessions WHERE token_hash = $1', [tokenHash]);
+    await db.query('UPDATE sessions SET revoked_at = NOW() WHERE token_hash = $1', [tokenHash]);
     return;
   }
   writeJson(files.sessions, readJson(files.sessions, []).filter((item) => item.tokenHash !== tokenHash));
@@ -281,6 +335,329 @@ async function createCustomFood(userId, food) {
   foods.push(record);
   writeJson(files.customFoods, foods);
   return record;
+}
+
+
+async function updateCustomFood(userId, foodId, food) {
+  return createCustomFood(userId, { ...food, id: foodId, userId, updatedAt: new Date().toISOString() });
+}
+
+async function deleteCustomFood(userId, foodId) {
+  if (usingPostgres()) {
+    await db.query('DELETE FROM custom_foods WHERE id = $1 AND user_id = $2', [foodId, userId]);
+    return;
+  }
+  writeJson(files.customFoods, readJson(files.customFoods, []).filter((food) => !(food.id === foodId && food.userId === userId)));
+}
+
+async function createMealEvent(userId, event) {
+  const record = { ...event, id: event.id || crypto.randomUUID(), userId, createdAt: event.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO meal_events (id, user_id, meal_plan_id, planned_meal_id, event_type, actual_items, actual_macro_snapshot, adjustment_applied, data, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7::jsonb, $8::boolean, $9::jsonb, COALESCE($10::timestamptz, NOW()))
+       RETURNING *`,
+      [record.id, userId, record.mealPlanId || null, record.plannedMealId || null, record.eventType || null, JSON.stringify(record.actualItems || []), JSON.stringify(record.actualMacroSnapshot || {}), Boolean(record.adjustmentApplied), JSON.stringify(record), record.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const events = readJson(files.mealEvents, []);
+  events.push(record);
+  writeJson(files.mealEvents, events);
+  return record;
+}
+
+async function listMealEvents(userId, start = null, end = null) {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM meal_events
+       WHERE user_id = $1
+         AND ($2::timestamptz IS NULL OR created_at >= $2::timestamptz)
+         AND ($3::timestamptz IS NULL OR created_at <= $3::timestamptz)
+       ORDER BY created_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.mealEvents, []).filter((event) => {
+    if (event.userId !== userId) return false;
+    if (start && event.createdAt < start) return false;
+    if (end && event.createdAt > end) return false;
+    return true;
+  });
+}
+
+async function savePreferences(userId, preferences) {
+  const record = { ...preferences, userId, updatedAt: new Date().toISOString(), createdAt: preferences.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO preferences (user_id, data, created_at, updated_at)
+       VALUES ($1, $2::jsonb, COALESCE($3::timestamptz, NOW()), NOW())
+       ON CONFLICT (user_id) DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()
+       RETURNING *`,
+      [userId, JSON.stringify(record), record.createdAt || null]
+    );
+    return publicDataRecord({ ...result.rows[0], id: userId });
+  }
+  const rows = readJson(files.preferences, []).filter((item) => item.userId !== userId);
+  rows.push(record);
+  writeJson(files.preferences, rows);
+  return record;
+}
+
+async function getPreferences(userId) {
+  if (usingPostgres()) {
+    const result = await db.query('SELECT user_id AS id, user_id, data, created_at, updated_at FROM preferences WHERE user_id = $1 LIMIT 1', [userId]);
+    return result.rows[0] ? publicDataRecord(result.rows[0]) : null;
+  }
+  return readJson(files.preferences, []).find((item) => item.userId === userId) || null;
+}
+
+async function saveDatedRecord(fileKey, tableName, userId, record, dateField = 'date') {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO ${tableName} (id, user_id, ${dateField}, data, created_at)
+       VALUES ($1, $2, $3::date, $4::jsonb, COALESCE($5::timestamptz, NOW()))
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data
+       RETURNING *`,
+      [item.id, userId, item[dateField] || item.date || item.periodStart || item.startDate || item.weekStart || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files[fileKey], []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files[fileKey], rows);
+  return item;
+}
+
+async function listDatedRecords(fileKey, tableName, userId, start = null, end = null, dateColumn = 'measurement_date') {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM ${tableName}
+       WHERE user_id = $1
+         AND ($2::date IS NULL OR ${dateColumn} >= $2::date)
+         AND ($3::date IS NULL OR ${dateColumn} <= $3::date)
+       ORDER BY ${dateColumn} DESC, created_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files[fileKey], []).filter((item) => {
+    const date = item.date || item.measurementDate || item.periodStart || item.startDate || item.weekStart || '';
+    if (item.userId !== userId) return false;
+    if (start && date < start) return false;
+    if (end && date > end) return false;
+    return true;
+  });
+}
+
+async function saveBodyMeasurement(userId, record) {
+  const date = record.date || record.measurementDate || new Date().toISOString().slice(0, 10);
+  return saveDatedRecord('bodyMeasurements', 'body_measurements', userId, { ...record, measurement_date: date, date }, 'measurement_date');
+}
+
+async function listBodyMeasurements(userId, start = null, end = null) {
+  return listDatedRecords('bodyMeasurements', 'body_measurements', userId, start, end, 'measurement_date');
+}
+
+async function saveProgressLog(userId, record) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, periodStart: record.periodStart || record.period_start || null, periodEnd: record.periodEnd || record.period_end || null, createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO progress_logs (id, user_id, period_start, period_end, data, created_at)
+       VALUES ($1, $2, $3::date, $4::date, $5::jsonb, COALESCE($6::timestamptz, NOW()))
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data
+       RETURNING *`,
+      [item.id, userId, item.periodStart || null, item.periodEnd || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files.progressLogs, []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files.progressLogs, rows);
+  return item;
+}
+
+async function listProgressLogs(userId, start = null, end = null) {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM progress_logs
+       WHERE user_id = $1
+         AND ($2::date IS NULL OR period_end >= $2::date)
+         AND ($3::date IS NULL OR period_start <= $3::date)
+       ORDER BY period_start DESC, created_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.progressLogs, []).filter((item) => item.userId === userId);
+}
+
+async function saveGroceryList(userId, record) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, startDate: record.startDate || record.start_date || null, endDate: record.endDate || record.end_date || null, updatedAt: new Date().toISOString(), createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO grocery_lists (id, user_id, start_date, end_date, data, created_at, updated_at)
+       VALUES ($1, $2, $3::date, $4::date, $5::jsonb, COALESCE($6::timestamptz, NOW()), NOW())
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, start_date = EXCLUDED.start_date, end_date = EXCLUDED.end_date, updated_at = NOW()
+       RETURNING *`,
+      [item.id, userId, item.startDate || null, item.endDate || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files.groceryLists, []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files.groceryLists, rows);
+  return item;
+}
+
+async function listGroceryLists(userId, start = null, end = null) {
+  if (usingPostgres()) {
+    const result = await db.query(
+      `SELECT * FROM grocery_lists
+       WHERE user_id = $1
+         AND ($2::date IS NULL OR end_date >= $2::date)
+         AND ($3::date IS NULL OR start_date <= $3::date)
+       ORDER BY start_date DESC, updated_at DESC`,
+      [userId, start || null, end || null]
+    );
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.groceryLists, []).filter((item) => item.userId === userId);
+}
+
+async function saveCheckIn(userId, record) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, weekStart: record.weekStart || record.week_start || record.periodStart || null, updatedAt: new Date().toISOString(), createdAt: record.createdAt || new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO check_ins (id, user_id, week_start, data, created_at, updated_at)
+       VALUES ($1, $2, $3::date, $4::jsonb, COALESCE($5::timestamptz, NOW()), NOW())
+       ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()
+       RETURNING *`,
+      [item.id, userId, item.weekStart || null, JSON.stringify(item), item.createdAt || null]
+    );
+    return publicDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files.checkIns, []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files.checkIns, rows);
+  return item;
+}
+
+async function listCheckIns(userId) {
+  if (usingPostgres()) {
+    const result = await db.query('SELECT * FROM check_ins WHERE user_id = $1 ORDER BY week_start DESC, updated_at DESC', [userId]);
+    return result.rows.map(publicDataRecord);
+  }
+  return readJson(files.checkIns, []).filter((item) => item.userId === userId);
+}
+
+function jsonDataRecord(row) {
+  if (!row) return null;
+  return publicDataRecord(row);
+}
+
+async function listJsonRows(fileKey, tableName, userId, orderBy = 'updated_at DESC') {
+  if (usingPostgres()) {
+    const result = await db.query(`SELECT * FROM ${tableName} WHERE user_id = $1 ORDER BY ${orderBy}`, [userId]);
+    return result.rows.map(jsonDataRecord);
+  }
+  return readJson(files[fileKey], []).filter((item) => item.userId === userId);
+}
+
+async function saveJsonRow(fileKey, tableName, userId, record, columnMap = {}) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), userId, createdAt: record.createdAt || new Date().toISOString(), updatedAt: new Date().toISOString() };
+  if (usingPostgres()) {
+    const columns = ['id', 'user_id', 'data', 'created_at', 'updated_at'];
+    const values = ['$1', '$2', '$3::jsonb', 'COALESCE($4::timestamptz, NOW())', 'NOW()'];
+    const params = [item.id, userId, JSON.stringify(item), item.createdAt || null];
+    let i = params.length + 1;
+    for (const [column, key] of Object.entries(columnMap)) {
+      const value = item[key] ?? null;
+      const isJson = value && typeof value === 'object';
+      columns.splice(columns.length - 2, 0, column);
+      values.splice(values.length - 2, 0, isJson ? `$${i}::jsonb` : `$${i}`);
+      params.push(isJson ? JSON.stringify(value) : value);
+      i += 1;
+    }
+    const updateSet = ['data = EXCLUDED.data', 'updated_at = NOW()', ...Object.keys(columnMap).map((column) => `${column} = EXCLUDED.${column}`)].join(', ');
+    const result = await db.query(
+      `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${values.join(', ')})
+       ON CONFLICT (id) DO UPDATE SET ${updateSet}
+       RETURNING *`,
+      params
+    );
+    return jsonDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files[fileKey], []).filter((row) => !(row.id === item.id && row.userId === userId));
+  rows.push(item);
+  writeJson(files[fileKey], rows);
+  return item;
+}
+
+async function deleteJsonRow(fileKey, tableName, userId, id) {
+  if (usingPostgres()) {
+    await db.query(`DELETE FROM ${tableName} WHERE id = $1 AND user_id = $2`, [id, userId]);
+    return;
+  }
+  writeJson(files[fileKey], readJson(files[fileKey], []).filter((item) => !(item.id === id && item.userId === userId)));
+}
+
+async function listPantryItems(userId) {
+  return listJsonRows('pantryItems', 'pantry_items', userId, 'COALESCE(expires_at, DATE \'9999-12-31\') ASC, updated_at DESC');
+}
+
+async function savePantryItem(userId, record) {
+  const item = { ...record, foodId: record.foodId || record.food_id || null, rawName: record.rawName || record.raw_name || record.name || '', expiresAt: record.expiresAt || record.expires_at || null };
+  return saveJsonRow('pantryItems', 'pantry_items', userId, item, { food_id: 'foodId', raw_name: 'rawName', quantity: 'quantity', unit: 'unit', grams: 'grams', category: 'category', location: 'location', expires_at: 'expiresAt', priority: 'priority' });
+}
+
+async function deletePantryItem(userId, id) {
+  return deleteJsonRow('pantryItems', 'pantry_items', userId, id);
+}
+
+async function listSupplements(userId) {
+  return listJsonRows('supplements', 'supplements', userId, 'active DESC, updated_at DESC');
+}
+
+async function saveSupplement(userId, record) {
+  return saveJsonRow('supplements', 'supplements', userId, record, { name: 'name', type: 'type', dose: 'dose', unit: 'unit', schedule: 'schedule', active: 'active', notes: 'notes' });
+}
+
+async function deleteSupplement(userId, id) {
+  return deleteJsonRow('supplements', 'supplements', userId, id);
+}
+
+async function saveSupplementLog(userId, supplementId, record) {
+  const item = { ...record, supplementId, takenAt: record.takenAt || record.taken_at || new Date().toISOString() };
+  return saveJsonRow('supplementLogs', 'supplement_logs', userId, item, { supplement_id: 'supplementId', taken_at: 'takenAt', status: 'status', notes: 'notes' });
+}
+
+async function listAdminFoodReviews() {
+  if (usingPostgres()) {
+    const result = await db.query('SELECT * FROM admin_food_reviews ORDER BY updated_at DESC LIMIT 200');
+    return result.rows.map(jsonDataRecord);
+  }
+  return readJson(files.adminFoodReviews, []);
+}
+
+async function saveAdminFoodReview(reviewerUserId, record) {
+  const item = { ...record, id: record.id || crypto.randomUUID(), reviewerUserId, createdAt: record.createdAt || new Date().toISOString(), updatedAt: new Date().toISOString() };
+  if (usingPostgres()) {
+    const result = await db.query(
+      `INSERT INTO admin_food_reviews (id, food_id, reviewer_user_id, status, issue_type, notes, before_payload, after_payload, data, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8::jsonb, $9::jsonb, COALESCE($10::timestamptz, NOW()), NOW())
+       ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status, issue_type = EXCLUDED.issue_type, notes = EXCLUDED.notes, after_payload = EXCLUDED.after_payload, data = EXCLUDED.data, updated_at = NOW()
+       RETURNING *`,
+      [item.id, item.foodId || item.food_id || null, reviewerUserId, item.status || 'open', item.issueType || item.issue_type || null, item.notes || '', JSON.stringify(item.beforePayload || item.before_payload || {}), JSON.stringify(item.afterPayload || item.after_payload || {}), JSON.stringify(item), item.createdAt || null]
+    );
+    return jsonDataRecord(result.rows[0]);
+  }
+  const rows = readJson(files.adminFoodReviews, []).filter((row) => row.id !== item.id);
+  rows.push(item);
+  writeJson(files.adminFoodReviews, rows);
+  return item;
 }
 
 async function getCustomFood(userId, foodId) {
@@ -385,12 +762,28 @@ async function getMealPlan(userId, planId) {
   return readJson(files.mealPlans, []).find((plan) => plan.id === planId && plan.userId === userId) || null;
 }
 
-async function listMealPlans(userId) {
+async function listMealPlans(userId, start = null, end = null) {
   if (usingPostgres()) {
+    if (start || end) {
+      const result = await db.query(
+        `SELECT * FROM meal_plans
+         WHERE user_id = $1
+           AND ($2::date IS NULL OR NULLIF(data->>'date', '')::date >= $2::date)
+           AND ($3::date IS NULL OR NULLIF(data->>'date', '')::date <= $3::date)
+         ORDER BY (data->>'date') DESC, updated_at DESC`,
+        [userId, start || null, end || null]
+      );
+      return result.rows.map(publicDataRecord);
+    }
     const result = await db.query('SELECT * FROM meal_plans WHERE user_id = $1 ORDER BY updated_at DESC', [userId]);
     return result.rows.map(publicDataRecord);
   }
-  return readJson(files.mealPlans, []).filter((plan) => plan.userId === userId);
+  return readJson(files.mealPlans, []).filter((plan) => {
+    if (plan.userId !== userId) return false;
+    if (start && plan.date < start) return false;
+    if (end && plan.date > end) return false;
+    return true;
+  });
 }
 
 async function saveMealPlan(userId, plan) {
@@ -426,6 +819,7 @@ module.exports = {
   getUserByEmail,
   getUserById,
   createUser,
+  updateUser,
   createSession,
   getSessionByTokenHash,
   deleteSession,
@@ -435,6 +829,8 @@ module.exports = {
   deleteRecipe,
   listCustomFoods,
   createCustomFood,
+  updateCustomFood,
+  deleteCustomFood,
   getCustomFood,
   searchCustomFoods,
   findCachedFood,
@@ -445,4 +841,25 @@ module.exports = {
   listMealPlans,
   saveMealPlan,
   deleteMealPlan,
+  createMealEvent,
+  listMealEvents,
+  savePreferences,
+  getPreferences,
+  saveBodyMeasurement,
+  listBodyMeasurements,
+  saveProgressLog,
+  listProgressLogs,
+  saveGroceryList,
+  listGroceryLists,
+  saveCheckIn,
+  listCheckIns,
+  listPantryItems,
+  savePantryItem,
+  deletePantryItem,
+  listSupplements,
+  saveSupplement,
+  deleteSupplement,
+  saveSupplementLog,
+  listAdminFoodReviews,
+  saveAdminFoodReview,
 };

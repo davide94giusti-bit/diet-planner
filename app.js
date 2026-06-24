@@ -1,4 +1,4 @@
-const APP_VERSION = '0.5.2-modal-scroll-lock';
+const APP_VERSION = '0.6.0-first-login-os';
 const DB_NAME = 'diet-planner-local-db';
 const DB_VERSION = 4;
 const STORES = ['settings', 'macroTargets', 'foods', 'baseline', 'plans', 'body', 'blood', 'profiles', 'nutritionLookupCache', 'dashboardPreferences', 'recipes', 'recipeAlternatives', 'nutritionProviders', 'offlineQueue', 'pantry', 'supplements', 'checkIns'];
@@ -1139,6 +1139,203 @@ Object.assign(I18N.it, {
   'progress.intelligence': 'Intelligenza progresso',
   'progress.trendStable': 'Il trend peso è stabile.',
   'progress.insufficient': 'Servono più dati prima di modificare i target.',
+
+});
+
+Object.assign(I18N.en, {
+  'onboarding.welcomeTitle': 'Welcome to Diet Planner',
+  'onboarding.welcomeBody': 'Build your gym diet day, follow it meal by meal, and adjust automatically when life changes.',
+  'onboarding.primaryCta': 'Build my first plan',
+  'onboarding.secondaryCta': 'I already have a plan',
+  'onboarding.loginCta': 'Log in',
+  'onboarding.pathTitle': 'How do you want to start?',
+  'onboarding.path.generate': 'Generate a plan for me',
+  'onboarding.path.generateHelp': "I will calculate a starter target and build your first gym diet day.",
+  'onboarding.path.import': 'Import my existing diet plan',
+  'onboarding.path.importHelp': 'Paste a plan from your nutritionist, coach, notes, or WhatsApp.',
+  'onboarding.path.manual': 'Start with manual macro targets',
+  'onboarding.path.manualHelp': 'Use your own calories and macro targets.',
+  'onboarding.accountTitle': 'Language and account',
+  'onboarding.accountHelp': 'Sign in for cloud sync, or create a local demo profile for this device.',
+  'onboarding.signedInAs': 'Signed in as {email}',
+  'onboarding.continueLocal': 'Create local demo profile during setup',
+  'onboarding.goalQuestion': 'What is your goal?',
+  'onboarding.goal.fat_loss': 'Moderate calorie deficit while keeping protein high.',
+  'onboarding.goal.lean_bulk': 'Small calorie surplus to support training.',
+  'onboarding.goal.maintenance': 'Stable intake to maintain body weight and routine.',
+  'onboarding.goal.recomposition': 'Stable or slight-deficit target with high protein and training consistency.',
+  'onboarding.goal.performance': 'Fuel training and recovery with enough carbs and total calories.',
+  'onboarding.goal.custom_nutritionist_plan': 'Follow an existing plan and use the app for execution and adjustments.',
+  'onboarding.goal.custom': 'Set calories and macros manually.',
+  'goal.custom': 'Custom',
+  'onboarding.bodyHelp': 'This creates a starter target. You can edit it anytime.',
+  'onboarding.knownMacros': 'I know my macros already',
+  'onboarding.workoutQuestion': 'Which days do you train?',
+  'onboarding.workoutHelp': 'On training days, I will mark your pre-workout and post-workout meals.',
+  'onboarding.workoutTime': 'Usual workout time',
+  'onboarding.workoutType': 'Workout type',
+  'onboarding.intensity': 'Intensity',
+  'onboarding.estimatedCalories': 'Estimated calories burned, optional',
+  'onboarding.foodQuestion': 'What foods should the plan use?',
+  'onboarding.likedFoods': 'Foods you like',
+  'onboarding.avoidFoods': 'Foods to avoid',
+  'onboarding.proteinPrefs': 'Protein preferences',
+  'onboarding.carbPrefs': 'Carb preferences',
+  'onboarding.fatPrefs': 'Fat preferences',
+  'onboarding.mealsPerDay': 'Meals per day',
+  'onboarding.cookingTime': 'Cooking time',
+  'onboarding.budgetPriority': 'Budget priority',
+  'onboarding.lunchMode': 'Lunch mode',
+  'onboarding.templateTitle': 'Choose a starter template',
+  'onboarding.template.balanced': 'Balanced gym day',
+  'onboarding.template.highProtein': 'High-protein simple meals',
+  'onboarding.template.mealPrep': 'Meal prep friendly',
+  'onboarding.template.minimalCooking': 'Minimal cooking',
+  'onboarding.template.budget': 'Budget focused',
+  'onboarding.template.italian': 'Italian-style gym diet',
+  'onboarding.importTitle': 'Paste your existing diet plan',
+  'onboarding.importHelp': 'Use meal labels like Breakfast, Colazione, Lunch, Pranzo, Dinner, Cena, Snack, Spuntino, Pre-workout, or Post-workout.',
+  'onboarding.samplePlan': 'Load sample plan',
+  'onboarding.manualTitle': 'Manual macro targets',
+  'onboarding.reviewTitle': 'Review starter target',
+  'onboarding.reviewHelp': 'This is a starter target. You can edit it anytime.',
+  'onboarding.confidence.high': 'High confidence',
+  'onboarding.confidence.estimated': 'Estimated',
+  'onboarding.confidence.review': 'Needs review',
+  'onboarding.generateFirstWeek': 'Generate my first week',
+  'onboarding.completeTitle': 'Your first day is ready.',
+  'onboarding.loop1': 'Tap I ate this when done.',
+  'onboarding.loop2': 'Tap I skipped this if you miss a meal.',
+  'onboarding.loop3': 'Tap I ate something different if reality changes.',
+  'onboarding.finishSetup': 'Finish setup to generate your first plan.',
+  'onboarding.localNameRequired': 'Add a display name or sign in before finishing setup.',
+  'onboarding.saved': 'Your first day is ready.',
+  'onboarding.tutorialTitle': 'This is your command center.',
+  'onboarding.tutorialBody': 'Follow the next meal, then tap what happened. If life changes, use I skipped this or I ate something different and the app will adjust the rest of the day.',
+  'onboarding.dismissTip': 'Dismiss tip',
+  'onboarding.weeklyHook': 'At the end of the week, the app asks about weight, hunger, energy, gym performance, and adherence before suggesting conservative changes.',
+  'onboarding.pantryHook': 'Want to use foods you already have?',
+  'onboarding.pantryPlaceholder': 'Chicken, rice, eggs, yogurt, bananas, potatoes',
+  'onboarding.importUnderstood': 'I understood {percent}% of this plan. Review {count} items.',
+  'common.back': 'Back',
+  'common.next': 'Next',
+  'common.retry': 'Retry',
+  'common.loading': 'Loading',
+  'common.localOnly': 'Local only',
+  'common.showExample': 'Show example',
+  'common.useExample': 'Use example',
+  'common.clear': 'Clear',
+  'common.analyze': 'Analyze',
+  'common.saved': 'Saved',
+  'dashboard.planToday': 'Generate today',
+  'dashboard.loadingApp': 'Loading your diet day...',
+  'dashboard.noPlanHelp': 'No plan for today yet. Generate today in one tap.',
+  'dashboard.finishSetup': 'Finish setup',
+  'trust.estimated': 'Estimated',
+  'trust.needsReview': 'Needs review',
+  'trust.rawCookedUnclear': 'Dry/cooked unclear',
+  'trust.providerData': 'Provider data',
+  'trust.manualValue': 'Manual value',
+  'trust.importedPlan': 'Imported from plan',
+  'trust.barcodeLabel': 'Barcode label data'
+});
+
+Object.assign(I18N.it, {
+  'onboarding.welcomeTitle': 'Benvenuto in Diet Planner',
+  'onboarding.welcomeBody': 'Costruisci la tua giornata alimentare per la palestra, seguila pasto per pasto e correggila automaticamente quando cambia qualcosa.',
+  'onboarding.primaryCta': 'Costruisci il mio primo piano',
+  'onboarding.secondaryCta': 'Ho gia un piano',
+  'onboarding.loginCta': 'Accedi',
+  'onboarding.pathTitle': 'Come vuoi iniziare?',
+  'onboarding.path.generate': 'Genera un piano per me',
+  'onboarding.path.generateHelp': 'Calcolo un target iniziale e costruisco la tua prima giornata per la palestra.',
+  'onboarding.path.import': 'Importa il mio piano alimentare',
+  'onboarding.path.importHelp': 'Incolla un piano da nutrizionista, coach, note o WhatsApp.',
+  'onboarding.path.manual': 'Parti dai miei macro manuali',
+  'onboarding.path.manualHelp': 'Usa i tuoi target di calorie e macro.',
+  'onboarding.accountTitle': 'Lingua e account',
+  'onboarding.accountHelp': 'Accedi per la sincronizzazione cloud, oppure crea un profilo demo locale su questo dispositivo.',
+  'onboarding.signedInAs': 'Accesso effettuato come {email}',
+  'onboarding.continueLocal': 'Crea profilo demo locale durante il setup',
+  'onboarding.goalQuestion': 'Qual e il tuo obiettivo?',
+  'onboarding.goal.fat_loss': 'Deficit calorico moderato con proteine alte.',
+  'onboarding.goal.lean_bulk': 'Piccolo surplus calorico per supportare l allenamento.',
+  'onboarding.goal.maintenance': 'Introito stabile per mantenere peso e routine.',
+  'onboarding.goal.recomposition': 'Target stabile o leggero deficit con proteine alte e costanza in palestra.',
+  'onboarding.goal.performance': 'Carburante per allenamento e recupero con carboidrati e calorie adeguati.',
+  'onboarding.goal.custom_nutritionist_plan': 'Segui un piano esistente e usa l app per esecuzione e correzioni.',
+  'onboarding.goal.custom': 'Imposta calorie e macro manualmente.',
+  'goal.custom': 'Personalizzato',
+  'onboarding.bodyHelp': 'Crea un target iniziale. Puoi modificarlo quando vuoi.',
+  'onboarding.knownMacros': 'Conosco gia i miei macro',
+  'onboarding.workoutQuestion': 'In quali giorni ti alleni?',
+  'onboarding.workoutHelp': 'Nei giorni di allenamento segnero i pasti pre e post workout.',
+  'onboarding.workoutTime': 'Orario allenamento abituale',
+  'onboarding.workoutType': 'Tipo allenamento',
+  'onboarding.intensity': 'Intensita',
+  'onboarding.estimatedCalories': 'Calorie bruciate stimate, opzionale',
+  'onboarding.foodQuestion': 'Quali alimenti deve usare il piano?',
+  'onboarding.likedFoods': 'Alimenti che ti piacciono',
+  'onboarding.avoidFoods': 'Alimenti da evitare',
+  'onboarding.proteinPrefs': 'Preferenze proteine',
+  'onboarding.carbPrefs': 'Preferenze carboidrati',
+  'onboarding.fatPrefs': 'Preferenze grassi',
+  'onboarding.mealsPerDay': 'Pasti al giorno',
+  'onboarding.cookingTime': 'Tempo cucina',
+  'onboarding.budgetPriority': 'Priorita budget',
+  'onboarding.lunchMode': 'Modalita pranzo',
+  'onboarding.templateTitle': 'Scegli un modello iniziale',
+  'onboarding.template.balanced': 'Giornata palestra bilanciata',
+  'onboarding.template.highProtein': 'Pasti semplici iperproteici',
+  'onboarding.template.mealPrep': 'Adatto al meal prep',
+  'onboarding.template.minimalCooking': 'Poca cucina',
+  'onboarding.template.budget': 'Budget contenuto',
+  'onboarding.template.italian': 'Stile italiano palestra',
+  'onboarding.importTitle': 'Incolla il tuo piano alimentare',
+  'onboarding.importHelp': 'Usa etichette come Breakfast, Colazione, Lunch, Pranzo, Dinner, Cena, Snack, Spuntino, Pre-workout o Post-workout.',
+  'onboarding.samplePlan': 'Carica piano esempio',
+  'onboarding.manualTitle': 'Target macro manuali',
+  'onboarding.reviewTitle': 'Rivedi target iniziale',
+  'onboarding.reviewHelp': 'Questo e un target iniziale. Puoi modificarlo quando vuoi.',
+  'onboarding.confidence.high': 'Alta affidabilita',
+  'onboarding.confidence.estimated': 'Stimato',
+  'onboarding.confidence.review': 'Da controllare',
+  'onboarding.generateFirstWeek': 'Genera la mia prima settimana',
+  'onboarding.completeTitle': 'La tua prima giornata e pronta.',
+  'onboarding.loop1': 'Tocca Ho mangiato questo quando hai finito.',
+  'onboarding.loop2': 'Tocca Ho saltato questo se salti un pasto.',
+  'onboarding.loop3': 'Tocca Ho mangiato altro se cambia la realta.',
+  'onboarding.finishSetup': 'Completa il setup per generare il primo piano.',
+  'onboarding.localNameRequired': 'Aggiungi un nome profilo o accedi prima di completare il setup.',
+  'onboarding.saved': 'La tua prima giornata e pronta.',
+  'onboarding.tutorialTitle': 'Questo e il tuo centro operativo.',
+  'onboarding.tutorialBody': 'Segui il prossimo pasto, poi tocca cosa e successo. Se cambia qualcosa, usa Ho saltato questo o Ho mangiato altro e l app regolera il resto della giornata.',
+  'onboarding.dismissTip': 'Nascondi suggerimento',
+  'onboarding.weeklyHook': 'A fine settimana l app ti chiedera peso, fame, energia, performance in palestra e aderenza prima di suggerire modifiche prudenti.',
+  'onboarding.pantryHook': 'Vuoi usare alimenti che hai gia?',
+  'onboarding.pantryPlaceholder': 'Pollo, riso, uova, yogurt, banane, patate',
+  'onboarding.importUnderstood': 'Ho capito il {percent}% di questo piano. Controlla {count} elementi.',
+  'common.back': 'Indietro',
+  'common.next': 'Avanti',
+  'common.retry': 'Riprova',
+  'common.loading': 'Caricamento',
+  'common.localOnly': 'Solo locale',
+  'common.showExample': 'Mostra esempio',
+  'common.useExample': 'Usa esempio',
+  'common.clear': 'Cancella',
+  'common.analyze': 'Analizza',
+  'common.saved': 'Salvato',
+  'dashboard.planToday': 'Genera oggi',
+  'dashboard.loadingApp': 'Carico la tua giornata alimentare...',
+  'dashboard.noPlanHelp': 'Nessun piano per oggi. Genera la giornata in un tap.',
+  'dashboard.finishSetup': 'Completa setup',
+  'trust.estimated': 'Stimato',
+  'trust.needsReview': 'Da controllare',
+  'trust.rawCookedUnclear': 'Crudo/cotto non chiaro',
+  'trust.providerData': 'Dati provider',
+  'trust.manualValue': 'Valore manuale',
+  'trust.importedPlan': 'Importato dal piano',
+  'trust.barcodeLabel': 'Dati etichetta barcode'
 });
 
 function getCloudSession() {
@@ -1276,6 +1473,11 @@ const DEFAULT_SETTINGS = {
   groceryDepartmentOrder: DEPARTMENTS,
   workoutMealPreference: 'easy digesting carbs + lean protein, lower fat before training',
   lastExportedAt: null,
+  onboardingCompleted: false,
+  onboardingStep: 0,
+  onboardingPath: '',
+  firstUseTutorialDismissed: false,
+  firstPlanGeneratedAt: null,
 };
 
 const SEED_FOODS = [
@@ -2066,7 +2268,10 @@ async function __legacy_loadState_1_unused() {
     state.settings.language = normalizeLanguage(state.activeProfile.language || state.settings.language);
     state.settings.theme = state.activeProfile.theme || state.settings.theme || 'system';
     state.settings.units = state.activeProfile.units || state.settings.units || 'metric';
+    if (state.activeProfile.onboardingCompleted && state.settings.onboardingCompleted !== true) state.settings.onboardingCompleted = true;
   }
+  const onboardingComplete = Boolean(state.activeProfile && (state.activeProfile.onboardingCompleted || state.settings.onboardingCompleted));
+  state.needsOnboarding = !state.activeProfile || !onboardingComplete;
   state.target = (await idbGet('macroTargets', 'default')) || DEFAULT_TARGET;
   state.foods = (await idbGetAll('foods')).map(normalizeFoodRecord).filter(recordBelongsToActiveUser).sort((a, b) => localizedFoodName(a).localeCompare(localizedFoodName(b)));
   state.baseline = (await idbGet('baseline', 'baseline')) || { id: 'baseline', rawText: SAMPLE_BASELINE, meals: parseBaselineText(SAMPLE_BASELINE), userId: state.activeUserId };
@@ -2199,7 +2404,7 @@ async function createLocalProfileFromForm() {
   const weight = Number($('onboardWeight')?.value || 0);
   if (weight > 0) await idbPut('body', { id: uuid('body'), userId: profile.id, date: todayISO(), bodyWeight: weight, source: 'onboarding', createdAt: now, updatedAt: now });
   await loadState();
-  if (state.activeProfile) await ensureStarterPlan();
+  if (state.activeProfile && !state.needsOnboarding) await ensureStarterPlan();
   renderNav();
   render();
   toast('Local profile created.');
@@ -2269,10 +2474,14 @@ function parseBaselineText(raw) {
 
 function parseMealHeader(line) {
   const clean = normalizeText(line.replace(/:$/, ''));
-  if (!line.endsWith(':') && !['breakfast', 'colazione', 'snack', 'spuntino', 'lunch', 'pranzo', 'dinner', 'cena'].includes(clean)) return null;
+  const known = ['breakfast', 'colazione', 'snack', 'spuntino', 'lunch', 'pranzo', 'dinner', 'cena', 'pre workout', 'pre allenamento', 'post workout', 'post allenamento', 'supper', 'extra'];
+  if (!line.endsWith(':') && !known.some((label) => clean === label || clean.includes(label))) return null;
   if (clean.includes('breakfast') || clean.includes('colazione')) return 'Breakfast';
   if (clean.includes('lunch') || clean.includes('pranzo')) return 'Lunch';
   if (clean.includes('dinner') || clean.includes('cena')) return 'Dinner';
+  if (clean.includes('pre workout') || clean.includes('pre allenamento')) return 'Snack 2';
+  if (clean.includes('post workout') || clean.includes('post allenamento')) return 'Snack 2';
+  if (clean.includes('supper') || clean.includes('extra')) return 'Snack 2';
   if (clean.includes('snack') || clean.includes('spuntino')) return 'Snack';
   return null;
 }
@@ -2665,7 +2874,7 @@ function render() {
     today: tr('page.today'), meals: tr('page.meals'), foods: tr('page.foods'), week: tr('page.week'), grocery: tr('page.grocery'), prep: tr('page.prep'),
     progress: tr('page.progress'), recipes: tr('page.recipes'), body: tr('page.body'), blood: tr('page.blood'), settings: tr('page.settings'),
   };
-  $('pageTitle').textContent = state.needsOnboarding ? tr('profile.createTitle') : (titles[state.view] || 'Diet Planner');
+  $('pageTitle').textContent = state.needsOnboarding ? tr('onboarding.welcomeTitle') : (titles[state.view] || 'Diet Planner');
   const app = $('app');
   if (state.needsOnboarding) {
     app.innerHTML = renderProfileGate();
@@ -2687,67 +2896,182 @@ function render() {
   app.innerHTML = renderer();
 }
 
+function getOnboardingDraft() {
+  try { return JSON.parse(localStorage.getItem('dietPlanner.onboardingDraft') || '{}') || {}; } catch { return {}; }
+}
+
+function saveOnboardingDraft(patch = {}) {
+  const next = { ...getOnboardingDraft(), ...patch, updatedAt: new Date().toISOString() };
+  localStorage.setItem('dietPlanner.onboardingDraft', JSON.stringify(next));
+  return next;
+}
+
+function chipInput(name, value, selected = false) {
+  return `<label class="chip-check"><input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(value)}" ${selected ? 'checked' : ''}> <span>${escapeHtml(value)}</span></label>`;
+}
+
+function selectedChipValues(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map((el) => el.value);
+}
+
+function renderOnboardingPathCard(path, title, help, activePath) {
+  const active = path === activePath ? 'active' : '';
+  return `<button class="onboarding-path-card ${active}" data-action="select-onboarding-path" data-path="${path}"><strong>${title}</strong><span>${help}</span></button>`;
+}
+
 function renderProfileGate() {
-  const lang = detectInitialLanguage();
+  return renderFirstLoginOnboarding();
+}
+
+function renderFirstLoginOnboarding() {
+  const draft = getOnboardingDraft();
+  const lang = normalizeLanguage(state.settings?.language || draft.language || detectInitialLanguage());
+  const activePath = draft.path || state.settings?.onboardingPath || 'generate';
   const existing = state.profiles || [];
+  const profile = state.activeProfile;
+  const targetPreview = calculateStarterTarget({
+    sex: draft.sex || 'male',
+    age: Number(draft.age || 30),
+    height: Number(draft.height || 175),
+    weight: Number(draft.weight || 75),
+    activity: Number(draft.activity || 1.45),
+    workouts: Number(draft.workouts || 4),
+    goalMode: draft.goalMode || 'maintenance',
+  });
+  const parsed = activePath === 'import' ? parseBaselineText(draft.baselineText || SAMPLE_BASELINE) : [];
+  const parsedItems = parsed.flatMap((meal) => meal.items || []);
+  const unresolved = parsedItems.filter((item) => !item.foodId).length;
+  const understood = parsedItems.length ? Math.round(((parsedItems.length - unresolved) / parsedItems.length) * 100) : 0;
+  const likeChips = ['Chicken', 'Turkey', 'Lean beef', 'Eggs', 'Egg whites', 'Tuna', 'Salmon', 'Greek yogurt', 'Skyr', 'Whey', 'Rice', 'Pasta', 'Oats', 'Bread', 'Potatoes', 'Bananas', 'Fruit', 'Vegetables', 'Olive oil', 'Nuts'];
+  const avoidChips = ['Fish', 'Dairy', 'Eggs', 'Red meat', 'Gluten', 'Lactose', 'Legumes', 'Pork', 'Seafood'];
+  const selectedLiked = String(state.settings?.likedFoods || '').split(',').map((x) => x.trim()).filter(Boolean);
+  const selectedAvoided = String(state.settings?.excludedFoods || state.settings?.dislikedFoods || '').split(',').map((x) => x.trim()).filter(Boolean);
   return html`
-    <div class="auth-shell">
-      <section class="card stack auth-card">
+    <div class="onboarding-shell stack">
+      <section class="onboarding-hero hero-card stack">
         <div>
           <p class="eyebrow">Diet Planner</p>
-          <h2>${tr('auth.cloudTitle')}</h2>
-          <p class="muted small">${tr('auth.cloudHelp')}</p>
+          <h2>${tr('onboarding.welcomeTitle')}</h2>
+          <p class="muted">${tr('onboarding.welcomeBody')}</p>
         </div>
-        <div class="grid two">
-          <label class="field"><span>${tr('auth.cloudEmail')}</span><input id="cloudLoginEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>
-          <label class="field"><span>${tr('auth.cloudPassword')}</span><input id="cloudLoginPassword" type="password" autocomplete="current-password"></label>
+        <div class="onboarding-loop">
+          <span>1. ${tr('onboarding.goalQuestion')}</span>
+          <span>2. ${tr('onboarding.workoutQuestion')}</span>
+          <span>3. ${tr('onboarding.foodQuestion')}</span>
+          <span>4. ${tr('onboarding.generateFirstWeek')}</span>
         </div>
-        <div class="actions"><button class="primary-button" data-action="cloud-login">${tr('auth.cloudLogin')}</button><button class="secondary-button" data-action="cloud-register">${tr('auth.register')}</button></div>
-        <div id="cloudLoginStatus" class="small muted"></div>
+        <div class="actions"><button class="primary-button" data-action="select-onboarding-path" data-path="generate">${tr('onboarding.primaryCta')}</button><button class="secondary-button" data-action="select-onboarding-path" data-path="import">${tr('onboarding.secondaryCta')}</button></div>
       </section>
 
-      <section class="card stack auth-card onboarding-card">
-        <div>
-          <p class="eyebrow">${tr('onboarding.step', { current: 1, total: 9 })}</p>
-          <h2>${tr('onboarding.title')}</h2>
-          <p class="muted small">${tr('onboarding.subtitle')}</p>
+      <section class="card stack onboarding-card">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 1, total: 8 })}</span><i style="--value:12.5%"></i></div>
+        <h2>${tr('onboarding.pathTitle')}</h2>
+        <div class="onboarding-path-grid">
+          ${renderOnboardingPathCard('generate', tr('onboarding.path.generate'), tr('onboarding.path.generateHelp'), activePath)}
+          ${renderOnboardingPathCard('import', tr('onboarding.path.import'), tr('onboarding.path.importHelp'), activePath)}
+          ${renderOnboardingPathCard('manual', tr('onboarding.path.manual'), tr('onboarding.path.manualHelp'), activePath)}
         </div>
-        <div class="step-list compact">
-          <span>${tr('onboarding.goal')}</span><span>${tr('onboarding.body')}</span><span>${tr('onboarding.macro')}</span><span>${tr('onboarding.baseline')}</span><span>${tr('onboarding.preferences')}</span><span>${tr('onboarding.workout')}</span><span>${tr('onboarding.generate')}</span>
-        </div>
+      </section>
+
+      <section class="card stack onboarding-card" id="onboardingAccountSection">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 2, total: 8 })}</span><i style="--value:25%"></i></div>
+        <h2>${tr('onboarding.accountTitle')}</h2>
+        <p class="muted small">${tr('onboarding.accountHelp')}</p>
         <div class="form-grid three">
-          <label class="field"><span>${tr('onboarding.goal')}</span><select id="onboardGoalMode"><option value="fat_loss">${tr('goal.fat_loss')}</option><option value="lean_bulk">${tr('goal.lean_bulk')}</option><option value="maintenance" selected>${tr('goal.maintenance')}</option><option value="recomposition">${tr('goal.recomposition')}</option><option value="performance">${tr('goal.performance')}</option><option value="custom_nutritionist_plan">${tr('goal.custom_nutritionist_plan')}</option></select></label>
-          <label class="field"><span>${tr('onboarding.sex')}</span><select id="onboardSex"><option value="male">${tr('common.male')}</option><option value="female">${tr('common.female')}</option></select></label>
-          <label class="field"><span>${tr('onboarding.age')}</span><input id="onboardAge" type="number" min="14" max="90" value="30"></label>
-          <label class="field"><span>${tr('onboarding.height')}</span><input id="onboardHeight" type="number" min="120" max="230" value="175"></label>
-          <label class="field"><span>${tr('onboarding.weight')}</span><input id="onboardWeight" type="number" min="35" max="250" value="75"></label>
-          <label class="field"><span>${tr('onboarding.workouts')}</span><input id="onboardWorkouts" type="number" min="0" max="14" value="4"></label>
-          <label class="field"><span>${tr('onboarding.activity')}</span><select id="onboardActivity"><option value="1.3">Light</option><option value="1.45" selected>Moderate</option><option value="1.6">High</option></select></label>
+          <label class="field"><span>${tr('settings.language')}</span><select id="onboardingLanguage"><option value="en" ${lang === 'en' ? 'selected' : ''}>English</option><option value="it" ${lang === 'it' ? 'selected' : ''}>Italiano</option></select></label>
+          <label class="field"><span>${tr('settings.theme')}</span><select id="onboardingTheme"><option value="system" ${(state.settings?.theme || 'system') === 'system' ? 'selected' : ''}>${tr('settings.themeSystem')}</option><option value="light" ${state.settings?.theme === 'light' ? 'selected' : ''}>${tr('settings.themeLight')}</option><option value="dark" ${state.settings?.theme === 'dark' ? 'selected' : ''}>${tr('settings.themeDark')}</option></select></label>
+          <label class="field"><span>Unit system</span><select id="onboardingUnits"><option value="metric">Metric: g/ml/pieces</option></select></label>
         </div>
-        <details class="collapsible"><summary>${tr('macro.dailyTarget')} · ${tr('onboarding.starterTarget')}</summary><div class="form-grid four"><label class="field"><span>kcal</span><input id="onboardCalories" type="number"></label><label class="field"><span>P</span><input id="onboardProtein" type="number"></label><label class="field"><span>C</span><input id="onboardCarbs" type="number"></label><label class="field"><span>F</span><input id="onboardFat" type="number"></label></div></details>
+        ${profile ? `<div class="info-box small">${tr('onboarding.signedInAs', { email: profile.email || profile.displayName || 'Local User' })}<div class="actions"><button class="ghost-button" data-action="logout-profile">${tr('profile.logout')}</button></div></div>` : html`
+          <div class="grid two onboarding-account-grid">
+            <div class="card flat stack-sm">
+              <h3>${tr('auth.cloudTitle')}</h3>
+              <p class="muted small">${tr('auth.cloudHelp')}</p>
+              <label class="field"><span>${tr('auth.cloudEmail')}</span><input id="cloudLoginEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>
+              <label class="field"><span>${tr('auth.cloudPassword')}</span><input id="cloudLoginPassword" type="password" autocomplete="current-password"></label>
+              <div class="actions"><button class="primary-button" data-action="cloud-login">${tr('auth.cloudLogin')}</button><button class="secondary-button" data-action="cloud-register">${tr('auth.register')}</button></div>
+              <div id="cloudLoginStatus" class="small muted"></div>
+            </div>
+            <div class="card flat stack-sm">
+              <h3>${tr('onboarding.continueLocal')}</h3>
+              <p class="muted small">${tr('settings.localProfileNote')}</p>
+              ${existing.filter((p) => p.authMethod !== 'diet_planner_cloud').length ? `<div class="stack-sm">${existing.filter((p) => p.authMethod !== 'diet_planner_cloud').map((p) => `<div class="row between small"><span><strong>${escapeHtml(p.displayName)}</strong><br><span class="muted">${escapeHtml(p.email || 'Local profile')}</span></span><button class="secondary-button" data-action="login-profile" data-profile-id="${p.id}">${tr('profile.unlock')}</button></div>`).join('')}</div>` : ''}
+              <label class="field"><span>${tr('profile.displayName')}</span><input id="onboardLocalName" autocomplete="name" placeholder="Mario"></label>
+              <label class="field"><span>${tr('profile.email')}</span><input id="onboardLocalEmail" type="email" autocomplete="email"></label>
+              <label class="field"><span>${tr('profile.pin')}</span><input id="onboardLocalPassword" type="password" autocomplete="new-password" placeholder="${tr('profile.continueWithoutPassword')}"></label>
+            </div>
+          </div>`}
       </section>
 
-      <section class="card stack auth-card">
-        <div>
-          <h2>${tr('auth.offlineDemo')}</h2>
-          <p class="muted small">${tr('settings.localProfileNote')}</p>
+      <section class="card stack onboarding-card">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 3, total: 8 })}</span><i style="--value:37.5%"></i></div>
+        <h2>${tr('onboarding.goalQuestion')}</h2>
+        <div class="goal-option-grid">
+          ${['fat_loss', 'lean_bulk', 'maintenance', 'recomposition', 'performance', 'custom_nutritionist_plan', 'custom'].map((goal) => `<label class="goal-option"><input type="radio" name="onboardGoalRadio" value="${goal}" ${(draft.goalMode || 'maintenance') === goal ? 'checked' : ''}><strong>${tr(`goal.${goal}`)}</strong><span>${tr(`onboarding.goal.${goal}`)}</span></label>`).join('')}
         </div>
-        ${existing.filter((p) => p.authMethod !== 'diet_planner_cloud').length ? `<div class="stack-sm"><h3>${tr('profile.unlock')}</h3>${existing.filter((p) => p.authMethod !== 'diet_planner_cloud').map((p) => `
-          <div class="card flat stack-sm">
-            <strong>${escapeHtml(p.displayName)}</strong>
-            <div class="small muted">${escapeHtml(p.email || 'Local profile')}</div>
-            ${p.hasPassword ? `<label class="field"><span>${tr('profile.pin')}</span><input id="loginPassword" type="password" autocomplete="current-password"></label>` : ''}
-            <button class="secondary-button" data-action="login-profile" data-profile-id="${p.id}">${tr('profile.unlock')}</button>
-          </div>`).join('')}</div>` : ''}
-        <div class="grid two">
-          <label class="field"><span>${tr('profile.displayName')}</span><input id="profileDisplayName" autocomplete="name" placeholder="Mario"></label>
-          <label class="field"><span>${tr('profile.email')}</span><input id="profileEmail" type="email" autocomplete="email"></label>
-          <label class="field"><span>${tr('settings.language')}</span><select id="profileLanguage"><option value="en" ${lang === 'en' ? 'selected' : ''}>English</option><option value="it" ${lang === 'it' ? 'selected' : ''}>Italiano</option></select></label>
-          <label class="field"><span>${tr('settings.theme')}</span><select id="profileTheme"><option value="system">${tr('settings.themeSystem')}</option><option value="light">${tr('settings.themeLight')}</option><option value="dark">${tr('settings.themeDark')}</option></select></label>
-          <label class="field"><span>Unit system</span><select id="profileUnits"><option value="metric">Metric: g/ml/pieces</option></select></label>
-          <label class="field"><span>${tr('profile.pin')}</span><input id="profilePassword" type="password" autocomplete="new-password" placeholder="${tr('profile.continueWithoutPassword')}"></label>
+      </section>
+
+      <section class="card stack onboarding-card">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 4, total: 8 })}</span><i style="--value:50%"></i></div>
+        <h2>${tr('onboarding.body')}</h2>
+        <p class="muted small">${tr('onboarding.bodyHelp')}</p>
+        <div class="form-grid three">
+          <label class="field"><span>${tr('onboarding.sex')}</span><select id="onboardSex"><option value="male">${tr('common.male')}</option><option value="female">${tr('common.female')}</option></select></label>
+          <label class="field"><span>${tr('onboarding.age')}</span><input id="onboardAge" type="number" min="14" max="90" value="${escapeHtml(draft.age || 30)}"></label>
+          <label class="field"><span>${tr('onboarding.height')}</span><input id="onboardHeight" type="number" min="120" max="230" value="${escapeHtml(draft.height || 175)}"></label>
+          <label class="field"><span>${tr('onboarding.weight')}</span><input id="onboardWeight" type="number" min="35" max="250" value="${escapeHtml(draft.weight || 75)}"></label>
+          <label class="field"><span>${tr('onboarding.activity')}</span><select id="onboardActivity"><option value="1.3">Light</option><option value="1.45" selected>Moderate</option><option value="1.6">High</option></select></label>
+          <label class="field"><span>${tr('onboarding.workouts')}</span><input id="onboardWorkouts" type="number" min="0" max="14" value="${escapeHtml(draft.workouts || 4)}"></label>
         </div>
-        <button class="ghost-button" data-action="create-profile">${tr('profile.create')}</button>
+      </section>
+
+      <section class="card stack onboarding-card">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 5, total: 8 })}</span><i style="--value:62.5%"></i></div>
+        <h2>${tr('onboarding.workout')}</h2>
+        <p class="muted small">${tr('onboarding.workoutHelp')}</p>
+        <div class="week-chip-grid">${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => `<label class="chip-check"><input type="checkbox" name="onboardWorkoutDays" value="${index + 1}" ${[1,3,5].includes(index + 1) ? 'checked' : ''}> <span>${day}</span></label>`).join('')}</div>
+        <div class="form-grid four">
+          <label class="field"><span>${tr('onboarding.workoutTime')}</span><input id="onboardWorkoutTime" type="time" value="18:30"></label>
+          <label class="field"><span>${tr('onboarding.workoutType')}</span><select id="onboardWorkoutType"><option value="weights">Weights</option><option value="cardio">Cardio</option><option value="mixed">Mixed</option><option value="sport">Sport</option><option value="other">Other</option></select></label>
+          <label class="field"><span>${tr('onboarding.intensity')}</span><select id="onboardWorkoutIntensity"><option value="easy">Easy</option><option value="moderate" selected>Moderate</option><option value="hard">Hard</option><option value="very_hard">Very hard</option></select></label>
+          <label class="field"><span>${tr('onboarding.estimatedCalories')}</span><input id="onboardWorkoutCalories" type="number" min="0" step="25"></label>
+        </div>
+      </section>
+
+      <section class="card stack onboarding-card">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 6, total: 8 })}</span><i style="--value:75%"></i></div>
+        <h2>${tr('onboarding.foodQuestion')}</h2>
+        <div class="stack-sm"><strong>${tr('onboarding.likedFoods')}</strong><div class="chip-grid">${likeChips.map((x) => chipInput('onboardLikedFoods', x, selectedLiked.includes(x))).join('')}</div></div>
+        <div class="stack-sm"><strong>${tr('onboarding.avoidFoods')}</strong><div class="chip-grid">${avoidChips.map((x) => chipInput('onboardAvoidFoods', x, selectedAvoided.includes(x))).join('')}</div></div>
+        <div class="form-grid three">
+          <label class="field"><span>${tr('onboarding.mealsPerDay')}</span><select id="onboardMealsPerDay"><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option></select></label>
+          <label class="field"><span>${tr('onboarding.cookingTime')}</span><select id="onboardCookingTime"><option value="minimal">Minimal</option><option value="moderate" selected>Moderate</option><option value="meal_prep">Meal prep</option></select></label>
+          <label class="field"><span>${tr('onboarding.lunchMode')}</span><select id="onboardLunchMode"><option value="same">Same lunch Monday-Friday</option><option value="rotating">Rotating lunches</option><option value="baseline">Use imported baseline lunch</option></select></label>
+        </div>
+        <label class="field"><span>${tr('onboarding.pantryHook')}</span><input id="onboardPantryText" placeholder="${tr('onboarding.pantryPlaceholder')}"></label>
+      </section>
+
+      <section class="card stack onboarding-card">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 7, total: 8 })}</span><i style="--value:87.5%"></i></div>
+        ${activePath === 'generate' ? html`<h2>${tr('onboarding.templateTitle')}</h2><div class="chip-grid template-grid">${[
+          ['balanced', tr('onboarding.template.balanced')], ['high_protein', tr('onboarding.template.highProtein')], ['meal_prep', tr('onboarding.template.mealPrep')], ['minimal_cooking', tr('onboarding.template.minimalCooking')], ['budget', tr('onboarding.template.budget')], ['italian', tr('onboarding.template.italian')]
+        ].map(([value, label]) => `<label class="chip-check"><input type="radio" name="onboardTemplate" value="${value}" ${value === 'balanced' ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</div>` : ''}
+        ${activePath === 'import' ? html`<h2>${tr('onboarding.importTitle')}</h2><p class="muted small">${tr('onboarding.importHelp')}</p><textarea id="onboardBaselineText" class="baseline-textarea">${escapeHtml(draft.baselineText || SAMPLE_BASELINE)}</textarea><div class="actions"><button class="secondary-button" data-action="onboarding-use-sample">${tr('onboarding.samplePlan')}</button><button class="ghost-button" data-action="onboarding-refresh-review">${tr('common.analyze')}</button></div><div class="info-box small">${tr('onboarding.importUnderstood', { percent: understood, count: unresolved })}</div>` : ''}
+        ${activePath === 'manual' ? html`<h2>${tr('onboarding.manualTitle')}</h2><div class="form-grid four"><label class="field"><span>kcal</span><input id="onboardCalories" type="number" value="${escapeHtml(draft.calories || targetPreview.calories)}"></label><label class="field"><span>P</span><input id="onboardProtein" type="number" value="${escapeHtml(draft.protein || targetPreview.protein)}"></label><label class="field"><span>C</span><input id="onboardCarbs" type="number" value="${escapeHtml(draft.carbs || targetPreview.carbs)}"></label><label class="field"><span>F</span><input id="onboardFat" type="number" value="${escapeHtml(draft.fat || targetPreview.fat)}"></label></div>` : ''}
+      </section>
+
+      <section class="card stack onboarding-card">
+        <div class="onboarding-progress"><span>${tr('onboarding.step', { current: 8, total: 8 })}</span><i style="--value:100%"></i></div>
+        <h2>${tr('onboarding.reviewTitle')}</h2>
+        <p class="muted small">${tr('onboarding.reviewHelp')}</p>
+        <div class="metric-grid compact">
+          <div class="metric"><span>${tr('macro.calories')}</span><strong id="onboardReviewCalories">${round(targetPreview.calories)} kcal</strong></div>
+          <div class="metric"><span>${tr('macro.protein')}</span><strong>${round(targetPreview.protein)} g</strong></div>
+          <div class="metric"><span>${tr('macro.carbs')}</span><strong>${round(targetPreview.carbs)} g</strong></div>
+          <div class="metric"><span>${tr('macro.fat')}</span><strong>${round(targetPreview.fat)} g</strong></div>
+        </div>
+        <div class="info-box small">${tr('onboarding.weeklyHook')}</div>
+        <div class="actions"><button class="primary-button" data-action="complete-onboarding">${tr('onboarding.generateFirstWeek')}</button><button class="ghost-button" data-action="skip-onboarding">${tr('onboarding.skip')}</button></div>
       </section>
     </div>`;
 }
@@ -2773,7 +3097,7 @@ async function cloudRegisterFromForm() {
     await loadCloudMealPlansIfAvailable();
     await loadCloudPantryIfAvailable();
     await loadCloudSupplementsIfAvailable();
-    if (state.activeProfile) await ensureStarterPlan();
+    if (state.activeProfile && !state.needsOnboarding) await ensureStarterPlan();
     renderNav();
     render();
     toast(tr('auth.cloudConnected'));
@@ -2804,7 +3128,7 @@ async function cloudLoginFromForm() {
     await loadCloudPantryIfAvailable();
     await loadCloudSupplementsIfAvailable();
     await loadState();
-    if (state.activeProfile) await ensureStarterPlan();
+    if (state.activeProfile && !state.needsOnboarding) await ensureStarterPlan();
     renderNav();
     render();
     toast(tr('auth.cloudConnected'));
@@ -2887,8 +3211,8 @@ function renderToday() {
       <section class="hero-card empty-state stack">
         <p class="eyebrow">${formatDate(date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
         <h2>${tr('dashboard.noPlan')}</h2>
-        <p class="muted">${tr('plans.subtitle')}</p>
-        <div class="actions"><button class="primary-button" data-action="generate-week" data-start="${monday}" data-end="${addDays(monday, 4)}" data-weekends="false">${tr('dashboard.planToday')}</button></div>
+        <p class="muted">${tr('dashboard.noPlanHelp')}</p>
+        <div class="actions"><button class="primary-button" data-action="generate-week" data-start="${monday}" data-end="${addDays(monday, 4)}" data-weekends="false">${tr('dashboard.planToday')}</button><button class="secondary-button" data-action="restart-onboarding">${tr('dashboard.finishSetup')}</button></div>
       </section>`;
   }
   const target = getTargetForDay(day);
@@ -2910,6 +3234,7 @@ function renderToday() {
         <div class="daily-hero-metrics"><span>${tr('dashboard.projectedToday')}</span><strong>${round(projected.calories)} / ${round(target.calories)} kcal</strong><span class="status-pill ${status.cls}">${status.label}</span></div>
       </section>
       ${renderSyncStatus()}
+      ${renderFirstUseTutorial()}
       ${renderNextMealCard(day, nextMeal)}
       ${renderRemainingMacroPanel(target, completed, remaining)}
       ${warnings.length ? `<section class="soft-note"><span>${tr('dashboard.optimizationNote')}</span><details class="collapsible"><summary>${tr('dashboard.optimizerDetails')}</summary><div class="small muted">${warnings.map(calmOptimizationWarning).map(escapeHtml).join('<br>')}</div></details></section>` : ''}
@@ -5031,6 +5356,202 @@ function exportBloodCsv() {
   exportCsv(`diet-planner-blood-${todayISO()}.csv`, rows);
 }
 
+
+function readOnboardingTargetFromWizard() {
+  const activePath = getOnboardingDraft().path || state.settings?.onboardingPath || 'generate';
+  if (activePath === 'manual' || Number($('onboardCalories')?.value || 0) > 0) {
+    return {
+      calories: Number($('onboardCalories')?.value || DEFAULT_TARGET.calories),
+      protein: Number($('onboardProtein')?.value || DEFAULT_TARGET.protein),
+      carbs: Number($('onboardCarbs')?.value || DEFAULT_TARGET.carbs),
+      fat: Number($('onboardFat')?.value || DEFAULT_TARGET.fat),
+      source: 'manual_onboarding',
+      confidence: 'high',
+      goalMode: document.querySelector('input[name="onboardGoalRadio"]:checked')?.value || 'custom',
+    };
+  }
+  const goalMode = document.querySelector('input[name="onboardGoalRadio"]:checked')?.value || 'maintenance';
+  return {
+    ...calculateStarterTarget({
+      sex: $('onboardSex')?.value || 'male',
+      age: Number($('onboardAge')?.value || 30),
+      height: Number($('onboardHeight')?.value || 175),
+      weight: Number($('onboardWeight')?.value || 75),
+      activity: Number($('onboardActivity')?.value || 1.45),
+      workouts: Number($('onboardWorkouts')?.value || 4),
+      goalMode,
+    }),
+    confidence: 'estimated',
+  };
+}
+
+async function createLocalProfileForOnboarding() {
+  const displayName = $('onboardLocalName')?.value.trim();
+  if (!displayName) return null;
+  const email = $('onboardLocalEmail')?.value.trim() || '';
+  const password = $('onboardLocalPassword')?.value || '';
+  const now = new Date().toISOString();
+  let passwordHash = '';
+  let passwordSalt = '';
+  if (password) {
+    const hashed = await hashPassword(password);
+    passwordHash = hashed.hash;
+    passwordSalt = hashed.salt;
+  }
+  const profile = {
+    id: uuid('user'), displayName, email,
+    language: $('onboardingLanguage')?.value || detectInitialLanguage(),
+    theme: $('onboardingTheme')?.value || 'system',
+    units: $('onboardingUnits')?.value || 'metric',
+    createdAt: now, updatedAt: now,
+    hasPassword: Boolean(password), passwordHash, passwordSalt,
+    authMethod: password ? 'local_password_hash' : 'none',
+    onboardingCompleted: false,
+    onboardingStep: 1,
+    lastLoginAt: now,
+  };
+  await idbPut('profiles', profile);
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ userId: profile.id, startedAt: now }));
+  await attachLegacyData(profile.id);
+  return profile;
+}
+
+function onboardingWorkoutPreferences() {
+  return {
+    days: selectedChipValues('onboardWorkoutDays').map(Number),
+    time: $('onboardWorkoutTime')?.value || '18:30',
+    type: $('onboardWorkoutType')?.value || 'weights',
+    intensity: $('onboardWorkoutIntensity')?.value || 'moderate',
+    estimatedCalories: Number($('onboardWorkoutCalories')?.value || 0) || null,
+  };
+}
+
+async function saveOnboardingPantryItems() {
+  const text = $('onboardPantryText')?.value || '';
+  const names = text.split(/[,;\n]/).map((x) => x.trim()).filter(Boolean).slice(0, 30);
+  for (const name of names) {
+    const food = lookupFood(name);
+    await idbPut('pantry', touchSyncMetadata({
+      id: uuid('pantry'), userId: state.activeUserId, rawName: name, foodId: food?.id || null,
+      quantity: 1, unit: food?.defaultUnit || 'g', grams: food?.defaultUnit === 'piece' ? food.unitGrams : 100,
+      category: food?.category || '', location: 'pantry', priority: 'normal', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+    }, 'local', isCloudSessionActive()));
+  }
+}
+
+async function saveOnboardingCompletionToCloud(settingsPatch = {}) {
+  if (!isCloudSessionActive()) return;
+  try { await apiRequest('/api/users/me', { method: 'PUT', body: { onboardingCompleted: true, onboardingStep: 99, language: settingsPatch.language, theme: settingsPatch.theme, units: settingsPatch.units } }); } catch (error) { console.warn('Cloud onboarding user update failed:', error.message); }
+  try { await apiRequest('/api/onboarding/complete', { method: 'POST', body: cloudPreferencePayload(settingsPatch) }); } catch (error) { console.warn('Cloud onboarding completion endpoint unavailable:', error.message); }
+}
+
+async function completeOnboarding() {
+  saveOnboardingDraft({
+    path: getOnboardingDraft().path || state.settings?.onboardingPath || 'generate',
+    language: $('onboardingLanguage')?.value || state.settings?.language || detectInitialLanguage(),
+    theme: $('onboardingTheme')?.value || state.settings?.theme || 'system',
+    baselineText: $('onboardBaselineText')?.value || getOnboardingDraft().baselineText || SAMPLE_BASELINE,
+  });
+  if (!state.activeProfile) {
+    const created = await createLocalProfileForOnboarding();
+    if (!created) { toast(tr('onboarding.localNameRequired')); return; }
+    await loadState();
+  }
+  const draft = getOnboardingDraft();
+  const path = draft.path || 'generate';
+  const language = $('onboardingLanguage')?.value || draft.language || state.settings.language;
+  const theme = $('onboardingTheme')?.value || state.settings.theme || 'system';
+  const units = $('onboardingUnits')?.value || state.settings.units || 'metric';
+  const goalMode = document.querySelector('input[name="onboardGoalRadio"]:checked')?.value || 'maintenance';
+  const target = readOnboardingTargetFromWizard();
+  const workoutPreferences = onboardingWorkoutPreferences();
+  const likedFoods = selectedChipValues('onboardLikedFoods');
+  const avoidedFoods = selectedChipValues('onboardAvoidFoods');
+  const settingsPatch = {
+    language, theme, units,
+    onboardingCompleted: true,
+    onboardingStep: 99,
+    onboardingPath: path,
+    firstUseTutorialDismissed: false,
+    firstPlanGeneratedAt: new Date().toISOString(),
+    goalMode,
+    macroTargets: target,
+    likedFoods: likedFoods.join(', '),
+    dislikedFoods: avoidedFoods.join(', '),
+    excludedFoods: avoidedFoods.join(', '),
+    preferredProtein: likedFoods.filter((x) => /chicken|turkey|beef|egg|tuna|salmon|yogurt|skyr|whey/i.test(x)).join(', ') || state.settings.preferredProtein,
+    preferredCarbs: likedFoods.filter((x) => /rice|pasta|oats|bread|potato|banana|fruit/i.test(x)).join(', ') || state.settings.preferredCarbs,
+    preferredFats: likedFoods.filter((x) => /oil|nuts|salmon|egg/i.test(x)).join(', ') || state.settings.preferredFats,
+    lunchMode: $('onboardLunchMode')?.value || state.settings.lunchMode,
+    mealsPerDay: Number($('onboardMealsPerDay')?.value || 5),
+    cookingTime: $('onboardCookingTime')?.value || 'moderate',
+    workoutPreferences,
+  };
+  await saveSettings(settingsPatch);
+  await saveTarget(target);
+  const weight = Number($('onboardWeight')?.value || 0);
+  if (weight > 0) await idbPut('body', { id: uuid('body'), userId: state.activeUserId, date: todayISO(), bodyWeight: weight, source: 'onboarding', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+  if (path === 'import') {
+    const rawText = $('onboardBaselineText')?.value || SAMPLE_BASELINE;
+    state.baseline = { id: 'baseline', rawText, meals: parseBaselineText(rawText), updatedAt: new Date().toISOString(), userId: state.activeUserId, source: 'onboarding_import' };
+    await idbPut('baseline', state.baseline);
+    if (isCloudSessionActive()) {
+      try { await apiRequest('/api/baseline/import', { method: 'POST', body: state.baseline }); } catch (error) { console.warn('Cloud baseline import failed:', error.message); }
+    }
+  }
+  await saveOnboardingPantryItems();
+  if (state.activeProfile) {
+    state.activeProfile = { ...state.activeProfile, onboardingCompleted: true, onboardingStep: 99, language, theme, units, updatedAt: new Date().toISOString() };
+    await idbPut('profiles', state.activeProfile);
+  }
+  await saveOnboardingCompletionToCloud(settingsPatch);
+  const monday = startOfWeekISO(todayISO());
+  await generatePlans(monday, addDays(monday, 4), false, settingsPatch.lunchMode);
+  localStorage.removeItem('dietPlanner.onboardingDraft');
+  state.view = 'today';
+  localStorage.setItem('dietPlanner.view', 'today');
+  await loadCloudMealPlansIfAvailable();
+  await loadState();
+  renderNav();
+  render();
+  toast(tr('onboarding.saved'));
+}
+
+async function skipOnboarding() {
+  if (!state.activeProfile) {
+    const created = await createLocalProfileForOnboarding();
+    if (!created) { toast(tr('onboarding.localNameRequired')); return; }
+    await loadState();
+  }
+  await saveSettings({ onboardingCompleted: true, onboardingStep: 99, firstUseTutorialDismissed: true });
+  if (state.activeProfile) await idbPut('profiles', { ...state.activeProfile, onboardingCompleted: true, onboardingStep: 99, updatedAt: new Date().toISOString() });
+  await saveOnboardingCompletionToCloud({ onboardingCompleted: true, onboardingStep: 99 });
+  await loadState();
+  if (!findPlan(todayISO())) await ensureStarterPlan();
+  renderNav();
+  render();
+}
+
+function renderFirstUseTutorial() {
+  if (state.settings?.firstUseTutorialDismissed) return '';
+  return `<section class="card clean-card coach-tip-card"><div><p class="eyebrow">Coach tip</p><h2>${tr('onboarding.tutorialTitle')}</h2><p class="muted small">${tr('onboarding.tutorialBody')}</p></div><button class="ghost-button" data-action="dismiss-first-use-tip">${tr('onboarding.dismissTip')}</button></section>`;
+}
+
+async function dismissFirstUseTutorial() {
+  await saveSettings({ firstUseTutorialDismissed: true });
+  await loadState();
+  render();
+}
+
+async function restartOnboarding() {
+  saveOnboardingDraft({ path: state.settings?.onboardingPath || 'generate' });
+  await saveSettings({ onboardingCompleted: false, onboardingStep: 1 });
+  if (state.activeProfile) await idbPut('profiles', { ...state.activeProfile, onboardingCompleted: false, onboardingStep: 1, updatedAt: new Date().toISOString() });
+  await loadState();
+  renderNav();
+  render();
+}
+
 function setupEvents() {
   document.addEventListener('click', async (event) => {
     const button = event.target.closest('[data-action]');
@@ -5041,6 +5562,13 @@ function setupEvents() {
     if (action === 'create-profile') { await createLocalProfileFromForm(); return; }
     if (action === 'login-profile') { await loginProfile(button.dataset.profileId); return; }
     if (action === 'logout-profile') { await logoutProfile(); return; }
+    if (action === 'select-onboarding-path') { saveOnboardingDraft({ path: button.dataset.path || 'generate' }); render(); return; }
+    if (action === 'onboarding-use-sample') { const field = $('onboardBaselineText'); if (field) field.value = SAMPLE_BASELINE; saveOnboardingDraft({ baselineText: SAMPLE_BASELINE, path: 'import' }); return; }
+    if (action === 'onboarding-refresh-review') { saveOnboardingDraft({ path: 'import', baselineText: $('onboardBaselineText')?.value || SAMPLE_BASELINE }); render(); return; }
+    if (action === 'complete-onboarding') { await completeOnboarding(); return; }
+    if (action === 'skip-onboarding') { await skipOnboarding(); return; }
+    if (action === 'dismiss-first-use-tip') { await dismissFirstUseTutorial(); return; }
+    if (action === 'restart-onboarding') { await restartOnboarding(); return; }
     if (action === 'open-macro-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('macro.dailyTarget'), renderMacroDetail(day)); return; }
     if (action === 'open-progress-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('progress.title'), renderProgressDetail(day)); return; }
     if (action === 'open-workout-detail') { const day = findPlan(todayISO()); if (day) openDetailPanel(tr('dashboard.workoutSummary'), renderWorkoutDetail(day)); return; }
@@ -5126,6 +5654,15 @@ function setupEvents() {
   $('modal').addEventListener('click', (event) => { if (event.target.id === 'modal') closeModal(); });
   document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !$('modal').hidden) closeModal(); });
   document.addEventListener('change', async (event) => {
+    if (event.target.id === 'onboardingLanguage') {
+      saveOnboardingDraft({ language: event.target.value });
+      if (state.activeProfile) await saveSettings({ language: event.target.value }); else { localStorage.setItem('dietPlanner.language', event.target.value); state.settings = normalizeSettingsRecord({ ...state.settings, language: event.target.value }); applyLanguageAndTheme(); renderNav(); render(); }
+    }
+    if (event.target.id === 'onboardingTheme') {
+      saveOnboardingDraft({ theme: event.target.value });
+      if (state.activeProfile) await saveSettings({ theme: event.target.value }); else { localStorage.setItem('dietPlanner.theme', event.target.value); state.settings = normalizeSettingsRecord({ ...state.settings, theme: event.target.value }); applyLanguageAndTheme(); }
+    }
+    if (event.target.name === 'onboardGoalRadio') { saveOnboardingDraft({ goalMode: event.target.value }); }
     if (event.target.id === 'importJson' && event.target.files?.[0]) {
       try { await importJson(event.target.files[0]); } catch (error) { toast(`Import failed: ${error.message}`); }
     }
@@ -5133,6 +5670,22 @@ function setupEvents() {
       localStorage.setItem('grocery.slots', JSON.stringify([...document.querySelectorAll('.grocery-slot:checked')].map((x) => x.value)));
       render();
     }
+  });
+
+  document.addEventListener('input', (event) => {
+    const target = event.target;
+    if (!target?.id?.startsWith?.('onboard')) return;
+    const patch = {};
+    if (target.id === 'onboardBaselineText') patch.baselineText = target.value;
+    if (target.id === 'onboardAge') patch.age = target.value;
+    if (target.id === 'onboardHeight') patch.height = target.value;
+    if (target.id === 'onboardWeight') patch.weight = target.value;
+    if (target.id === 'onboardWorkouts') patch.workouts = target.value;
+    if (target.id === 'onboardCalories') patch.calories = target.value;
+    if (target.id === 'onboardProtein') patch.protein = target.value;
+    if (target.id === 'onboardCarbs') patch.carbs = target.value;
+    if (target.id === 'onboardFat') patch.fat = target.value;
+    if (Object.keys(patch).length) saveOnboardingDraft(patch);
   });
 
   window.addEventListener('online', async () => {
@@ -5679,13 +6232,15 @@ async function loadState() {
   const session = getActiveSession();
   state.activeProfile = state.profiles.find((p) => p.id === session?.userId) || null;
   state.activeUserId = state.activeProfile?.id || null;
-  state.needsOnboarding = !state.activeProfile;
   state.settings = normalizeSettingsRecord((await idbGet('settings', 'settings')) || DEFAULT_SETTINGS);
   if (state.activeProfile) {
     state.settings.language = normalizeLanguage(state.activeProfile.language || state.settings.language);
     state.settings.theme = state.activeProfile.theme || state.settings.theme || 'system';
     state.settings.units = state.activeProfile.units || state.settings.units || 'metric';
+    if (state.activeProfile.onboardingCompleted && state.settings.onboardingCompleted !== true) state.settings.onboardingCompleted = true;
   }
+  const onboardingComplete = Boolean(state.activeProfile && (state.activeProfile.onboardingCompleted || state.settings.onboardingCompleted));
+  state.needsOnboarding = !state.activeProfile || !onboardingComplete;
   state.target = (await idbGet('macroTargets', 'default')) || DEFAULT_TARGET;
   state.foods = (await idbGetAll('foods')).map(normalizeFoodRecord).filter(recordBelongsToActiveUser).sort((a, b) => localizedFoodName(a).localeCompare(localizedFoodName(b)));
   state.recipes = (await idbGetAll('recipes').catch(() => [])).map(normalizeRecipeRecord).filter(recordBelongsToActiveUser);
@@ -6484,5 +7039,5 @@ function registerServiceWorker() {
 
 init().catch((error) => {
   console.error(error);
-  document.body.innerHTML = `<main class="main-content"><div class="card danger-box"><h1>Diet Planner failed to start</h1><pre>${escapeHtml(error.stack || error.message)}</pre></div></main>`;
+  document.body.innerHTML = `<main class="main-content"><div class="card danger-box stack"><h1>Diet Planner failed to start</h1><p>Could not load the app shell. Retry, clear local cache, or continue after checking diagnostics.</p><div class="actions"><button onclick="location.reload()">Retry</button><button onclick="indexedDB.deleteDatabase('diet-planner-local-db');localStorage.clear();location.reload()">Clear local cache</button></div><details><summary>Diagnostics</summary><pre>${escapeHtml(error.stack || error.message)}</pre></details></div></main>`;
 });

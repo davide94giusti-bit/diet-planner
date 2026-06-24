@@ -184,3 +184,55 @@ Persistence test:
 5. Stop and restart the server.
 6. Confirm the user, recipe, custom food, and nutrition cache still exist.
 7. Redeploy/restart simulation should not erase data because durable cloud data is in Supabase Postgres.
+
+## Daily execution OS update
+
+Version `0.4.0-daily-os` shifts the primary dashboard from a generic data overview to a daily execution assistant:
+
+- next-meal command card with `I ate this`, `I skipped this`, `I ate something different`, `Swap meal`, and edit actions
+- compact remaining macro panel for calories, protein, carbs, and fat
+- full-day meal checklist with planned/eaten/skipped/changed states
+- calm recalculation summary after skipped/replaced meals
+- guided replacement flow for saved foods, saved recipes, barcode products, manual entries, and restaurant estimates
+- deterministic meal and food swap suggestions using macro distance, meal type, prep-time tags, cost/faster/pre-workout heuristics, and user exclusions
+- backend meal-plan sync when a cloud session is active
+
+Advanced details remain available in modal/detail views so the mobile primary screen stays action-oriented.
+
+## Expanded backend endpoint coverage
+
+Additional backend routes in this build:
+
+- `GET /api/nutrition/barcode/:barcode`
+- `PUT /api/nutrition/custom-foods/:id`
+- `DELETE /api/nutrition/custom-foods/:id`
+- `GET /api/meal-plans?start=YYYY-MM-DD&end=YYYY-MM-DD`
+- `POST /api/meal-plans/generate`
+- `POST /api/meal-plans/:id/recalculate`
+- `POST /api/meals/:id/complete`
+- `POST /api/meals/:id/skip`
+- `POST /api/meals/:id/replace`
+- `POST /api/meals/:id/swap`
+- `GET /api/progress/summary`
+- `POST /api/body-measurements`
+- `GET /api/body-measurements`
+- `POST /api/check-ins`
+- `GET /api/check-ins`
+- `POST /api/grocery/generate`
+- `GET /api/grocery/current`
+- `PUT /api/grocery/:id`
+
+The browser still talks to the Diet Planner backend only. Normal users do not configure nutrition-provider keys.
+
+## Additional Postgres tables
+
+The backend initializer now also creates/scaffolds these cloud tables when `DATABASE_URL` is configured:
+
+- `meal_events`
+- `preferences`
+- `body_measurements`
+- `progress_logs`
+- `grocery_lists`
+- `check_ins`
+
+Existing JSONB-backed recipes, foods, cache, and meal plans are preserved. The new tables support daily execution events, progress intelligence, grocery/prep infrastructure, and future weekly check-in flows.

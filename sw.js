@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diet-planner-v0.5.2-modal-scroll-lock';
+const CACHE_NAME = 'diet-planner-v0.6.0-first-login-os';
 const APP_SHELL = [
   './',
   './index.html',

@@ -14,6 +14,7 @@ const OPENFOODFACTS_ENABLED = /^(1|true|yes|on)$/i.test(process.env.OPENFOODFACT
 const NUTRITION_CACHE_TTL_DAYS = Number(process.env.NUTRITION_CACHE_TTL_DAYS || 30);
 const AUTO_PROVISION_ACCOUNTS = !/^(0|false|no|off)$/i.test(process.env.DIET_PLANNER_AUTO_PROVISION || 'true');
 const storage = require('./storage');
+const plannerEngine = require('./plannerEngine');
 const SESSION_COOKIE = 'dp_session';
 const MAX_JSON_BYTES = 1_000_000;
 
@@ -153,11 +154,14 @@ function publicUser(user) {
   return {
     id: user.id,
     email: user.email,
-    name: user.name || user.email,
-    displayName: user.name || user.email,
+    name: user.displayName || user.name || user.email,
+    displayName: user.displayName || user.name || user.email,
     language: user.language || 'en',
     theme: user.theme || 'system',
     units: user.units || 'metric',
+    role: user.role || 'user',
+    onboardingCompleted: Boolean(user.onboardingCompleted || user.onboarding_completed),
+    onboardingStep: Number(user.onboardingStep || user.onboarding_step || 0),
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
@@ -265,8 +269,13 @@ function normalizeFood(food) {
     sourceProvider,
     sourceId: String(food.sourceId || id),
     sourceUrl: food.sourceUrl || '',
+    servingSize: food.servingSize || food.serving_size || '',
+    servingQuantity: nullableNumber(food.servingQuantity || food.serving_quantity),
+    productQuantity: nullableNumber(food.productQuantity || food.product_quantity),
     confidence: food.confidence || 'unknown',
-    rawOrCookedState: food.rawOrCookedState || inferFoodState(name),
+    confidenceScore: food.confidenceScore ?? food.confidence_score ?? (food.confidence === 'high' ? 0.9 : food.confidence === 'medium' ? 0.7 : food.confidence === 'low' ? 0.45 : 0.25),
+    rawOrCookedState: food.rawOrCookedState || food.raw_cooked_state || inferFoodState(name),
+    raw_cooked_state: food.rawOrCookedState || food.raw_cooked_state || inferFoodState(name),
     notes: food.notes || 'Normalized backend food record. Verify labels when precision matters.',
     importedAt: food.importedAt || nowIso(),
     lastVerifiedAt: food.lastVerifiedAt || nowIso(),
@@ -386,7 +395,7 @@ const Providers = {
     requiresApiKey: false,
     async search(query) {
       if (!OPENFOODFACTS_ENABLED) return [];
-      const params = new URLSearchParams({ search_terms: query, search_simple: '1', action: 'process', json: '1', page_size: '8', fields: 'code,product_name,brands,nutriments,categories_tags,url' });
+      const params = new URLSearchParams({ search_terms: query, search_simple: '1', action: 'process', json: '1', page_size: '8', fields: 'code,product_name,brands,nutriments,categories_tags,url,serving_size,serving_quantity,product_quantity' });
       const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?${params.toString()}`);
       if (!response.ok) throw new Error(`Open Food Facts HTTP ${response.status}`);
       const data = await response.json();
@@ -398,7 +407,7 @@ const Providers = {
       const cached = await storage.findCachedFood('open_food_facts', id);
       if (cached?.sourceProvider === 'open_food_facts') return cached;
       if (!OPENFOODFACTS_ENABLED) return null;
-      const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(id)}.json?fields=code,product_name,brands,nutriments,categories_tags,url`);
+      const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(id)}.json?fields=code,product_name,brands,nutriments,categories_tags,url,serving_size,serving_quantity,product_quantity`);
       if (!response.ok) throw new Error(`Open Food Facts HTTP ${response.status}`);
       const data = await response.json();
       const food = data.product ? normalizeOffFood(data.product) : null;
@@ -466,6 +475,9 @@ function normalizeOffFood(product) {
     sourceProvider: 'open_food_facts',
     sourceId: String(product.code || ''),
     sourceUrl: product.url || '',
+    servingSize: product.serving_size || '',
+    servingQuantity: nullableNumber(product.serving_quantity),
+    productQuantity: nullableNumber(product.product_quantity),
     confidence: nutriments['energy-kcal_100g'] && nutriments.proteins_100g !== undefined ? 'medium' : 'low',
     department: 'Other',
     rawOrCookedState: 'as_sold',
@@ -505,6 +517,173 @@ async function getProviderFood(providerId, id, user) {
   return food ? provider.normalizeFood(food) : null;
 }
 
+
+function todayDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function normalizeMealEvent(user, plan, meal, eventType, extra = {}) {
+  return {
+    id: extra.id || randomId('event'),
+    userId: user.id,
+    mealPlanId: plan.id || plan.date || null,
+    plannedMealId: meal?.id || extra.plannedMealId || null,
+    eventType,
+    actualItems: extra.actualItems || meal?.items || [],
+    actualMacroSnapshot: extra.actualMacroSnapshot || meal?.currentMacroSnapshot || null,
+    adjustmentApplied: Boolean(extra.adjustmentApplied),
+    createdAt: nowIso(),
+    ...extra,
+  };
+}
+
+
+function planTargetFromBodyOrPlan(body, plan) {
+  return body.target || body.targetSnapshot || body.target_snapshot || plan.targetSnapshot || plan.target || {};
+}
+
+function mealEventTypeForAction(action) {
+  if (action === 'complete') return 'eaten_as_planned';
+  if (action === 'skip') return 'skipped';
+  if (action === 'swap') return 'swapped';
+  return 'replaced';
+}
+
+function applyMealAction(meal, action, body = {}) {
+  const current = { ...meal, items: Array.isArray(meal.items) ? [...meal.items] : [] };
+  if (body.meal && (action === 'replace' || action === 'swap')) {
+    const replacement = {
+      ...body.meal,
+      id: current.id,
+      slot: current.slot,
+      time: current.time,
+      originalItems: current.originalItems || current.items || [],
+      status: body.meal.status || (action === 'swap' ? 'planned' : 'changed'),
+    };
+    replacement.adjustments = [...(current.adjustments || []), ...(body.meal.adjustments || []), { at: nowIso(), type: `server_${action}`, from: current.recipeName || current.slot, to: replacement.recipeName || replacement.slot }];
+    return replacement;
+  }
+  if (action === 'complete') return { ...current, status: 'completed', completedAt: nowIso(), actualItems: current.items || [] };
+  if (action === 'skip') return { ...current, status: 'skipped', skippedAt: nowIso(), skipReason: body.reason || '' };
+  if (action === 'replace') {
+    const replacement = body.meal && typeof body.meal === 'object' ? body.meal : {};
+    return { ...current, ...replacement, id: current.id, date: current.date, slot: current.slot, time: replacement.time || current.time, status: 'changed', items: replacement.items || body.items || current.items || [], recipeName: replacement.recipeName || body.recipeName || body.name || current.recipeName, replacedAt: nowIso() };
+  }
+  if (action === 'swap') {
+    const replacement = body.meal && typeof body.meal === 'object' ? body.meal : {};
+    return { ...current, ...replacement, id: current.id, date: current.date, slot: current.slot, time: replacement.time || current.time, status: 'planned', items: replacement.items || body.items || current.items || [], recipeName: replacement.recipeName || body.recipeName || body.name || current.recipeName, swappedAt: nowIso() };
+  }
+  return current;
+}
+
+async function mutateStoredMealPlan(user, mealId, action, body = {}) {
+  const plans = await storage.listMealPlans(user.id);
+  for (const plan of plans) {
+    const hit = findMealInPlan(plan, mealId);
+    if (!hit) continue;
+    const nextPlan = { ...plan, meals: [...(plan.meals || [])] };
+    const mutatedMeal = applyMealAction(hit.meal, action, body);
+    nextPlan.meals[hit.index] = mutatedMeal;
+    const eventType = mealEventTypeForAction(action);
+    const eventData = normalizeMealEvent(user, nextPlan, mutatedMeal, eventType, {
+      ...(body.event || {}),
+      adjustmentApplied: body.recalculate !== false,
+      actualItems: body.actualItems || body.items || mutatedMeal.actualItems || mutatedMeal.items || [],
+      actualMacroSnapshot: body.actualMacroSnapshot || mutatedMeal.actualMacroSnapshot || null,
+    });
+    let recalcPayload = null;
+    let savedPlan = nextPlan;
+    if (body.recalculate !== false) {
+      const result = plannerEngine.recalculateMealPlan(nextPlan, {
+        type: eventType,
+        eventType,
+        plannedMealId: mutatedMeal.id,
+        mealName: mutatedMeal.slot || mutatedMeal.recipeName || 'Meal',
+      }, { foods: CURATED_FOODS, target: planTargetFromBodyOrPlan(body, nextPlan) });
+      savedPlan = result.mealPlan;
+      recalcPayload = result.recalculation;
+      eventData.adjustmentApplied = true;
+      eventData.adjustment = recalcPayload;
+    } else {
+      savedPlan.updatedAt = nowIso();
+    }
+    const saved = await storage.saveMealPlan(user.id, savedPlan);
+    const event = await storage.createMealEvent(user.id, eventData);
+    return { mealPlan: saved, meal: saved.meals?.find((meal) => String(meal.id) === String(mealId)) || mutatedMeal, event, recalculation: recalcPayload };
+  }
+  return null;
+}
+
+function findMealInPlan(plan, mealId) {
+  const meals = Array.isArray(plan?.meals) ? plan.meals : [];
+  const index = meals.findIndex((meal) => String(meal.id) === String(mealId));
+  return index >= 0 ? { meal: meals[index], index } : null;
+}
+
+async function mutateStoredMeal(user, mealId, mutator) {
+  const plans = await storage.listMealPlans(user.id);
+  for (const plan of plans) {
+    const hit = findMealInPlan(plan, mealId);
+    if (!hit) continue;
+    const nextPlan = { ...plan, meals: [...(plan.meals || [])], updatedAt: nowIso() };
+    const currentMeal = { ...hit.meal };
+    const mutatedMeal = await mutator(currentMeal, nextPlan) || currentMeal;
+    nextPlan.meals[hit.index] = mutatedMeal;
+    const saved = await storage.saveMealPlan(user.id, nextPlan);
+    return { mealPlan: saved, meal: mutatedMeal };
+  }
+  return null;
+}
+
+function generateServerMealPlan(user, body = {}) {
+  const date = String(body.date || todayDate()).slice(0, 10);
+  return {
+    id: body.id || date,
+    userId: user.id,
+    date,
+    goalMode: body.goalMode || body.goal_mode || 'custom_nutritionist_plan',
+    workoutDay: Boolean(body.workoutDay || body.workout_day),
+    workoutTime: body.workoutTime || body.workout_time || '',
+    targetSnapshot: body.targetSnapshot || body.target_snapshot || {},
+    meals: Array.isArray(body.meals) ? body.meals : [],
+    generatedAt: nowIso(),
+    updatedAt: nowIso(),
+    source: 'server_scaffold',
+    notes: body.meals ? 'Server-saved generated meal plan.' : 'Server scaffold created. Use frontend planner to add meals or send meals in the request body.',
+  };
+}
+
+function aggregateGroceryFromPlans(plans) {
+  const byName = new Map();
+  for (const plan of plans) {
+    for (const meal of plan.meals || []) {
+      for (const item of meal.items || []) {
+        const key = normalizeText(item.foodName || item.rawName || item.name || item.foodId || 'item');
+        if (!key) continue;
+        const existing = byName.get(key) || { name: item.foodName || item.rawName || item.name || 'Item', grams: 0, department: item.department || 'Other', checked: false };
+        existing.grams += Number(item.grams || item.quantity || 0);
+        if (item.department) existing.department = item.department;
+        byName.set(key, existing);
+      }
+    }
+  }
+  return [...byName.values()].sort((a, b) => String(a.department).localeCompare(String(b.department)) || String(a.name).localeCompare(String(b.name)));
+}
+
+function progressSummary(measurements = [], mealPlans = []) {
+  const sorted = [...measurements].sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+  const first = sorted[0];
+  const last = sorted[sorted.length - 1];
+  const completedMeals = mealPlans.flatMap((plan) => plan.meals || []).filter((meal) => meal.status === 'completed' || meal.status === 'changed');
+  const totalMeals = mealPlans.flatMap((plan) => plan.meals || []).length;
+  return {
+    weightTrend: first && last ? Number(last.bodyWeight || last.body_weight || 0) - Number(first.bodyWeight || first.body_weight || 0) : null,
+    measurementCount: measurements.length,
+    adherenceScore: totalMeals ? Math.round((completedMeals.length / totalMeals) * 100) : null,
+    recommendation: measurements.length < 3 ? 'Not enough data for a reliable adjustment yet.' : 'Review the trend with adherence before changing targets.',
+  };
+}
+
 async function handleApi(req, res, url, user) {
   if (!rateLimit(req, user)) return json(res, 429, { error: 'Rate limit exceeded' });
 
@@ -523,6 +702,25 @@ async function handleApi(req, res, url, user) {
     if (!q) return json(res, 400, { error: 'q is required' });
     const results = await nutritionSearch(q, user, provider);
     return json(res, 200, { query: q, provider, priority: providerStatus(), results });
+  }
+
+  const barcodeMatch = url.pathname.match(/^\/api\/nutrition\/barcode\/([^/]+)$/);
+  if (barcodeMatch) {
+    if (req.method !== 'GET') return methodNotAllowed(res);
+    const barcode = decodeURIComponent(barcodeMatch[1]).replace(/[^0-9]/g, '');
+    if (!barcode) return json(res, 400, { error: 'barcode is required' });
+    const cached = await storage.findCachedFood('open_food_facts', barcode);
+    if (cached) return json(res, 200, { food: normalizeFood(cached), provider: 'open_food_facts', cached: true });
+    let food = null;
+    try {
+      food = await getProviderFood('open_food_facts', barcode, user);
+    } catch (error) {
+      console.warn('Open Food Facts barcode lookup failed:', error.message);
+      return json(res, 503, { error: 'barcode provider unavailable', provider: 'open_food_facts', barcode });
+    }
+    if (!food) return notFound(res);
+    await upsertCachedFoods([food], barcode);
+    return json(res, 200, { food, provider: 'open_food_facts', cached: false });
   }
 
   const foodMatch = url.pathname.match(/^\/api\/nutrition\/food\/([^/]+)\/([^/]+)$/);
@@ -544,10 +742,48 @@ async function handleApi(req, res, url, user) {
     return json(res, 201, { food: saved });
   }
 
-  if (url.pathname === '/api/users/me') {
-    if (req.method !== 'GET') return methodNotAllowed(res);
+  const customFoodMatch = url.pathname.match(/^\/api\/nutrition\/custom-foods\/([^/]+)$/);
+  if (customFoodMatch) {
     if (!user) return unauthorized(res);
-    return json(res, 200, { user });
+    const id = decodeURIComponent(customFoodMatch[1]);
+    if (req.method === 'PUT') {
+      const body = await readBody(req);
+      const sourceId = body.sourceId || id;
+      const food = normalizeFood({ ...body, id, sourceProvider: 'custom_foods', source: 'custom_foods', sourceId, userId: user.id, userEdited: true });
+      const saved = await storage.updateCustomFood(user.id, id, food);
+      return json(res, 200, { food: saved });
+    }
+    if (req.method === 'DELETE') {
+      await storage.deleteCustomFood(user.id, id);
+      return noContent(res);
+    }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/users/me') {
+    if (!user) return unauthorized(res);
+    if (req.method === 'GET') return json(res, 200, { user });
+    if (req.method === 'PUT') {
+      const body = await readBody(req);
+      const updated = await storage.updateUser(user.id, body);
+      return json(res, 200, { user: publicUser(updated) });
+    }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/auth/register') {
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const body = await readBody(req);
+    const email = String(body.email || '').trim().toLowerCase();
+    const password = String(body.password || '');
+    const displayName = String(body.displayName || body.name || email).trim();
+    if (!email || !password) return json(res, 400, { error: 'email and password are required' });
+    const existing = await storage.getUserByEmail(email);
+    if (existing) return json(res, 409, { error: 'Account already exists' });
+    const stored = await storage.createUser({ id: randomId('user'), email, passwordHash: hashPassword(password), displayName, language: body.language || 'en', theme: body.theme || 'system', units: body.units || 'metric', role: 'user', onboardingCompleted: false, onboardingStep: 1, createdAt: nowIso(), updatedAt: nowIso() });
+    const token = crypto.randomBytes(32).toString('hex');
+    await storage.createSession({ id: randomId('session'), userId: stored.id, tokenHash: hashSessionToken(token), createdAt: nowIso(), expiresAt: addDays(new Date(), 30).toISOString(), ip: getClientIp(req) });
+    return json(res, 201, { user: publicUser(stored), token }, { 'Set-Cookie': sessionCookie(token, req) });
   }
 
   if (url.pathname === '/api/auth/login') {
@@ -573,6 +809,107 @@ async function handleApi(req, res, url, user) {
     const token = getSessionToken(req);
     if (token) await storage.deleteSession(hashSessionToken(token));
     return noContent(res, { 'Set-Cookie': `${SESSION_COOKIE}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0` });
+  }
+
+  if (url.pathname === '/api/preferences') {
+    if (!user) return unauthorized(res);
+    if (req.method === 'GET') return json(res, 200, { preferences: await storage.getPreferences(user.id) || null });
+    if (req.method === 'PUT') {
+      const saved = await storage.savePreferences(user.id, await readBody(req));
+      return json(res, 200, { preferences: saved });
+    }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/onboarding') {
+    if (!user) return unauthorized(res);
+    if (req.method === 'GET') {
+      const preferences = await storage.getPreferences(user.id) || null;
+      return json(res, 200, { onboarding: { completed: Boolean(user.onboardingCompleted || user.onboarding_completed || preferences?.onboardingCompleted), step: Number(user.onboardingStep || user.onboarding_step || preferences?.onboardingStep || 0), preferences } });
+    }
+    if (req.method === 'PUT') {
+      const body = await readBody(req);
+      const saved = await storage.savePreferences(user.id, { ...(await storage.getPreferences(user.id) || {}), ...body, userId: user.id, updatedAt: nowIso() });
+      if (body.onboardingCompleted != null || body.onboardingStep != null) await storage.updateUser(user.id, { onboardingCompleted: body.onboardingCompleted, onboardingStep: body.onboardingStep });
+      return json(res, 200, { onboarding: { completed: Boolean(saved.onboardingCompleted), step: Number(saved.onboardingStep || 0), preferences: saved } });
+    }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/onboarding/complete') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const body = await readBody(req);
+    const saved = await storage.savePreferences(user.id, { ...(await storage.getPreferences(user.id) || {}), ...body, onboardingCompleted: true, onboardingStep: 99, firstPlanGeneratedAt: body.firstPlanGeneratedAt || nowIso(), userId: user.id, updatedAt: nowIso() });
+    const updated = await storage.updateUser(user.id, { onboardingCompleted: true, onboardingStep: 99, language: body.language, theme: body.theme, units: body.units });
+    return json(res, 200, { user: publicUser(updated), preferences: saved, onboardingCompleted: true });
+  }
+
+  if (url.pathname === '/api/baseline/import') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const body = await readBody(req);
+    const preferences = await storage.getPreferences(user.id) || {};
+    const baseline = { id: body.id || 'baseline', rawText: body.rawText || body.raw_text || '', meals: Array.isArray(body.meals) ? body.meals : [], source: 'onboarding_import', updatedAt: nowIso() };
+    const saved = await storage.savePreferences(user.id, { ...preferences, baselineDiet: baseline, baseline_diet: baseline, updatedAt: nowIso() });
+    return json(res, 201, { baseline, preferences: saved });
+  }
+
+  if (url.pathname === '/api/pantry') {
+    if (!user) return unauthorized(res);
+    if (req.method === 'GET') return json(res, 200, { pantryItems: await storage.listPantryItems(user.id) });
+    if (req.method === 'POST') {
+      const saved = await storage.savePantryItem(user.id, await readBody(req));
+      return json(res, 201, { pantryItem: saved });
+    }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/pantry/use-available-foods') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const items = await storage.listPantryItems(user.id);
+    return json(res, 200, { availableFoods: items.filter((item) => item.available !== false), scaffolded: true, message: 'Pantry preference captured. Planner integration is scaffolded for swaps and grocery generation.' });
+  }
+
+  const pantryMatch = url.pathname.match(/^\/api\/pantry\/([^/]+)$/);
+  if (pantryMatch) {
+    if (!user) return unauthorized(res);
+    const id = decodeURIComponent(pantryMatch[1]);
+    if (req.method === 'PUT') return json(res, 200, { pantryItem: await storage.savePantryItem(user.id, { ...(await readBody(req)), id }) });
+    if (req.method === 'DELETE') { await storage.deletePantryItem(user.id, id); return noContent(res); }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/supplements') {
+    if (!user) return unauthorized(res);
+    if (req.method === 'GET') return json(res, 200, { supplements: await storage.listSupplements(user.id) });
+    if (req.method === 'POST') return json(res, 201, { supplement: await storage.saveSupplement(user.id, await readBody(req)) });
+    return methodNotAllowed(res);
+  }
+
+  const supplementLogMatch = url.pathname.match(/^\/api\/supplements\/([^/]+)\/log$/);
+  if (supplementLogMatch) {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    return json(res, 201, { supplementLog: await storage.saveSupplementLog(user.id, decodeURIComponent(supplementLogMatch[1]), await readBody(req)) });
+  }
+
+  const supplementMatch = url.pathname.match(/^\/api\/supplements\/([^/]+)$/);
+  if (supplementMatch) {
+    if (!user) return unauthorized(res);
+    const id = decodeURIComponent(supplementMatch[1]);
+    if (req.method === 'PUT') return json(res, 200, { supplement: await storage.saveSupplement(user.id, { ...(await readBody(req)), id }) });
+    if (req.method === 'DELETE') { await storage.deleteSupplement(user.id, id); return noContent(res); }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/admin/food-reviews') {
+    if (!user) return unauthorized(res);
+    if (user.role !== 'admin') return json(res, 403, { error: 'Admin role required' });
+    if (req.method === 'GET') return json(res, 200, { foodReviews: await storage.listAdminFoodReviews() });
+    if (req.method === 'POST') return json(res, 201, { foodReview: await storage.saveAdminFoodReview(user.id, await readBody(req)) });
+    return methodNotAllowed(res);
   }
 
   if (url.pathname === '/api/recipes') {
@@ -606,7 +943,7 @@ async function handleApi(req, res, url, user) {
 
   if (url.pathname === '/api/meal-plans') {
     if (!user) return unauthorized(res);
-    if (req.method === 'GET') return json(res, 200, { mealPlans: await storage.listMealPlans(user.id) });
+    if (req.method === 'GET') return json(res, 200, { mealPlans: await storage.listMealPlans(user.id, url.searchParams.get('start'), url.searchParams.get('end')) });
     if (req.method === 'POST') {
       const body = await readBody(req);
       const plan = { ...body, id: body.id || body.date || randomId('plan'), userId: user.id, updatedAt: nowIso() };
@@ -614,6 +951,120 @@ async function handleApi(req, res, url, user) {
       return json(res, 201, { mealPlan: saved });
     }
     return methodNotAllowed(res);
+  }
+
+
+  if (url.pathname === '/api/meal-plans/generate') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const body = await readBody(req);
+    const plan = generateServerMealPlan(user, body);
+    const saved = await storage.saveMealPlan(user.id, plan);
+    return json(res, 201, { mealPlan: saved, scaffolded: !Array.isArray(body.meals) });
+  }
+
+  if (url.pathname === '/api/meal-plans/generate-first-week') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const body = await readBody(req);
+    const start = String(body.start || body.startDate || todayDate()).slice(0, 10);
+    const days = Math.max(1, Math.min(7, Number(body.days || 5)));
+    const incomingPlans = Array.isArray(body.mealPlans) ? body.mealPlans : [];
+    const savedPlans = [];
+    for (let i = 0; i < days; i += 1) {
+      const date = addDays(new Date(`${start}T00:00:00.000Z`), i).toISOString().slice(0, 10);
+      const incoming = incomingPlans.find((plan) => String(plan.date || '').slice(0, 10) === date);
+      const plan = incoming ? { ...incoming, id: incoming.id || date, userId: user.id, date, updatedAt: nowIso() } : generateServerMealPlan(user, { ...body, id: date, date, meals: body.meals || [] });
+      savedPlans.push(await storage.saveMealPlan(user.id, plan));
+    }
+    await storage.updateUser(user.id, { onboardingCompleted: true, onboardingStep: 99 });
+    return json(res, 201, { mealPlans: savedPlans, scaffolded: !incomingPlans.length && !Array.isArray(body.meals) });
+  }
+
+  const mealPlanRecalcMatch = url.pathname.match(/^\/api\/meal-plans\/([^/]+)\/recalculate$/);
+  if (mealPlanRecalcMatch) {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const id = decodeURIComponent(mealPlanRecalcMatch[1]);
+    const body = await readBody(req);
+    const existing = await storage.getMealPlan(user.id, id);
+    if (!existing) return notFound(res);
+    const plan = { ...existing, ...(body.plan || {}), id, userId: user.id };
+    const eventType = body.event?.type || body.event?.eventType || 'recalculation';
+    const result = plannerEngine.recalculateMealPlan(plan, { ...(body.event || {}), eventType }, { foods: CURATED_FOODS, target: planTargetFromBodyOrPlan(body, plan) });
+    const saved = await storage.saveMealPlan(user.id, result.mealPlan);
+    const event = await storage.createMealEvent(user.id, normalizeMealEvent(user, saved, null, eventType, { ...(body.event || {}), adjustmentApplied: true, adjustment: result.recalculation }));
+    return json(res, 200, { mealPlan: saved, recalculation: result.recalculation, event });
+  }
+
+  const mealActionMatch = url.pathname.match(/^\/api\/meals\/([^/]+)\/(complete|skip|replace|swap)$/);
+  if (mealActionMatch) {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const mealId = decodeURIComponent(mealActionMatch[1]);
+    const action = mealActionMatch[2];
+    const body = await readBody(req);
+    const mutated = await mutateStoredMealPlan(user, mealId, action, body);
+    if (!mutated) return notFound(res);
+    return json(res, 200, mutated);
+  }
+
+  if (url.pathname === '/api/body-measurements') {
+    if (!user) return unauthorized(res);
+    if (req.method === 'GET') return json(res, 200, { bodyMeasurements: await storage.listBodyMeasurements(user.id, url.searchParams.get('start'), url.searchParams.get('end')) });
+    if (req.method === 'POST') {
+      const saved = await storage.saveBodyMeasurement(user.id, await readBody(req));
+      return json(res, 201, { bodyMeasurement: saved });
+    }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/progress/summary') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'GET') return methodNotAllowed(res);
+    const start = url.searchParams.get('start');
+    const end = url.searchParams.get('end');
+    const measurements = await storage.listBodyMeasurements(user.id, start, end);
+    const mealPlans = await storage.listMealPlans(user.id, start, end);
+    const logs = await storage.listProgressLogs(user.id, start, end);
+    return json(res, 200, { summary: progressSummary(measurements, mealPlans), bodyMeasurements: measurements, progressLogs: logs });
+  }
+
+  if (url.pathname === '/api/check-ins') {
+    if (!user) return unauthorized(res);
+    if (req.method === 'GET') return json(res, 200, { checkIns: await storage.listCheckIns(user.id) });
+    if (req.method === 'POST') {
+      const saved = await storage.saveCheckIn(user.id, await readBody(req));
+      return json(res, 201, { checkIn: saved });
+    }
+    return methodNotAllowed(res);
+  }
+
+  if (url.pathname === '/api/grocery/generate') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'POST') return methodNotAllowed(res);
+    const body = await readBody(req);
+    const start = body.startDate || body.start || todayDate();
+    const end = body.endDate || body.end || start;
+    const plans = await storage.listMealPlans(user.id, start, end);
+    const groceryList = await storage.saveGroceryList(user.id, { id: body.id || randomId('grocery'), startDate: start, endDate: end, items: aggregateGroceryFromPlans(plans), checkedItems: [], createdAt: nowIso(), updatedAt: nowIso() });
+    return json(res, 201, { groceryList });
+  }
+
+  if (url.pathname === '/api/grocery/current') {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'GET') return methodNotAllowed(res);
+    const lists = await storage.listGroceryLists(user.id, url.searchParams.get('start'), url.searchParams.get('end'));
+    return json(res, 200, { groceryList: lists[0] || null, groceryLists: lists });
+  }
+
+  const groceryMatch = url.pathname.match(/^\/api\/grocery\/([^/]+)$/);
+  if (groceryMatch) {
+    if (!user) return unauthorized(res);
+    if (req.method !== 'PUT') return methodNotAllowed(res);
+    const id = decodeURIComponent(groceryMatch[1]);
+    const saved = await storage.saveGroceryList(user.id, { ...(await readBody(req)), id, updatedAt: nowIso() });
+    return json(res, 200, { groceryList: saved });
   }
 
   const mealPlanMatch = url.pathname.match(/^\/api\/meal-plans\/([^/]+)$/);

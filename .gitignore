@@ -1,6 +1,6 @@
 node_modules/
+$Recycle.Bin/
 .env
-backend/data/
-data/
-npm-debug.log*
+.env.*
+!.env.example
 .DS_Store
