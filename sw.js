@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diet-planner-v0.6.0-first-login-os';
+const CACHE_NAME = 'diet-planner-v0.6.2-onboarding-celebration';
 const APP_SHELL = [
   './',
   './index.html',

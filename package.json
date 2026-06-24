@@ -1,6 +1,6 @@
 {
   "name": "diet-planner-mvp",
-  "version": "0.6.0-first-login-os",
+  "version": "0.6.2-onboarding-celebration",
   "private": true,
   "description": "Diet Planner PWA with backend-managed nutrition provider integrations.",
   "scripts": {
